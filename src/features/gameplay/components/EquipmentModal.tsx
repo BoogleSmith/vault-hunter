@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import "../../shared/components/controls.css";
 import "./EquipmentModal.css";
 import type {
@@ -53,6 +53,11 @@ interface DisplayRow {
   indices: number[];
 }
 
+interface EffectToken {
+  text: string;
+  tone: "positive" | "negative";
+}
+
 function buildRows(
   entries: Array<{ item: Item; index: number }>,
 ): DisplayRow[] {
@@ -103,20 +108,78 @@ function formatSignedValue(value: number): string {
   return value > 0 ? `+${value}` : `${value}`;
 }
 
-function formatEffect(effect: Item["effect"]): string {
-  const parts: string[] = [];
-  if (effect.healthMax)
-    parts.push(`${formatSignedValue(effect.healthMax)} max HP`);
-  if (effect.health) parts.push(`${formatSignedValue(effect.health)} HP`);
-  if (effect.damageBase)
-    parts.push(`${formatSignedValue(effect.damageBase)} min dmg`);
-  if (effect.damageMax)
-    parts.push(`${formatSignedValue(effect.damageMax)} max dmg`);
-  if (effect.agility)
-    parts.push(`${formatSignedValue(effect.agility)} agility`);
-  if (effect.dexterity)
-    parts.push(`${formatSignedValue(effect.dexterity)} dexterity`);
-  return parts.join("  ·  ");
+function formatSignedFixed(value: number, digits: number): string {
+  if (value > 0) return `+${value.toFixed(digits)}`;
+  return value.toFixed(digits);
+}
+
+function getItemEffectTokens(item: Item): EffectToken[] {
+  const parts: EffectToken[] = [];
+
+  if (item.armorValue) {
+    parts.push({
+      text: `${formatSignedFixed(item.armorValue, 2)} armor`,
+      tone: item.armorValue > 0 ? "positive" : "negative",
+    });
+  }
+
+  const { effect } = item;
+  if (effect.healthMax) {
+    parts.push({
+      text: `${formatSignedValue(effect.healthMax)} max HP`,
+      tone: effect.healthMax > 0 ? "positive" : "negative",
+    });
+  }
+  if (effect.health) {
+    parts.push({
+      text: `${formatSignedValue(effect.health)} HP`,
+      tone: effect.health > 0 ? "positive" : "negative",
+    });
+  }
+  if (effect.damageBase) {
+    parts.push({
+      text: `${formatSignedValue(effect.damageBase)} min dmg`,
+      tone: effect.damageBase > 0 ? "positive" : "negative",
+    });
+  }
+  if (effect.damageMax) {
+    parts.push({
+      text: `${formatSignedValue(effect.damageMax)} max dmg`,
+      tone: effect.damageMax > 0 ? "positive" : "negative",
+    });
+  }
+  if (effect.agility) {
+    parts.push({
+      text: `${formatSignedValue(effect.agility)} agility`,
+      tone: effect.agility > 0 ? "positive" : "negative",
+    });
+  }
+  if (effect.dexterity) {
+    parts.push({
+      text: `${formatSignedValue(effect.dexterity)} dexterity`,
+      tone: effect.dexterity > 0 ? "positive" : "negative",
+    });
+  }
+
+  return parts;
+}
+
+function EffectText({ item, className }: { item: Item; className: string }) {
+  const tokens = getItemEffectTokens(item);
+  if (tokens.length === 0) return null;
+
+  return (
+    <span className={className}>
+      {tokens.map((token, index) => (
+        <Fragment key={`${token.text}-${index}`}>
+          {index > 0 && <span className="eq-effect-sep"> · </span>}
+          <span className={`eq-effect-token eq-effect-token--${token.tone}`}>
+            {token.text}
+          </span>
+        </Fragment>
+      ))}
+    </span>
+  );
 }
 
 interface EquipmentModalProps {
@@ -282,14 +345,6 @@ export function EquipmentModal({
                           .map((slot) => REQUIREMENT_LABELS[slot])
                           .join(", ")
                       : "";
-                  const effectText = [
-                    item.armorValue
-                      ? `+${item.armorValue.toFixed(2)} armor`
-                      : "",
-                    formatEffect(item.effect),
-                  ]
-                    .filter(Boolean)
-                    .join("  ·  ");
 
                   return (
                     <li
@@ -316,11 +371,10 @@ export function EquipmentModal({
                               {slotSummary}
                             </span>
                           )}
-                          {effectText && (
-                            <span className="eq-inv-slot-summary">
-                              {effectText}
-                            </span>
-                          )}
+                          <EffectText
+                            item={item}
+                            className="eq-inv-slot-summary"
+                          />
                         </span>
                       </span>
                       <span className="eq-inv-actions">
@@ -373,19 +427,10 @@ export function EquipmentModal({
                   <p className="eq-info-desc">
                     {hoveredInventoryItem.description}
                   </p>
-                  {(hoveredInventoryItem.armorValue ||
-                    formatEffect(hoveredInventoryItem.effect)) && (
-                    <span className="eq-info-effect">
-                      {[
-                        hoveredInventoryItem.armorValue
-                          ? `+${hoveredInventoryItem.armorValue.toFixed(2)} armor`
-                          : "",
-                        formatEffect(hoveredInventoryItem.effect),
-                      ]
-                        .filter(Boolean)
-                        .join("  ·  ")}
-                    </span>
-                  )}
+                  <EffectText
+                    item={hoveredInventoryItem}
+                    className="eq-info-effect"
+                  />
                   <em className="eq-info-hint">Inventory item preview</em>
                 </div>
               </div>
@@ -400,19 +445,7 @@ export function EquipmentModal({
                       {hoveredItem.label}
                     </strong>
                     <p className="eq-info-desc">{hoveredItem.description}</p>
-                    {(hoveredItem.armorValue ||
-                      formatEffect(hoveredItem.effect)) && (
-                      <span className="eq-info-effect">
-                        {[
-                          hoveredItem.armorValue
-                            ? `+${hoveredItem.armorValue.toFixed(2)} armor`
-                            : "",
-                          formatEffect(hoveredItem.effect),
-                        ]
-                          .filter(Boolean)
-                          .join("  ·  ")}
-                      </span>
-                    )}
+                    <EffectText item={hoveredItem} className="eq-info-effect" />
                     <em className="eq-info-hint">Click slot to unequip</em>
                   </div>
                 </div>

@@ -210,7 +210,6 @@
 .eq-info-effect {
   font-size: 0.78rem;
   font-weight: 600;
-  color: var(--accent);
 }
 
 .eq-info-hint {
@@ -350,7 +349,18 @@
   font-size: 0.66rem;
   letter-spacing: 0.04em;
   text-transform: uppercase;
-  color: color-mix(in srgb, var(--accent) 65%, var(--ink));
+}
+
+.eq-effect-token--positive {
+  color: #2f8e57;
+}
+
+.eq-effect-token--negative {
+  color: #b64b4b;
+}
+
+.eq-effect-sep {
+  color: color-mix(in srgb, var(--ink) 35%, transparent);
 }
 
 .eq-inv-actions {
