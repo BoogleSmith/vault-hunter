@@ -1,0 +1,6 @@
+{
+  "RIGHT": { "label": "Right", "dx": 1, "dy": 0 },
+  "DOWN": { "label": "Down", "dx": 0, "dy": 1 },
+  "LEFT": { "label": "Left", "dx": -1, "dy": 0 },
+  "UP": { "label": "Up", "dx": 0, "dy": -1 }
+}

@@ -1,0 +1,46 @@
+{
+  "WARRIOR": {
+    "label": "Warrior",
+    "bonuses": {
+      "health": 100,
+      "healthMax": 100,
+      "damageBase": 30,
+      "damageMax": 0,
+      "agility": 0,
+      "dexterity": 0
+    }
+  },
+  "THEIF": {
+    "label": "Theif",
+    "bonuses": {
+      "health": 0,
+      "healthMax": 0,
+      "damageBase": 0,
+      "damageMax": 0,
+      "agility": 60,
+      "dexterity": 20
+    }
+  },
+  "ROGUE": {
+    "label": "Rogue",
+    "bonuses": {
+      "health": 0,
+      "healthMax": 0,
+      "damageBase": 20,
+      "damageMax": 0,
+      "agility": 0,
+      "dexterity": 30
+    }
+  },
+  "BRAWLER": {
+    "label": "Brawler",
+    "bonuses": {
+      "health": 0,
+      "healthMax": 0,
+      "damageBase": 25,
+      "damageMax": 15,
+      "agility": 0,
+      "dexterity": 0
+    }
+  }
+}

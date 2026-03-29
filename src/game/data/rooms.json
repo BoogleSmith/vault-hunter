@@ -1,0 +1,80 @@
+[
+  {
+    "key": "FOYER",
+    "tile": "F",
+    "enemy": "EMPTY",
+    "description": "You find yourself in a foyer. The building is old and dark, but this room is oddly neat and tidy."
+  },
+  {
+    "key": "CATACOMBS",
+    "tile": "C",
+    "enemy": "SKELETON",
+    "description": "You descend into catacombs. The air is musty and bones lie scattered around you."
+  },
+  {
+    "key": "DUNGEON",
+    "tile": "D",
+    "enemy": "ZOMBIE",
+    "description": "You enter a dungeon. Barred cells with chains and rusted tools line the hall."
+  },
+  {
+    "key": "SANCTUARY",
+    "tile": "S",
+    "enemy": "CULTIST",
+    "description": "You step into a chapel. Fresh candles line the walls around a blood-stained altar."
+  },
+  {
+    "key": "BALLROOM",
+    "tile": "B",
+    "enemy": "RAIDER",
+    "description": "You enter a deserted ballroom, where valuables have been piled in careless heaps."
+  },
+  {
+    "key": "ARMORY",
+    "tile": "A",
+    "enemy": "SPECTRALGUARD",
+    "description": "You enter the armory. Weapons and armor hang from every wall."
+  },
+  {
+    "key": "YARD",
+    "tile": "Y",
+    "enemy": "GARGOYL",
+    "description": "You enter an open courtyard. Dark wings beat overhead."
+  },
+  {
+    "key": "GROUNDS",
+    "tile": "G",
+    "enemy": "HELLHOUND",
+    "description": "You enter the grounds. Howls echo from the darkness."
+  },
+  {
+    "key": "HALLWAY",
+    "tile": "H",
+    "enemy": "POLTERGEIST",
+    "description": "You enter a long hallway. Floorboards creak and broken portraits litter the floor."
+  },
+  {
+    "key": "MAUSOLEUM",
+    "tile": "M",
+    "enemy": "WRAITH",
+    "description": "You enter a mausoleum. You cannot shake the feeling of being watched."
+  },
+  {
+    "key": "THRONEROOM",
+    "tile": "T",
+    "enemy": "CYCLOPS",
+    "description": "You enter a throne room. Massive footprints surround shattered furniture."
+  },
+  {
+    "key": "PRECIPICE",
+    "tile": "P",
+    "enemy": "LUMBERINGHORROR",
+    "description": "You enter a cavern where whispers rise from a vast precipice."
+  },
+  {
+    "key": "VAULT",
+    "tile": "V",
+    "enemy": "DRAKE",
+    "description": "You enter a treasure vault. Gold glints in the dark beneath fresh scorch marks."
+  }
+]

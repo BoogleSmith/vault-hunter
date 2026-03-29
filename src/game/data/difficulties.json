@@ -1,0 +1,5 @@
+{
+  "SHORT": { "label": "Short", "width": 10, "height": 3 },
+  "MEDIUM": { "label": "Medium", "width": 15, "height": 5 },
+  "LONG": { "label": "Long", "width": 25, "height": 7 }
+}
