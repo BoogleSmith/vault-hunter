@@ -7,6 +7,7 @@ import {
   ITEMS,
   ROOM_TYPES,
   enemyFromTemplate,
+  itemFromTemplate,
 } from "./data";
 import { addHealth, nextInt } from "./mechanics";
 import type {
@@ -128,13 +129,13 @@ function roomFromType(
       ...enemy.lootTags,
       ...type.lootTags,
     ]);
-    if (itemKey) enemy.inventory.push({ ...ITEMS[itemKey] });
+    if (itemKey) enemy.inventory.push(itemFromTemplate(itemKey));
   }
 
   const items: (typeof ITEMS)[keyof typeof ITEMS][] = [];
   if (!enemy.alive && ITEM_KEYS.length > 0 && Math.random() < 0.18) {
     const itemKey = pickWeightedItemKeyForTags(type.lootTags);
-    if (itemKey) items.push({ ...ITEMS[itemKey] });
+    if (itemKey) items.push(itemFromTemplate(itemKey));
   }
 
   return {
@@ -297,11 +298,7 @@ export function movePlayer(game: Game, directionKey: DirectionKey): void {
     game.log.push("You search the room and find:");
     for (const item of room.items) {
       game.player.inventory.push(item);
-      if (!item.usable) {
-        game.log.push(`- ${item.label} (equipped)`);
-      } else {
-        game.log.push(`- ${item.label}`);
-      }
+      game.log.push(`- ${item.label}`);
     }
     room.items = [];
   }

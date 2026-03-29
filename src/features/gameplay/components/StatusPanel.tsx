@@ -5,6 +5,7 @@ import { HealthBar } from "../../shared/components/HealthBar";
 interface StatusPanelProps {
   game: Game;
   onReset: () => void;
+  onOpenEquipment: () => void;
   showEnemyDebug: boolean;
   onToggleEnemyDebug: () => void;
 }
@@ -12,6 +13,7 @@ interface StatusPanelProps {
 export function StatusPanel({
   game,
   onReset,
+  onOpenEquipment,
   showEnemyDebug,
   onToggleEnemyDebug,
 }: StatusPanelProps) {
@@ -43,6 +45,9 @@ export function StatusPanel({
           Location: {game.currentX},{game.currentY}
         </span>
       </div>
+      <button className="eq-open-btn" onClick={onOpenEquipment}>
+        ⚔ Equipment
+      </button>
       <div className="debug-controls">
         <label className="debug-toggle">
           <input

@@ -1,4 +1,14 @@
-import type { Item, ItemEffect, ItemKey } from "../../../game/engine";
+import type { Item, ItemEffect, ItemKey, ItemSlot } from "../../../game/engine";
+
+const SLOT_LABELS: Record<ItemSlot, string> = {
+  leftHand: "Left Hand",
+  rightHand: "Right Hand",
+  leftAccessory: "Left Accessory",
+  rightAccessory: "Right Accessory",
+  head: "Head",
+  back: "Back",
+  chest: "Chest",
+};
 
 const TYPE_ICON: Record<Item["type"], string> = {
   potion: "🧪",
@@ -57,18 +67,22 @@ function buildRows(inventory: Item[]): DisplayRow[] {
 
 interface InventoryPanelProps {
   inventory: Item[];
+  equipment: Partial<Record<ItemSlot, number>>;
   playerHealth: number;
   playerHealthMax: number;
   itemCooldowns: Partial<Record<ItemKey, number>>;
   onUseItem: (index: number) => void;
+  onEquipItem: (index: number) => void;
 }
 
 export function InventoryPanel({
   inventory,
+  equipment,
   playerHealth,
   playerHealthMax,
   itemCooldowns,
   onUseItem,
+  onEquipItem,
 }: InventoryPanelProps) {
   const rows = buildRows(inventory);
 
@@ -92,6 +106,10 @@ export function InventoryPanel({
             const cd = item.sharedCooldown
               ? (itemCooldowns[item.key] ?? 0)
               : (selected?.cooldownRemaining ?? 0);
+            const equipIndex = indices[0];
+            const isEquipped =
+              item.instanceId !== undefined &&
+              Object.values(equipment).includes(item.instanceId);
 
             return (
               <li key={`${item.key}-${indices[0] ?? 0}`} className="inv-item">
@@ -102,27 +120,43 @@ export function InventoryPanel({
                     {count > 1 && <span className="inv-count"> x{count}</span>}
                   </strong>
                   <span className="inv-desc">{item.description}</span>
+                  {item.equipSlots.length > 0 && (
+                    <span className="inv-slots">
+                      Slots:{" "}
+                      {item.equipSlots
+                        .map((slot) => SLOT_LABELS[slot])
+                        .join(", ")}
+                    </span>
+                  )}
                   <span className="inv-effect">
                     {formatEffect(item.effect)}
                   </span>
                 </span>
-                {item.usable &&
-                  (() => {
-                    return (
-                      <button
-                        className="inv-use-btn"
-                        onClick={() =>
-                          useIndex !== undefined && onUseItem(useIndex)
-                        }
-                        disabled={
-                          cd > 0 ||
-                          (isPureHeal && playerHealth >= playerHealthMax)
-                        }
-                      >
-                        {cd > 0 ? `${cd} room${cd !== 1 ? "s" : ""}` : "Use"}
-                      </button>
-                    );
-                  })()}
+                <span className="inv-actions">
+                  {item.equipSlots.length > 0 && equipIndex !== undefined && (
+                    <button
+                      className="inv-equip-btn ghost"
+                      onClick={() => onEquipItem(equipIndex)}
+                      disabled={isEquipped}
+                    >
+                      {isEquipped ? "Equipped" : "Equip"}
+                    </button>
+                  )}
+                  {item.usable && (
+                    <button
+                      className="inv-use-btn"
+                      onClick={() =>
+                        useIndex !== undefined && onUseItem(useIndex)
+                      }
+                      disabled={
+                        cd > 0 ||
+                        (isPureHeal && playerHealth >= playerHealthMax)
+                      }
+                    >
+                      {cd > 0 ? `${cd} room${cd !== 1 ? "s" : ""}` : "Use"}
+                    </button>
+                  )}
+                </span>
               </li>
             );
           })}

@@ -7,7 +7,7 @@ export {
   movePlayer,
 } from "./map";
 export { runCombatRound, tryFlee } from "./combat";
-export { useItem } from "./mechanics";
+export { equipItem, unequipSlot, useItem } from "./mechanics";
 
 export type {
   Game,
@@ -15,6 +15,7 @@ export type {
   Item,
   ItemEffect,
   ItemKey,
+  ItemSlot,
   Player,
   Room,
 } from "./types";

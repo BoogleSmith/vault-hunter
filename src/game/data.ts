@@ -64,6 +64,15 @@ export const ITEMS = itemsData as Record<ItemKey, Item>;
 
 export const ITEM_KEYS = Object.keys(ITEMS) as ItemKey[];
 
+let nextItemInstanceId = 1;
+
+export function itemFromTemplate(itemKey: ItemKey): Item {
+  return {
+    ...ITEMS[itemKey],
+    instanceId: nextItemInstanceId++,
+  };
+}
+
 export function enemyFromTemplate(templateKey: EnemyTemplateKey): Enemy {
   const template = ENEMIES[templateKey];
   return {

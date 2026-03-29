@@ -13,6 +13,15 @@ export type ItemKey =
 
 export type ItemType = "potion" | "weapon" | "accessory" | "relic";
 
+export type ItemSlot =
+  | "leftHand"
+  | "rightHand"
+  | "leftAccessory"
+  | "rightAccessory"
+  | "head"
+  | "back"
+  | "chest";
+
 export type LootTag =
   | "common"
   | "undead"
@@ -45,6 +54,8 @@ export interface Item {
   description: string;
   type: ItemType;
   tags: LootTag[];
+  equipSlots: ItemSlot[];
+  instanceId?: number;
   dropWeight: number;
   stackable: boolean;
   usable: boolean;
@@ -145,6 +156,7 @@ export interface Player extends UnitBase {
   classKey: PlayerClassKey;
   armor: ArmorKey;
   inventory: Item[];
+  equipment: Partial<Record<ItemSlot, number>>;
   itemCooldowns: Partial<Record<ItemKey, number>>;
   usedItemKeys: ItemKey[];
 }

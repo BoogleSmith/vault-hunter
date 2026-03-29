@@ -1,4 +1,4 @@
-import { ITEMS, PLAYER_CLASSES } from "./data";
+import { itemFromTemplate, PLAYER_CLASSES } from "./data";
 import type { ArmorKey, Player, PlayerClassKey, UnitBase } from "./types";
 
 const BASE_PLAYER: UnitBase = {
@@ -34,7 +34,11 @@ export function createPlayer({
     agility: BASE_PLAYER.agility + bonuses.agility,
     dexterity: BASE_PLAYER.dexterity + bonuses.dexterity,
     alive: true,
-    inventory: [{ ...ITEMS["HEALTH_POTION"] }, { ...ITEMS["HEALTH_POTION"] }],
+    inventory: [
+      itemFromTemplate("HEALTH_POTION"),
+      itemFromTemplate("HEALTH_POTION"),
+    ],
+    equipment: {},
     itemCooldowns: {},
     usedItemKeys: [],
   };

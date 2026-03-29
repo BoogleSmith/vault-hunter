@@ -17,8 +17,8 @@ import {
 } from "./game/map";
 import { createPlayer } from "./game/player";
 import { runCombatRound, runEnemyTurn, tryFlee } from "./game/combat";
-import { useItem } from "./game/mechanics";
-import type { Game } from "./game/types";
+import { equipItem, unequipSlot, useItem } from "./game/mechanics";
+import type { Game, ItemSlot } from "./game/types";
 import { GameplayPage } from "./features/gameplay/GameplayPage";
 import { GameOverPage } from "./features/gameover/GameOverPage";
 import { SetupPage } from "./features/setup/SetupPage";
@@ -98,6 +98,18 @@ function App() {
     });
   }
 
+  function handleEquipItem(index: number): void {
+    withGameUpdate((next) => {
+      equipItem(next, index);
+    });
+  }
+
+  function handleUnequipSlot(slot: ItemSlot): void {
+    withGameUpdate((next) => {
+      unequipSlot(next, slot);
+    });
+  }
+
   function resetGame(): void {
     setGame(null);
   }
@@ -137,6 +149,8 @@ function App() {
       onFlee={handleFlee}
       onReset={resetGame}
       onUseItem={handleUseItem}
+      onEquipItem={handleEquipItem}
+      onUnequipSlot={handleUnequipSlot}
       showEnemyDebug={showEnemyDebug}
       onToggleEnemyDebug={() => setShowEnemyDebug((current) => !current)}
     />

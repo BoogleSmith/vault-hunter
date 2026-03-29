@@ -1,4 +1,4 @@
-import type { Game, Item, Player, UnitBase } from "./types";
+import type { Game, Item, ItemSlot, Player, UnitBase } from "./types";
 
 export function nextInt(a: number, b: number): number {
   const min = Math.min(a, b);
@@ -31,6 +31,87 @@ export function applyItemEffect(player: Player, item: Item): void {
   if (e.damageMax) player.damageMax += e.damageMax;
   if (e.agility) player.agility += e.agility;
   if (e.dexterity) player.dexterity += e.dexterity;
+}
+
+export function removeItemEffect(player: Player, item: Item): void {
+  const e = item.effect;
+  if (e.healthMax) {
+    player.healthMax = Math.max(1, player.healthMax - e.healthMax);
+    player.health = Math.min(player.health, player.healthMax);
+  }
+  if (e.damageBase) player.damageBase -= e.damageBase;
+  if (e.damageMax) player.damageMax -= e.damageMax;
+  if (e.agility) player.agility -= e.agility;
+  if (e.dexterity) player.dexterity -= e.dexterity;
+}
+
+function clearEquipmentSlots(player: Player, instanceId: number): void {
+  (Object.keys(player.equipment) as ItemSlot[]).forEach((slot) => {
+    if (player.equipment[slot] === instanceId) {
+      delete player.equipment[slot];
+    }
+  });
+}
+
+function unequipByInstanceId(player: Player, instanceId: number): void {
+  const item = player.inventory.find(
+    (entry) => entry.instanceId === instanceId,
+  );
+  if (!item) {
+    clearEquipmentSlots(player, instanceId);
+    return;
+  }
+  removeItemEffect(player, item);
+  clearEquipmentSlots(player, instanceId);
+}
+
+export function unequipSlot(game: Game, slot: ItemSlot): boolean {
+  const instanceId = game.player.equipment[slot];
+  if (instanceId === undefined) return false;
+  const item = game.player.inventory.find((e) => e.instanceId === instanceId);
+  if (item) game.log.push(`You unequipped ${item.label}.`);
+  unequipByInstanceId(game.player, instanceId);
+  return true;
+}
+
+export function equipItem(game: Game, index: number): boolean {
+  const item = game.player.inventory[index];
+  if (!item || item.equipSlots.length === 0 || item.instanceId === undefined) {
+    return false;
+  }
+
+  const alreadyEquipped = item.equipSlots.every(
+    (slot) => game.player.equipment[slot] === item.instanceId,
+  );
+  if (alreadyEquipped) {
+    game.log.push(`${item.label} is already equipped.`);
+    return false;
+  }
+
+  const overlappingIds = Array.from(
+    new Set(
+      item.equipSlots
+        .map((slot) => game.player.equipment[slot])
+        .filter((instanceId): instanceId is number => instanceId !== undefined),
+    ),
+  );
+
+  for (const instanceId of overlappingIds) {
+    const equippedItem = game.player.inventory.find(
+      (entry) => entry.instanceId === instanceId,
+    );
+    if (equippedItem) {
+      game.log.push(`You unequipped ${equippedItem.label}.`);
+    }
+    unequipByInstanceId(game.player, instanceId);
+  }
+
+  applyItemEffect(game.player, item);
+  item.equipSlots.forEach((slot) => {
+    game.player.equipment[slot] = item.instanceId;
+  });
+  game.log.push(`You equipped ${item.label}.`);
+  return true;
 }
 
 export function useItem(game: Game, index: number): boolean {

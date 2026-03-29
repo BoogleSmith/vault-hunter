@@ -1,5 +1,5 @@
 import { ARMOR } from "./data";
-import { addHealth, applyItemEffect, nextInt } from "./mechanics";
+import { addHealth, nextInt } from "./mechanics";
 import {
   checkVictory,
   getAvailableDirections,
@@ -66,16 +66,10 @@ export function runCombatRound(game: Game): void {
     // Enemy just died — collect any dropped items
     for (const item of room.enemy.inventory) {
       game.player.inventory.push(item);
-      if (item.type !== "potion") {
-        applyItemEffect(game.player, item);
-        game.log.push(`You equipped ${item.label}!`);
-      } else {
-        game.log.push(`You found ${item.label} on the body!`);
-      }
+      game.log.push(`You found ${item.label} on the body!`);
     }
     room.enemy.inventory = [];
   }
-
   if (!game.player.alive) {
     game.status = "lost";
     game.log.push("You have fallen. Game over.");
