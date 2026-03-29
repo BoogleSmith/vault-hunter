@@ -1,4 +1,6 @@
 import { useEffect, useState } from "react";
+import "../../shared/components/controls.css";
+import "./EquipmentModal.css";
 import type {
   EquipRequirement,
   Game,

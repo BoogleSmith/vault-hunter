@@ -1,3 +1,6 @@
+import "../../shared/components/controls.css";
+import "./InterruptPrompt.css";
+
 interface InterruptPromptProps {
   title: string;
   message: string;

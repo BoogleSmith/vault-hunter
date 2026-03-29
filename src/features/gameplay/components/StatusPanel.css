@@ -1,0 +1,27 @@
+.status {
+  align-self: start;
+}
+
+.kicker {
+  font-size: 0.78rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.status h1 {
+  margin: 0.2rem 0 0.65rem;
+}
+
+.stats-grid {
+  margin-top: 0.9rem;
+  display: grid;
+  gap: 0.4rem;
+}
+
+.eq-open-btn {
+  margin-top: 0.9rem;
+  width: 100%;
+  font-size: 0.88rem;
+  padding: 0.5rem 0.9rem;
+}

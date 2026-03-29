@@ -1,0 +1,26 @@
+.log h2 {
+  margin: 0.2rem 0 0.65rem;
+}
+
+.log {
+  min-height: 18rem;
+}
+
+.log-lines {
+  max-height: 16rem;
+  overflow: auto;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 0.7rem;
+  background: color-mix(in srgb, var(--panel) 84%, black 4%);
+}
+
+.log-lines p {
+  margin: 0;
+  padding: 0.2rem 0;
+  border-bottom: 1px dashed color-mix(in srgb, var(--line) 60%, transparent);
+}
+
+.log-lines p:last-child {
+  border-bottom: 0;
+}

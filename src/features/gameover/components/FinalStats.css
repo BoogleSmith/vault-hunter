@@ -1,0 +1,26 @@
+.final-stats {
+  width: 100%;
+  background: color-mix(in srgb, var(--panel) 84%, black 4%);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 1.2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  text-align: left;
+}
+
+.final-stats p {
+  margin: 0;
+  font-size: 0.95rem;
+  color: var(--ink);
+}
+
+.final-stats strong {
+  color: var(--accent);
+}
+
+.final-items {
+  font-size: 0.85rem;
+  opacity: 0.75;
+}

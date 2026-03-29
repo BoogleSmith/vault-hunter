@@ -1,5 +1,6 @@
 import { PLAYER_CLASSES } from "../../../game/data";
 import type { Game } from "../../../game/engine";
+import "./FinalStats.css";
 
 interface FinalStatsProps {
   game: Game;

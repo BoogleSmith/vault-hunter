@@ -1,3 +1,5 @@
+import "./HealthBar.css";
+
 interface HealthBarProps {
   current: number;
   max: number;

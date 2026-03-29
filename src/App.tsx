@@ -1,6 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { FormEvent } from "react";
-import "./App.css";
 
 import {
   type DifficultyKey,
@@ -16,7 +15,11 @@ import {
 } from "./game/map";
 import { createPlayer } from "./game/player";
 import { runCombatRound, runEnemyTurn, tryFlee } from "./game/combat";
-import { equipItem, unequipSlot, useItem } from "./game/mechanics";
+import {
+  equipItem,
+  unequipSlot,
+  useItem as consumeItem,
+} from "./game/mechanics";
 import type { Game, ItemSlot } from "./game/types";
 import { GameplayPage } from "./features/gameplay/GameplayPage";
 import { GameOverPage } from "./features/gameover/GameOverPage";
@@ -180,7 +183,7 @@ function App() {
   function handleUseItem(index: number): void {
     if (activePrompt) return;
     withGameUpdate((next) => {
-      const used = useItem(next, index);
+      const used = consumeItem(next, index);
       if (used) {
         runEnemyTurn(next);
         advanceEnemyRoaming(next);
@@ -204,6 +207,26 @@ function App() {
 
   function handleDismissPrompt(): void {
     setPendingPrompts((current) => current.slice(1));
+  }
+
+  function forceGameOutcome(status: "won" | "lost"): void {
+    setGame((previous) => {
+      if (!previous || previous.status !== "playing") {
+        return previous;
+      }
+
+      const next = structuredClone(previous);
+      next.status = status;
+      if (status === "lost") {
+        next.player.health = 0;
+        next.player.alive = false;
+        next.log.push("Debug: Forced game over.");
+      } else {
+        next.player.alive = true;
+        next.log.push("Debug: Forced victory.");
+      }
+      return next;
+    });
   }
 
   function resetGame(): void {
@@ -251,6 +274,8 @@ function App() {
         onUnequipSlot={handleUnequipSlot}
         showEnemyDebug={showEnemyDebug}
         onToggleEnemyDebug={() => setShowEnemyDebug((current) => !current)}
+        onForceVictory={() => forceGameOutcome("won")}
+        onForceDeath={() => forceGameOutcome("lost")}
       />
       {activePrompt && (
         <InterruptPrompt

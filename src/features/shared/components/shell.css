@@ -1,0 +1,7 @@
+.shell {
+  width: min(1180px, 100% - 2rem);
+  margin: 2rem auto;
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: 1fr;
+}

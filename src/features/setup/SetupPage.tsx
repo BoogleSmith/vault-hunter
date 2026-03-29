@@ -1,4 +1,7 @@
 import type { FormEvent } from "react";
+import "../shared/components/shell.css";
+import "../shared/components/surface.css";
+import "./SetupPage.css";
 
 import type { DifficultyKey, PlayerClassKey } from "../../game/data";
 import { SetupForm } from "./components/SetupForm";

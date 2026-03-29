@@ -1,0 +1,17 @@
+.panel {
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 1.1rem;
+  background: linear-gradient(
+    160deg,
+    color-mix(in srgb, var(--panel) 92%, white) 0%,
+    var(--panel) 100%
+  );
+  box-shadow: 0 16px 36px color-mix(in srgb, var(--ink) 18%, transparent);
+}
+
+.ghost {
+  background: transparent;
+  color: var(--ink);
+  border-color: var(--line);
+}

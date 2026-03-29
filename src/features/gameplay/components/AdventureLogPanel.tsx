@@ -1,4 +1,6 @@
 import { useEffect, useRef } from "react";
+import "../../shared/components/surface.css";
+import "./AdventureLogPanel.css";
 
 interface AdventureLogPanelProps {
   log: string[];

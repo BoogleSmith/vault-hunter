@@ -1,4 +1,6 @@
 import type { Enemy } from "../../../game/types";
+import "../../shared/components/controls.css";
+import "./EncounterPanel.css";
 import { HealthBar } from "../../shared/components/HealthBar";
 
 interface EncounterPanelProps {

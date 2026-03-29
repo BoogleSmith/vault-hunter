@@ -1,4 +1,7 @@
 import { type DirectionKey } from "../../../game/data";
+import "../../shared/components/controls.css";
+import "../../shared/components/surface.css";
+import "./RoomPanel.css";
 import { EncounterPanel } from "./EncounterPanel";
 
 const DPAD: { key: DirectionKey; label: string; col: number; row: number }[] = [

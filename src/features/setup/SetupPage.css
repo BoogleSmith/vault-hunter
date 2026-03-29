@@ -1,0 +1,8 @@
+.intro p {
+  max-width: 55ch;
+}
+
+.setup form {
+  display: grid;
+  gap: 0.65rem;
+}

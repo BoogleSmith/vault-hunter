@@ -1,21 +1,20 @@
 import { PLAYER_CLASSES } from "../../../game/data";
 import type { Game } from "../../../game/engine";
+import "../../shared/components/controls.css";
+import "../../shared/components/surface.css";
+import "./StatusPanel.css";
 import { HealthBar } from "../../shared/components/HealthBar";
 
 interface StatusPanelProps {
   game: Game;
   onReset: () => void;
   onOpenEquipment: () => void;
-  showEnemyDebug: boolean;
-  onToggleEnemyDebug: () => void;
 }
 
 export function StatusPanel({
   game,
   onReset,
   onOpenEquipment,
-  showEnemyDebug,
-  onToggleEnemyDebug,
 }: StatusPanelProps) {
   return (
     <section className="panel status">
@@ -42,16 +41,6 @@ export function StatusPanel({
       <button className="eq-open-btn" onClick={onOpenEquipment}>
         ⚔ Equipment
       </button>
-      <div className="debug-controls">
-        <label className="debug-toggle">
-          <input
-            type="checkbox"
-            checked={showEnemyDebug}
-            onChange={onToggleEnemyDebug}
-          />
-          <span>Show Enemy Positions</span>
-        </label>
-      </div>
       <button className="ghost" onClick={onReset}>
         New Run
       </button>

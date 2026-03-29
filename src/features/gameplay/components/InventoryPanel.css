@@ -1,0 +1,82 @@
+.inventory {
+  grid-column: 1 / -1;
+}
+
+.inv-empty {
+  font-size: 0.9rem;
+  opacity: 0.6;
+  font-style: italic;
+}
+
+.inv-list {
+  list-style: none;
+  padding: 0;
+  margin: 0.4rem 0 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));
+  gap: 0.5rem;
+}
+
+.inv-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.55rem;
+  padding: 0.55rem 0.7rem;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--panel) 80%, white);
+}
+
+.inv-icon {
+  font-size: 1.3rem;
+  line-height: 1;
+  flex-shrink: 0;
+  margin-top: 0.1rem;
+}
+
+.inv-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.inv-info strong {
+  font-size: 0.9rem;
+}
+
+.inv-count {
+  font-weight: 400;
+  opacity: 0.7;
+  font-size: 0.82rem;
+}
+
+.inv-desc {
+  font-size: 0.78rem;
+  opacity: 0.65;
+}
+
+.inv-slots {
+  font-size: 0.76rem;
+  color: color-mix(in srgb, var(--accent) 65%, var(--ink));
+}
+
+.inv-effect {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--accent);
+}
+
+.inv-actions {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  flex-shrink: 0;
+}
+
+.inv-equip-btn,
+.inv-use-btn {
+  align-self: center;
+  padding: 0.3rem 0.65rem;
+  font-size: 0.8rem;
+}

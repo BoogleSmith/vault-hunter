@@ -5,6 +5,9 @@ import type {
   ItemKey,
   ItemSlot,
 } from "../../../game/engine";
+import "../../shared/components/controls.css";
+import "../../shared/components/surface.css";
+import "./InventoryPanel.css";
 
 const SLOT_LABELS: Record<EquipRequirement, string> = {
   hand: "Hand",

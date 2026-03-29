@@ -28,7 +28,7 @@
     "phrase": "Click Clack!",
     "description": "A skeleton armed with a sword leaps from the shadows to attack you!",
     "lootTags": ["undead", "martial"],
-    "roamRate": 0,
+    "roamRate": -1,
     "undiscoveredRoaming": false
   },
   "ZOMBIE": {
@@ -60,7 +60,7 @@
     "phrase": "Finally another sacrifice!",
     "description": "A cloaked figure rises to greet you!",
     "lootTags": ["cult", "dexterous"],
-    "roamRate": 1,
+    "roamRate": 2,
     "undiscoveredRoaming": false
   },
   "RAIDER": {
@@ -76,8 +76,8 @@
     "phrase": "Stand and deliver!",
     "description": "A ragtag soldier brandishing a blade jumps out from behind a nearby column!",
     "lootTags": ["raider", "martial"],
-    "roamRate": 3,
-    "undiscoveredRoaming": false
+    "roamRate": 1,
+    "undiscoveredRoaming": true
   },
   "SPECTRALGUARD": {
     "name": "Spectral Guard",
@@ -109,7 +109,7 @@
     "description": "A menacing Gargoyl swoops from the ceiling to attack you!",
     "lootTags": ["beast", "agile"],
     "roamRate": 2,
-    "undiscoveredRoaming": true
+    "undiscoveredRoaming": false
   },
   "HELLHOUND": {
     "name": "Hellhound",
@@ -141,7 +141,7 @@
     "description": "A dark shape spreads across the room. A shadowy figure stands before you!",
     "lootTags": ["spectral", "cursed"],
     "roamRate": 2,
-    "undiscoveredRoaming": true
+    "undiscoveredRoaming": false
   },
   "POLTERGEIST": {
     "name": "Poltergeist",
@@ -157,14 +157,14 @@
     "description": "Objects begin flying across the room. A translucent figure whirls past you!",
     "lootTags": ["spectral", "cursed", "agile"],
     "roamRate": 3,
-    "undiscoveredRoaming": true
+    "undiscoveredRoaming": false
   },
   "CYCLOPS": {
     "name": "Cyclops",
     "health": 200,
     "healthMax": 200,
     "damageBase": 1,
-    "damageMax": 5,
+    "damageMax": 25,
     "agility": 5,
     "dexterity": 10,
     "armor": 0.7,
@@ -188,8 +188,8 @@
     "phrase": "Hisssssssssss!",
     "description": "A massive mound of flesh and flailing tentacles gushes out from the chasm!",
     "lootTags": ["cursed", "giant", "beast"],
-    "roamRate": 0,
-    "undiscoveredRoaming": false
+    "roamRate": -2,
+    "undiscoveredRoaming": true
   },
   "DRAKE": {
     "name": "Drake",

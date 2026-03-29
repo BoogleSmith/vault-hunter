@@ -1,6 +1,0 @@
-{
-  "UNARMORED": { "label": "Unarmored", "constant": 1 },
-  "LIGHT": { "label": "Light", "constant": 1.3 },
-  "MEDIUM": { "label": "Medium", "constant": 1.5 },
-  "HEAVY": { "label": "Heavy", "constant": 1.7 }
-}

@@ -1,4 +1,5 @@
 import type { FormEvent } from "react";
+import "../../shared/components/controls.css";
 
 import {
   DIFFICULTIES,

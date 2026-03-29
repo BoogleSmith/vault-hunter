@@ -1,0 +1,30 @@
+.monster {
+  min-height: 18rem;
+}
+
+.encounter {
+  border: 1px solid color-mix(in srgb, #bf3f3f 45%, var(--line));
+  border-radius: 10px;
+  background: color-mix(in srgb, #bf3f3f 12%, transparent);
+  padding: 0.7rem;
+  margin-block: 0.8rem;
+}
+
+.actions-label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--line);
+  margin: 0.4rem 0 0.2rem;
+}
+
+.actions-label:first-child {
+  margin-top: 0;
+}
+
+.combat-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.55rem;
+}

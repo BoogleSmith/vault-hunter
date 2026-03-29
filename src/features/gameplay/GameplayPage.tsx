@@ -1,10 +1,14 @@
 import { useState } from "react";
+import "../shared/components/shell.css";
+import "../shared/components/surface.css";
+import "./GameplayPage.css";
 import type { DirectionKey } from "../../game/data";
 import type { Game, ItemSlot, Room } from "../../game/engine";
 import { EquipmentModal } from "./components/EquipmentModal";
 import { AdventureLogPanel } from "./components/AdventureLogPanel";
 import { RoomPanel } from "./components/RoomPanel";
 import { StatusPanel } from "./components/StatusPanel";
+import { DebugMenu } from "./components/DebugMenu";
 
 interface GameplayPageProps {
   game: Game;
@@ -21,6 +25,8 @@ interface GameplayPageProps {
   onUnequipSlot: (slot: ItemSlot) => void;
   showEnemyDebug: boolean;
   onToggleEnemyDebug: () => void;
+  onForceVictory: () => void;
+  onForceDeath: () => void;
 }
 
 export function GameplayPage({
@@ -38,6 +44,8 @@ export function GameplayPage({
   onUnequipSlot,
   showEnemyDebug,
   onToggleEnemyDebug,
+  onForceVictory,
+  onForceDeath,
 }: GameplayPageProps) {
   const [showEquipModal, setShowEquipModal] = useState(false);
 
@@ -48,8 +56,6 @@ export function GameplayPage({
           game={game}
           onReset={onReset}
           onOpenEquipment={() => setShowEquipModal(true)}
-          showEnemyDebug={showEnemyDebug}
-          onToggleEnemyDebug={onToggleEnemyDebug}
         />
         <AdventureLogPanel log={game.log} />
       </section>
@@ -77,6 +83,13 @@ export function GameplayPage({
           showEnemyDebug={showEnemyDebug}
         />
       </section>
+      <DebugMenu
+        canForceOutcome={game.status === "playing"}
+        showEnemyDebug={showEnemyDebug}
+        onToggleEnemyDebug={onToggleEnemyDebug}
+        onForceVictory={onForceVictory}
+        onForceDeath={onForceDeath}
+      />
     </main>
   );
 }
