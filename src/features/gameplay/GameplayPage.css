@@ -54,6 +54,20 @@
   height: 100%;
 }
 
+.exit-fab {
+  position: fixed;
+  left: 0.8rem;
+  bottom: 0.8rem;
+  z-index: 1300;
+  background: transparent;
+  color: #f1f4f6;
+  border-color: rgba(0, 0, 0, 0.75);
+}
+
+.exit-fab:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.05);
+}
+
 /* ── Responsive ─────────────────────────────── */
 
 @media (max-width: 980px) {

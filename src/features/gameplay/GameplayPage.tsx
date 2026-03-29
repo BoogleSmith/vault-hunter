@@ -55,7 +55,6 @@ export function GameplayPage({
         <section className="hud-column">
           <StatusPanel
             game={game}
-            onReset={onReset}
             onOpenEquipment={() => setShowEquipModal(true)}
           />
         </section>
@@ -86,6 +85,9 @@ export function GameplayPage({
         />
       </section>
       <AdventureLogPanel log={game.log} />
+      <button className="exit-fab" onClick={onReset}>
+        ← Exit
+      </button>
       <DebugMenu
         canForceOutcome={game.status === "playing"}
         showEnemyDebug={showEnemyDebug}

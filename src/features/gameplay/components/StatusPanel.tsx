@@ -7,15 +7,10 @@ import { HealthBar } from "../../shared/components/HealthBar";
 
 interface StatusPanelProps {
   game: Game;
-  onReset: () => void;
   onOpenEquipment: () => void;
 }
 
-export function StatusPanel({
-  game,
-  onReset,
-  onOpenEquipment,
-}: StatusPanelProps) {
+export function StatusPanel({ game, onOpenEquipment }: StatusPanelProps) {
   return (
     <section className="panel status">
       <p className="kicker">
@@ -40,9 +35,6 @@ export function StatusPanel({
       </div>
       <button className="eq-open-btn" onClick={onOpenEquipment}>
         💼 Inventory
-      </button>
-      <button className="ghost" onClick={onReset}>
-        New Run
       </button>
     </section>
   );
