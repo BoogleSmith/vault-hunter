@@ -2,28 +2,6 @@ import { PLAYER_CLASSES } from "../../../game/data";
 import type { Game } from "../../../game/engine";
 import { HealthBar } from "../../shared/components/HealthBar";
 
-function getTotalArmorValue(game: Game): number {
-  const equippedIds = new Set(
-    Object.values(game.player.equipment).filter(
-      (id): id is number => id !== undefined,
-    ),
-  );
-
-  let total = 0;
-  for (const item of game.player.inventory) {
-    if (
-      item.instanceId === undefined ||
-      !equippedIds.has(item.instanceId) ||
-      !item.armorValue
-    ) {
-      continue;
-    }
-    total += item.armorValue;
-  }
-
-  return Math.max(0, total);
-}
-
 interface StatusPanelProps {
   game: Game;
   onReset: () => void;
@@ -39,8 +17,6 @@ export function StatusPanel({
   showEnemyDebug,
   onToggleEnemyDebug,
 }: StatusPanelProps) {
-  const armorValue = getTotalArmorValue(game);
-
   return (
     <section className="panel status">
       <p className="kicker">
@@ -59,12 +35,6 @@ export function StatusPanel({
           <span>HP:</span>
           <HealthBar current={game.player.health} max={game.player.healthMax} />
         </div>
-        <span>
-          Damage: {game.player.damageBase}-{game.player.damageMax}
-        </span>
-        <span>Agility: {game.player.agility}</span>
-        <span>Dexterity: {game.player.dexterity}</span>
-        <span>Armor: +{armorValue.toFixed(2)}</span>
         <span>
           Location: {game.currentX},{game.currentY}
         </span>
