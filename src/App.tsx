@@ -16,6 +16,7 @@ import {
 } from "./game/map";
 import { createPlayer } from "./game/player";
 import { runCombatRound, tryFlee } from "./game/combat";
+import { useItem } from "./game/mechanics";
 import type { Game } from "./game/types";
 import { GameplayPage } from "./features/gameplay/GameplayPage";
 import { GameOverPage } from "./features/gameover/GameOverPage";
@@ -76,6 +77,10 @@ function App() {
     withGameUpdate((next) => tryFlee(next));
   }
 
+  function handleUseItem(index: number): void {
+    withGameUpdate((next) => useItem(next, index));
+  }
+
   function resetGame(): void {
     setGame(null);
   }
@@ -114,6 +119,7 @@ function App() {
       onAttack={handleAttack}
       onFlee={handleFlee}
       onReset={resetGame}
+      onUseItem={handleUseItem}
     />
   );
 }

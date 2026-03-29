@@ -1,4 +1,59 @@
 export type DifficultyKey = "SHORT" | "MEDIUM" | "LONG";
+
+export type ItemKey =
+  | "HEALTH_POTION"
+  | "GREAT_HEALTH_POTION"
+  | "RUSTY_SWORD"
+  | "BONE_DAGGER"
+  | "SILVER_SWORD"
+  | "SHADOW_CLOAK"
+  | "AMULET_OF_SWIFTNESS"
+  | "RING_OF_VIGOR"
+  | "CURSED_IDOL";
+
+export type ItemType = "potion" | "weapon" | "accessory" | "relic";
+
+export type LootTag =
+  | "common"
+  | "undead"
+  | "beast"
+  | "cult"
+  | "raider"
+  | "guardian"
+  | "spectral"
+  | "giant"
+  | "dragon"
+  | "healing"
+  | "vitality"
+  | "agile"
+  | "dexterous"
+  | "cursed"
+  | "martial";
+
+export interface ItemEffect {
+  health?: number;
+  healthMax?: number;
+  damageBase?: number;
+  damageMax?: number;
+  agility?: number;
+  dexterity?: number;
+}
+
+export interface Item {
+  key: ItemKey;
+  label: string;
+  description: string;
+  type: ItemType;
+  tags: LootTag[];
+  dropWeight: number;
+  stackable: boolean;
+  usable: boolean;
+  consumable: boolean;
+  sharedCooldown: boolean;
+  cooldown: number;
+  cooldownRemaining?: number;
+  effect: ItemEffect;
+}
 export type ArmorKey = "UNARMORED" | "LIGHT" | "MEDIUM" | "HEAVY";
 export type PlayerClassKey = "WARRIOR" | "THEIF" | "ROGUE" | "BRAWLER";
 export type DirectionKey = "RIGHT" | "DOWN" | "LEFT" | "UP";
@@ -78,12 +133,17 @@ export interface Enemy extends UnitBase {
   armor: ArmorKey;
   phrase: string;
   description: string;
+  lootTags: LootTag[];
+  inventory: Item[];
 }
 
 export interface Player extends UnitBase {
   name: string;
   classKey: PlayerClassKey;
   armor: ArmorKey;
+  inventory: Item[];
+  itemCooldowns: Partial<Record<ItemKey, number>>;
+  usedItemKeys: ItemKey[];
 }
 
 export interface RoomTypeMeta {
@@ -91,6 +151,7 @@ export interface RoomTypeMeta {
   tile: string;
   enemy: EnemyTemplateKey;
   description: string;
+  lootTags: LootTag[];
 }
 
 export interface Room {
@@ -99,6 +160,7 @@ export interface Room {
   typeKey: RoomTypeKey;
   discovered: boolean;
   enemy: Enemy;
+  items: Item[];
 }
 
 export type GameStatus = "playing" | "won" | "lost";

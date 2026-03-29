@@ -1,6 +1,8 @@
 import {
   DIFFICULTIES,
   DIRECTIONS,
+  ITEM_KEYS,
+  ITEMS,
   ROOM_TYPES,
   enemyFromTemplate,
 } from "./data";
@@ -23,6 +25,50 @@ const RANDOM_ROOM_POOL = ROOM_TYPES.filter(
   (room) => room.key !== "FOYER" && room.key !== "VAULT",
 );
 
+function pickWeightedItemKey(): (typeof ITEM_KEYS)[number] | undefined {
+  const weighted = ITEM_KEYS.map((key) => ({
+    key,
+    weight: Math.max(0, ITEMS[key].dropWeight),
+  }));
+  return pickFromWeighted(weighted);
+}
+
+function pickFromWeighted(
+  weighted: { key: (typeof ITEM_KEYS)[number]; weight: number }[],
+): (typeof ITEM_KEYS)[number] | undefined {
+  const total = weighted.reduce((sum, entry) => sum + entry.weight, 0);
+  if (total <= 0) {
+    return ITEM_KEYS[nextInt(0, ITEM_KEYS.length - 1)];
+  }
+
+  let roll = Math.random() * total;
+  for (const entry of weighted) {
+    roll -= entry.weight;
+    if (roll <= 0) return entry.key;
+  }
+
+  return weighted[weighted.length - 1]?.key;
+}
+
+function pickWeightedItemKeyForTags(
+  tags: string[],
+): (typeof ITEM_KEYS)[number] | undefined {
+  if (tags.length === 0) {
+    return pickWeightedItemKey();
+  }
+
+  const tagged = ITEM_KEYS.filter((key) =>
+    ITEMS[key].tags.some((tag) => tags.includes(tag)),
+  );
+  if (tagged.length === 0) {
+    return pickWeightedItemKey();
+  }
+
+  return pickFromWeighted(
+    tagged.map((key) => ({ key, weight: Math.max(0, ITEMS[key].dropWeight) })),
+  );
+}
+
 function roomFromType(
   typeKey: RoomTypeKey,
   x: number,
@@ -36,12 +82,27 @@ function roomFromType(
       ? enemyFromTemplate(type.enemy)
       : enemyFromTemplate("EMPTY");
 
+  if (enemy.alive && ITEM_KEYS.length > 0 && Math.random() < 0.25) {
+    const itemKey = pickWeightedItemKeyForTags([
+      ...enemy.lootTags,
+      ...type.lootTags,
+    ]);
+    if (itemKey) enemy.inventory.push({ ...ITEMS[itemKey] });
+  }
+
+  const items: (typeof ITEMS)[keyof typeof ITEMS][] = [];
+  if (!enemy.alive && ITEM_KEYS.length > 0 && Math.random() < 0.18) {
+    const itemKey = pickWeightedItemKeyForTags(type.lootTags);
+    if (itemKey) items.push({ ...ITEMS[itemKey] });
+  }
+
   return {
     x,
     y,
     typeKey,
     discovered,
     enemy,
+    items,
   };
 }
 
@@ -162,7 +223,25 @@ export function movePlayer(game: Game, directionKey: DirectionKey): void {
     return;
   }
   room.discovered = true;
-  addHealth(game.player, 15);
+  addHealth(game.player, 3);
+
+  // Tick item cooldowns down by one room
+  const cds = game.player.itemCooldowns;
+  (Object.keys(cds) as Array<keyof typeof cds>).forEach((k) => {
+    const current = cds[k];
+    if (current === undefined) return;
+    if (current <= 1) delete cds[k];
+    else cds[k] = current - 1;
+  });
+
+  game.player.inventory.forEach((item) => {
+    if ((item.cooldownRemaining ?? 0) <= 0) return;
+    if ((item.cooldownRemaining ?? 0) <= 1) {
+      delete item.cooldownRemaining;
+    } else {
+      item.cooldownRemaining = (item.cooldownRemaining ?? 0) - 1;
+    }
+  });
 
   const roomMeta = getRoomMeta(room);
   game.log.push(`${roomMeta.key}: ${roomMeta.description}`);
@@ -171,6 +250,19 @@ export function movePlayer(game: Game, directionKey: DirectionKey): void {
     if (room.enemy.phrase) {
       game.log.push(`${room.enemy.name}: "${room.enemy.phrase}"`);
     }
+  }
+
+  if (room.items.length > 0) {
+    game.log.push("You search the room and find:");
+    for (const item of room.items) {
+      game.player.inventory.push(item);
+      if (!item.usable) {
+        game.log.push(`- ${item.label} (equipped)`);
+      } else {
+        game.log.push(`- ${item.label}`);
+      }
+    }
+    room.items = [];
   }
 
   checkVictory(game);

@@ -24,7 +24,16 @@ export function FinalStats({ game }: FinalStatsProps) {
       <p>
         <strong>Rooms Explored:</strong>{" "}
         {game.map.flat().filter((room) => room.discovered).length}/
-        {game.map.length * game.map[0].length}
+        {game.map.length * (game.map[0]?.length ?? 0)}
+      </p>
+      <p>
+        <strong>Items Collected:</strong> {game.player.inventory.length}
+        {game.player.inventory.length > 0 && (
+          <span className="final-items">
+            {" "}
+            ({game.player.inventory.map((i) => i.label).join(", ")})
+          </span>
+        )}
       </p>
     </div>
   );

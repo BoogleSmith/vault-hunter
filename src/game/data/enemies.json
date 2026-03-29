@@ -10,7 +10,8 @@
     "armor": "UNARMORED",
     "alive": false,
     "phrase": "",
-    "description": ""
+    "description": "",
+    "lootTags": []
   },
   "SKELETON": {
     "name": "Skeleton",
@@ -23,7 +24,8 @@
     "armor": "HEAVY",
     "alive": true,
     "phrase": "Click Clack!",
-    "description": "A skeleton armed with a sword leaps from the shadows to attack you!"
+    "description": "A skeleton armed with a sword leaps from the shadows to attack you!",
+    "lootTags": ["undead", "martial"]
   },
   "ZOMBIE": {
     "name": "Zombie",
@@ -36,7 +38,8 @@
     "armor": "UNARMORED",
     "alive": true,
     "phrase": "Braaiiinnss!",
-    "description": "A drooling zombie climbs out of a nearby coffin!"
+    "description": "A drooling zombie climbs out of a nearby coffin!",
+    "lootTags": ["undead", "common"]
   },
   "CULTIST": {
     "name": "Cultist",
@@ -49,7 +52,8 @@
     "armor": "LIGHT",
     "alive": true,
     "phrase": "Finally another sacrifice!",
-    "description": "A cloaked figure rises to greet you!"
+    "description": "A cloaked figure rises to greet you!",
+    "lootTags": ["cult", "dexterous"]
   },
   "RAIDER": {
     "name": "Raider",
@@ -62,7 +66,8 @@
     "armor": "MEDIUM",
     "alive": true,
     "phrase": "Stand and deliver!",
-    "description": "A ragtag soldier brandishing a blade jumps out from behind a nearby column!"
+    "description": "A ragtag soldier brandishing a blade jumps out from behind a nearby column!",
+    "lootTags": ["raider", "martial"]
   },
   "SPECTRALGUARD": {
     "name": "Spectral Guard",
@@ -75,7 +80,8 @@
     "armor": "HEAVY",
     "alive": true,
     "phrase": "Stop! Theif!",
-    "description": "A dark guard blocks your path!"
+    "description": "A dark guard blocks your path!",
+    "lootTags": ["guardian", "spectral", "vitality"]
   },
   "GARGOYL": {
     "name": "Gargoyl",
@@ -88,7 +94,8 @@
     "armor": "UNARMORED",
     "alive": true,
     "phrase": "SCRAAAAAWWW!!!!",
-    "description": "A menacing Gargoyl swoops from the ceiling to attack you!"
+    "description": "A menacing Gargoyl swoops from the ceiling to attack you!",
+    "lootTags": ["beast", "agile"]
   },
   "HELLHOUND": {
     "name": "HellHound",
@@ -101,7 +108,8 @@
     "armor": "UNARMORED",
     "alive": true,
     "phrase": "Grrrrrrrrrr!",
-    "description": "A bloodthirsty mongrel comes bounding across the room at you!"
+    "description": "A bloodthirsty mongrel comes bounding across the room at you!",
+    "lootTags": ["beast", "raider"]
   },
   "WRAITH": {
     "name": "Wraith",
@@ -114,7 +122,8 @@
     "armor": "UNARMORED",
     "alive": true,
     "phrase": "BLOOOOOOOOOSH!!!!",
-    "description": "A dark shape spreads across the room. A shadowy figure stands before you!"
+    "description": "A dark shape spreads across the room. A shadowy figure stands before you!",
+    "lootTags": ["spectral", "cursed"]
   },
   "POLTERGEIST": {
     "name": "Poltergeist",
@@ -127,7 +136,8 @@
     "armor": "UNARMORED",
     "alive": true,
     "phrase": "BWAHAHAHAHAHAHA!",
-    "description": "Objects begin flying across the room. A translucent figure whirls past you!"
+    "description": "Objects begin flying across the room. A translucent figure whirls past you!",
+    "lootTags": ["spectral", "cursed", "agile"]
   },
   "CYCLOPS": {
     "name": "Cyclops",
@@ -140,7 +150,8 @@
     "armor": "HEAVY",
     "alive": true,
     "phrase": "GRAAAAAAAAAAW!!!!!!",
-    "description": "The earth rumbles as a one eyed giant stumbles through the opposite doorway!"
+    "description": "The earth rumbles as a one eyed giant stumbles through the opposite doorway!",
+    "lootTags": ["giant", "martial"]
   },
   "LUMBERINGHORROR": {
     "name": "Lumbering Horror",
@@ -153,7 +164,8 @@
     "armor": "HEAVY",
     "alive": true,
     "phrase": "Hisssssssssss!",
-    "description": "A massive mound of flesh and flailing tentacles gushes out from the chasm!"
+    "description": "A massive mound of flesh and flailing tentacles gushes out from the chasm!",
+    "lootTags": ["cursed", "giant", "beast"]
   },
   "DRAKE": {
     "name": "Drake",
@@ -166,6 +178,7 @@
     "armor": "HEAVY",
     "alive": true,
     "phrase": "ROOAAAARRR!",
-    "description": "A mighty drake rises from a mountain of treasure!"
+    "description": "A mighty drake rises from a mountain of treasure!",
+    "lootTags": ["dragon", "guardian", "vitality"]
   }
 }
