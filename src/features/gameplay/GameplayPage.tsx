@@ -3,7 +3,6 @@ import type { DirectionKey } from "../../game/data";
 import type { Game, ItemSlot, Room } from "../../game/engine";
 import { EquipmentModal } from "./components/EquipmentModal";
 import { AdventureLogPanel } from "./components/AdventureLogPanel";
-import { InventoryPanel } from "./components/InventoryPanel";
 import { MonsterPanel } from "./components/MonsterPanel";
 import { RoomPanel } from "./components/RoomPanel";
 import { StatusPanel } from "./components/StatusPanel";
@@ -54,6 +53,8 @@ export function GameplayPage({
         <EquipmentModal
           game={game}
           onClose={() => setShowEquipModal(false)}
+          onUseItem={onUseItem}
+          onEquipItem={onEquipItem}
           onUnequipSlot={(slot) => {
             onUnequipSlot(slot);
           }}
@@ -71,15 +72,6 @@ export function GameplayPage({
       />
       <AdventureLogPanel log={game.log} />
       <MonsterPanel enemy={currentRoom.enemy} />
-      <InventoryPanel
-        inventory={game.player.inventory}
-        equipment={game.player.equipment}
-        playerHealth={game.player.health}
-        playerHealthMax={game.player.healthMax}
-        itemCooldowns={game.player.itemCooldowns}
-        onUseItem={onUseItem}
-        onEquipItem={onEquipItem}
-      />
     </main>
   );
 }

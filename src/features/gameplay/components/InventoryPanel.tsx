@@ -6,8 +6,10 @@ const SLOT_LABELS: Record<ItemSlot, string> = {
   leftAccessory: "Left Accessory",
   rightAccessory: "Right Accessory",
   head: "Head",
+  amulet: "Amulet",
   back: "Back",
   chest: "Chest",
+  legs: "Legs",
 };
 
 const TYPE_ICON: Record<Item["type"], string> = {
@@ -94,6 +96,7 @@ export function InventoryPanel({
       ) : (
         <ul className="inv-list">
           {rows.map(({ item, count, indices }) => {
+            const equipSlots = item.equipSlots ?? [];
             const isPureHeal =
               !!item.effect.health &&
               Object.keys(item.effect).every((k) => k === "health");
@@ -120,12 +123,10 @@ export function InventoryPanel({
                     {count > 1 && <span className="inv-count"> x{count}</span>}
                   </strong>
                   <span className="inv-desc">{item.description}</span>
-                  {item.equipSlots.length > 0 && (
+                  {equipSlots.length > 0 && (
                     <span className="inv-slots">
                       Slots:{" "}
-                      {item.equipSlots
-                        .map((slot) => SLOT_LABELS[slot])
-                        .join(", ")}
+                      {equipSlots.map((slot) => SLOT_LABELS[slot]).join(", ")}
                     </span>
                   )}
                   <span className="inv-effect">
@@ -133,7 +134,7 @@ export function InventoryPanel({
                   </span>
                 </span>
                 <span className="inv-actions">
-                  {item.equipSlots.length > 0 && equipIndex !== undefined && (
+                  {equipSlots.length > 0 && equipIndex !== undefined && (
                     <button
                       className="inv-equip-btn ghost"
                       onClick={() => onEquipItem(equipIndex)}

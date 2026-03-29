@@ -19,8 +19,10 @@ export type ItemSlot =
   | "leftAccessory"
   | "rightAccessory"
   | "head"
+  | "amulet"
   | "back"
-  | "chest";
+  | "chest"
+  | "legs";
 
 export type LootTag =
   | "common"
@@ -54,7 +56,7 @@ export interface Item {
   description: string;
   type: ItemType;
   tags: LootTag[];
-  equipSlots: ItemSlot[];
+  equipSlots?: ItemSlot[];
   instanceId?: number;
   dropWeight: number;
   stackable: boolean;

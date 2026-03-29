@@ -11,12 +11,14 @@ interface SlotConfig {
 
 const SLOT_CONFIGS: SlotConfig[] = [
   { slot: "head", icon: "🪖", label: "Head", row: 1, col: 2 },
-  { slot: "leftHand", icon: "🗡️", label: "L. Hand", row: 2, col: 1 },
-  { slot: "chest", icon: "🛡️", label: "Chest", row: 2, col: 2 },
-  { slot: "rightHand", icon: "⚔️", label: "R. Hand", row: 2, col: 3 },
-  { slot: "leftAccessory", icon: "💍", label: "L. Ring", row: 3, col: 1 },
-  { slot: "back", icon: "🧥", label: "Back", row: 3, col: 2 },
-  { slot: "rightAccessory", icon: "💍", label: "R. Ring", row: 3, col: 3 },
+  { slot: "amulet", icon: "📿", label: "Amulet", row: 2, col: 2 },
+  { slot: "leftHand", icon: "🗡️", label: "L. Hand", row: 3, col: 1 },
+  { slot: "chest", icon: "🛡️", label: "Chest", row: 3, col: 2 },
+  { slot: "rightHand", icon: "⚔️", label: "R. Hand", row: 3, col: 3 },
+  { slot: "leftAccessory", icon: "💍", label: "L. Ring", row: 4, col: 1 },
+  { slot: "back", icon: "🧥", label: "Back", row: 4, col: 2 },
+  { slot: "rightAccessory", icon: "💍", label: "R. Ring", row: 4, col: 3 },
+  { slot: "legs", icon: "👖", label: "Legs", row: 5, col: 2 },
 ];
 
 const TYPE_ICON: Record<Item["type"], string> = {
@@ -25,6 +27,46 @@ const TYPE_ICON: Record<Item["type"], string> = {
   accessory: "💍",
   relic: "🗿",
 };
+
+const SLOT_LABELS: Record<ItemSlot, string> = {
+  leftHand: "L Hand",
+  rightHand: "R Hand",
+  leftAccessory: "L Ring",
+  rightAccessory: "R Ring",
+  head: "Head",
+  amulet: "Amulet",
+  back: "Back",
+  chest: "Chest",
+  legs: "Legs",
+};
+
+interface DisplayRow {
+  item: Item;
+  count: number;
+  indices: number[];
+}
+
+function buildRows(inventory: Item[]): DisplayRow[] {
+  const rows: DisplayRow[] = [];
+  const stackIndex = new Map<string, number>();
+
+  inventory.forEach((item, i) => {
+    if (item.stackable) {
+      const rowIdx = stackIndex.get(item.key);
+      if (rowIdx !== undefined) {
+        rows[rowIdx]!.count++;
+        rows[rowIdx]!.indices.push(i);
+      } else {
+        stackIndex.set(item.key, rows.length);
+        rows.push({ item, count: 1, indices: [i] });
+      }
+    } else {
+      rows.push({ item, count: 1, indices: [i] });
+    }
+  });
+
+  return rows;
+}
 
 function formatEffect(effect: Item["effect"]): string {
   const parts: string[] = [];
@@ -40,15 +82,20 @@ function formatEffect(effect: Item["effect"]): string {
 interface EquipmentModalProps {
   game: Game;
   onClose: () => void;
+  onUseItem: (index: number) => void;
+  onEquipItem: (index: number) => void;
   onUnequipSlot: (slot: ItemSlot) => void;
 }
 
 export function EquipmentModal({
   game,
   onClose,
+  onUseItem,
+  onEquipItem,
   onUnequipSlot,
 }: EquipmentModalProps) {
-  const [hoveredSlot, setHoveredSlot] = useState<ItemSlot | null>(null);
+  const [inspectedSlot, setInspectedSlot] = useState<ItemSlot | null>(null);
+  const rows = buildRows(game.player.inventory);
 
   useEffect(() => {
     function handleKey(e: KeyboardEvent) {
@@ -64,9 +111,11 @@ export function EquipmentModal({
     return game.player.inventory.find((e) => e.instanceId === instanceId);
   }
 
-  const hoveredItem = hoveredSlot ? getEquippedItem(hoveredSlot) : undefined;
-  const hoveredConfig = hoveredSlot
-    ? SLOT_CONFIGS.find((c) => c.slot === hoveredSlot)
+  const hoveredItem = inspectedSlot
+    ? getEquippedItem(inspectedSlot)
+    : undefined;
+  const hoveredConfig = inspectedSlot
+    ? SLOT_CONFIGS.find((c) => c.slot === inspectedSlot)
     : undefined;
 
   return (
@@ -117,8 +166,7 @@ export function EquipmentModal({
                   className={`eq-slot ${filled ? "eq-slot--filled" : "eq-slot--empty"}`}
                   style={{ gridRow: row, gridColumn: col }}
                   onClick={() => filled && onUnequipSlot(slot)}
-                  onMouseEnter={() => setHoveredSlot(slot)}
-                  onMouseLeave={() => setHoveredSlot(null)}
+                  onMouseEnter={() => setInspectedSlot(slot)}
                   aria-label={`${label}: ${item?.label ?? "Empty"}`}
                 >
                   <span className="eq-slot-icon">{icon}</span>
@@ -160,6 +208,98 @@ export function EquipmentModal({
             <p className="eq-info-placeholder">
               Hover a slot to see item details
             </p>
+          )}
+        </div>
+
+        <div className="eq-inventory">
+          <h3>Inventory</h3>
+          {rows.length === 0 ? (
+            <p className="eq-inv-empty">Nothing collected yet.</p>
+          ) : (
+            <ul className="eq-inv-list">
+              {rows.map(({ item, count, indices }) => {
+                const equipSlots = item.equipSlots ?? [];
+                const isPureHeal =
+                  !!item.effect.health &&
+                  Object.keys(item.effect).every((k) => k === "health");
+                const useIndex =
+                  indices.find(
+                    (idx) =>
+                      (game.player.inventory[idx]?.cooldownRemaining ?? 0) <= 0,
+                  ) ?? indices[0];
+                const selected =
+                  useIndex !== undefined
+                    ? game.player.inventory[useIndex]
+                    : item;
+                const cd = item.sharedCooldown
+                  ? (game.player.itemCooldowns[item.key] ?? 0)
+                  : (selected?.cooldownRemaining ?? 0);
+
+                const equipIndex = indices[0];
+                const isEquipped =
+                  item.instanceId !== undefined &&
+                  Object.values(game.player.equipment).includes(
+                    item.instanceId,
+                  );
+
+                const slotSummary =
+                  equipSlots.length > 0
+                    ? equipSlots.map((slot) => SLOT_LABELS[slot]).join(", ")
+                    : "";
+
+                return (
+                  <li
+                    key={`${item.key}-${indices[0] ?? 0}`}
+                    className="eq-inv-item"
+                  >
+                    <span className="eq-inv-main">
+                      <span className="eq-inv-icon">
+                        {TYPE_ICON[item.type]}
+                      </span>
+                      <span className="eq-inv-text">
+                        <strong>
+                          {item.label}
+                          {count > 1 && (
+                            <span className="eq-inv-count"> x{count}</span>
+                          )}
+                        </strong>
+                        {slotSummary && (
+                          <span className="eq-inv-slot-summary">
+                            {slotSummary}
+                          </span>
+                        )}
+                      </span>
+                    </span>
+                    <span className="eq-inv-actions">
+                      {equipSlots.length > 0 && equipIndex !== undefined && (
+                        <button
+                          className="ghost eq-inv-btn"
+                          onClick={() => onEquipItem(equipIndex)}
+                          disabled={isEquipped}
+                        >
+                          {isEquipped ? "On" : "Equip"}
+                        </button>
+                      )}
+                      {item.usable && (
+                        <button
+                          className="eq-inv-btn"
+                          onClick={() =>
+                            useIndex !== undefined && onUseItem(useIndex)
+                          }
+                          disabled={
+                            cd > 0 ||
+                            (isPureHeal &&
+                              game.player.health >= game.player.healthMax)
+                          }
+                        >
+                          {cd > 0 ? `${cd}` : "Use"}
+                        </button>
+                      )}
+                    </span>
+                  </li>
+                );
+              })}
+            </ul>
           )}
         </div>
       </div>

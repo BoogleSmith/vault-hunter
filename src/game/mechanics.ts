@@ -76,11 +76,12 @@ export function unequipSlot(game: Game, slot: ItemSlot): boolean {
 
 export function equipItem(game: Game, index: number): boolean {
   const item = game.player.inventory[index];
-  if (!item || item.equipSlots.length === 0 || item.instanceId === undefined) {
+  const equipSlots = item?.equipSlots ?? [];
+  if (!item || equipSlots.length === 0 || item.instanceId === undefined) {
     return false;
   }
 
-  const alreadyEquipped = item.equipSlots.every(
+  const alreadyEquipped = equipSlots.every(
     (slot) => game.player.equipment[slot] === item.instanceId,
   );
   if (alreadyEquipped) {
@@ -90,7 +91,7 @@ export function equipItem(game: Game, index: number): boolean {
 
   const overlappingIds = Array.from(
     new Set(
-      item.equipSlots
+      equipSlots
         .map((slot) => game.player.equipment[slot])
         .filter((instanceId): instanceId is number => instanceId !== undefined),
     ),
@@ -107,7 +108,7 @@ export function equipItem(game: Game, index: number): boolean {
   }
 
   applyItemEffect(game.player, item);
-  item.equipSlots.forEach((slot) => {
+  equipSlots.forEach((slot) => {
     game.player.equipment[slot] = item.instanceId;
   });
   game.log.push(`You equipped ${item.label}.`);

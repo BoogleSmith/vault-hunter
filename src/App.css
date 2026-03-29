@@ -120,6 +120,7 @@ button:disabled {
 
 .eq-modal {
   width: min(480px, 92vw);
+  max-height: 88vh;
   border: 1px solid var(--line);
   border-radius: 18px;
   background: linear-gradient(
@@ -164,11 +165,11 @@ button:disabled {
   padding: 1rem 0.8rem;
 }
 
-/* 3×3 slot grid — row 1 col 1&3 are intentionally empty */
+/* Slot grid */
 .eq-slot-grid {
   display: grid;
   grid-template-columns: 1fr 1.15fr 1fr;
-  grid-template-rows: repeat(3, minmax(76px, auto));
+  grid-template-rows: repeat(5, minmax(60px, auto));
   gap: 0.5rem;
   position: relative;
 }
@@ -261,10 +262,11 @@ button:disabled {
 .eq-info-panel {
   border-top: 1px solid var(--line);
   padding: 0.8rem 1.1rem;
-  min-height: 5.5rem;
+  height: 6.25rem;
   display: flex;
   align-items: flex-start;
   gap: 0.7rem;
+  overflow: auto;
   background: color-mix(in srgb, var(--panel) 82%, black 6%);
 }
 
@@ -286,6 +288,7 @@ button:disabled {
   display: flex;
   flex-direction: column;
   gap: 0.2rem;
+  min-width: 0;
 }
 
 .eq-info-name {
@@ -324,6 +327,97 @@ button:disabled {
 
 .eq-info-placeholder {
   font-style: italic;
+}
+
+.eq-inventory {
+  border-top: 1px solid var(--line);
+  padding: 0.65rem 0.9rem 0.9rem;
+  height: 12.5rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.eq-inventory h3 {
+  margin: 0.2rem 0 0.5rem;
+  font-size: 0.92rem;
+}
+
+.eq-inv-empty {
+  margin: 0;
+  font-size: 0.8rem;
+  opacity: 0.65;
+  font-style: italic;
+  overflow: auto;
+}
+
+.eq-inv-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.35rem;
+  overflow: auto;
+  padding-right: 0.2rem;
+}
+
+.eq-inv-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  border: 1px solid color-mix(in srgb, var(--line) 88%, transparent);
+  border-radius: 9px;
+  padding: 0.4rem 0.5rem;
+  background: color-mix(in srgb, var(--panel) 82%, white);
+}
+
+.eq-inv-main {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  min-width: 0;
+}
+
+.eq-inv-icon {
+  line-height: 1;
+  font-size: 1rem;
+}
+
+.eq-inv-text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.eq-inv-text strong {
+  font-size: 0.8rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.eq-inv-count {
+  font-size: 0.72rem;
+  opacity: 0.65;
+  font-weight: 400;
+}
+
+.eq-inv-slot-summary {
+  font-size: 0.66rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--accent) 65%, var(--ink));
+}
+
+.eq-inv-actions {
+  display: inline-flex;
+  gap: 0.35rem;
+  flex-shrink: 0;
+}
+
+.eq-inv-btn {
+  padding: 0.22rem 0.55rem;
+  font-size: 0.72rem;
 }
 
 /* ── Interrupt Prompt ──────────────────────────────── */
