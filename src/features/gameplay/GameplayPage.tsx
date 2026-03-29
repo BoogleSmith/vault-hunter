@@ -3,7 +3,6 @@ import type { DirectionKey } from "../../game/data";
 import type { Game, ItemSlot, Room } from "../../game/engine";
 import { EquipmentModal } from "./components/EquipmentModal";
 import { AdventureLogPanel } from "./components/AdventureLogPanel";
-import { MonsterPanel } from "./components/MonsterPanel";
 import { RoomPanel } from "./components/RoomPanel";
 import { StatusPanel } from "./components/StatusPanel";
 
@@ -42,13 +41,16 @@ export function GameplayPage({
 
   return (
     <main className="shell in-game">
-      <StatusPanel
-        game={game}
-        onReset={onReset}
-        onOpenEquipment={() => setShowEquipModal(true)}
-        showEnemyDebug={showEnemyDebug}
-        onToggleEnemyDebug={onToggleEnemyDebug}
-      />
+      <section className="hud-column">
+        <StatusPanel
+          game={game}
+          onReset={onReset}
+          onOpenEquipment={() => setShowEquipModal(true)}
+          showEnemyDebug={showEnemyDebug}
+          onToggleEnemyDebug={onToggleEnemyDebug}
+        />
+        <AdventureLogPanel log={game.log} />
+      </section>
       {showEquipModal && (
         <EquipmentModal
           game={game}
@@ -60,18 +62,18 @@ export function GameplayPage({
           }}
         />
       )}
-      <RoomPanel
-        game={game}
-        currentRoom={currentRoom}
-        availableDirections={availableDirections}
-        inEncounter={inEncounter}
-        onMove={onMove}
-        onAttack={onAttack}
-        onFlee={onFlee}
-        showEnemyDebug={showEnemyDebug}
-      />
-      <AdventureLogPanel log={game.log} />
-      <MonsterPanel enemy={currentRoom.enemy} />
+      <section className="room-column">
+        <RoomPanel
+          game={game}
+          currentRoom={currentRoom}
+          availableDirections={availableDirections}
+          inEncounter={inEncounter}
+          onMove={onMove}
+          onAttack={onAttack}
+          onFlee={onFlee}
+          showEnemyDebug={showEnemyDebug}
+        />
+      </section>
     </main>
   );
 }

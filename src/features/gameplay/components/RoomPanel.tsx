@@ -1,4 +1,5 @@
 import { type DirectionKey } from "../../../game/data";
+import { EncounterPanel } from "./EncounterPanel";
 
 const DPAD: { key: DirectionKey; label: string; col: number; row: number }[] = [
   { key: "UP", label: "↑", col: 2, row: 1 },
@@ -30,73 +31,66 @@ export function RoomPanel({
   showEnemyDebug,
 }: RoomPanelProps) {
   const roomMeta = getRoomMeta(currentRoom);
+  const isPlaying = game.status === "playing";
 
   return (
     <section className="panel room">
       <h2>{roomMeta.key}</h2>
       <p>{roomMeta.description}</p>
 
-      <div className="actions">
-        <p className="actions-label">Move</p>
-        <div className="dpad">
-          {DPAD.map(({ key, label, col, row }) => (
-            <button
-              key={key}
-              style={{ gridColumn: col, gridRow: row }}
-              onClick={() => onMove(key)}
-              disabled={
-                !availableDirections[key] ||
-                inEncounter ||
-                game.status !== "playing"
-              }
-            >
-              {label}
-            </button>
+      {inEncounter && currentRoom.enemy.alive && (
+        <EncounterPanel
+          enemy={currentRoom.enemy}
+          onAttack={onAttack}
+          onFlee={onFlee}
+          isPlaying={isPlaying}
+        />
+      )}
+
+      {!inEncounter && (
+        <div className="actions">
+          <p className="actions-label">Move</p>
+          <div className="dpad">
+            {DPAD.map(({ key, label, col, row }) => (
+              <button
+                key={key}
+                style={{ gridColumn: col, gridRow: row }}
+                onClick={() => onMove(key)}
+                disabled={!availableDirections[key] || !isPlaying}
+              >
+                {label}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {!inEncounter && (
+        <div className="map">
+          {game.map.map((row, y) => (
+            <div className="map-row" key={y}>
+              {row.map((room, x) => {
+                const isCurrent = x === game.currentX && y === game.currentY;
+                const hasEnemy = showEnemyDebug && room.enemy.alive;
+                const label = isCurrent
+                  ? "X"
+                  : room.discovered || hasEnemy
+                    ? getRoomMeta(room).tile
+                    : " ";
+
+                return (
+                  <span
+                    className={`tile ${isCurrent ? "current" : ""} ${hasEnemy ? "enemy" : ""}`}
+                    key={`${x}-${y}`}
+                  >
+                    {label}
+                  </span>
+                );
+              })}
+            </div>
           ))}
         </div>
-
-        <p className="actions-label">Combat</p>
-        <div className="combat-actions">
-          <button
-            onClick={onAttack}
-            disabled={!inEncounter || game.status !== "playing"}
-          >
-            ⚔ Attack
-          </button>
-          <button
-            className="ghost"
-            onClick={onFlee}
-            disabled={!inEncounter || game.status !== "playing"}
-          >
-            🏃 Flee
-          </button>
-        </div>
-      </div>
-
-      <div className="map">
-        {game.map.map((row, y) => (
-          <div className="map-row" key={y}>
-            {row.map((room, x) => {
-              const isCurrent = x === game.currentX && y === game.currentY;
-              const hasEnemy = showEnemyDebug && room.enemy.alive;
-              const label = isCurrent
-                ? "X"
-                : room.discovered || hasEnemy
-                  ? getRoomMeta(room).tile
-                  : " ";
-
-              return (
-                <span
-                  className={`tile ${isCurrent ? "current" : ""} ${hasEnemy ? "enemy" : ""}`}
-                  key={`${x}-${y}`}
-                >
-                  {label}
-                </span>
-              );
-            })}
-          </div>
-        ))}
-      </div>
+      )}
     </section>
   );
 }
