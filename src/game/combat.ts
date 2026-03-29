@@ -109,6 +109,11 @@ export function tryFlee(game: Game): void {
     .map(([key]) => key);
   const directionKey = options[nextInt(0, options.length - 1)];
 
+  room.enemy.roamDelayRemaining = Math.max(
+    1,
+    room.enemy.roamRate < 0 ? Math.abs(room.enemy.roamRate) : 0,
+  );
+
   game.log.push(`${game.player.name} escaped!`);
   movePlayer(game, directionKey);
 }

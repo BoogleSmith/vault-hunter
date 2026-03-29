@@ -65,5 +65,11 @@ export const ITEMS = itemsData as Record<ItemKey, Item>;
 export const ITEM_KEYS = Object.keys(ITEMS) as ItemKey[];
 
 export function enemyFromTemplate(templateKey: EnemyTemplateKey): Enemy {
-  return { ...ENEMIES[templateKey], inventory: [] };
+  const template = ENEMIES[templateKey];
+  return {
+    ...template,
+    roamDelayRemaining:
+      template.roamRate < 0 ? Math.abs(template.roamRate) : undefined,
+    inventory: [],
+  };
 }

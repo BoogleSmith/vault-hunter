@@ -98,6 +98,25 @@ button:disabled {
   gap: 0.4rem;
 }
 
+.debug-controls {
+  margin-top: 0.85rem;
+}
+
+.debug-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-size: 0.84rem;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.debug-toggle input {
+  width: 1rem;
+  height: 1rem;
+  margin: 0;
+}
+
 .room h2,
 .log h2,
 h1 {
@@ -180,6 +199,11 @@ h1 {
   background: var(--accent);
   color: #fff;
   font-weight: 800;
+}
+
+.tile.enemy:not(.current) {
+  background: color-mix(in srgb, #bf3f3f 48%, var(--panel));
+  color: color-mix(in srgb, #fff 86%, var(--ink));
 }
 
 .log,

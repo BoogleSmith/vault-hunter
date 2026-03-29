@@ -309,6 +309,84 @@ export function movePlayer(game: Game, directionKey: DirectionKey): void {
   checkVictory(game);
 }
 
+export function advanceEnemyRoaming(game: Game): void {
+  if (game.status !== "playing") {
+    return;
+  }
+
+  const roamingEnemyRooms: Room[] = game.map
+    .flat()
+    .filter(
+      (room) =>
+        room.enemy.alive && (room.discovered || room.enemy.undiscoveredRoaming),
+    );
+
+  for (const source of roamingEnemyRooms) {
+    // The enemy may have moved earlier this tick due to another move chain.
+    if (!source.enemy.alive) {
+      continue;
+    }
+
+    // Do not roam enemies currently engaged with the player.
+    if (source.x === game.currentX && source.y === game.currentY) {
+      continue;
+    }
+
+    const enemy = source.enemy;
+
+    if ((enemy.roamDelayRemaining ?? 0) > 0) {
+      if ((enemy.roamDelayRemaining ?? 0) <= 1) {
+        delete enemy.roamDelayRemaining;
+      } else {
+        enemy.roamDelayRemaining = (enemy.roamDelayRemaining ?? 0) - 1;
+      }
+      continue;
+    }
+
+    if (enemy.roamRate === 0) {
+      continue;
+    }
+
+    if (enemy.roamRate < 0) {
+      // Negative roamRate means the enemy never gets normal roaming steps,
+      // but it can still use roamDelayRemaining as an externally assigned delay.
+      continue;
+    }
+
+    let currentRoom = source;
+    const steps = enemy.roamRate;
+    for (let step = 0; step < steps; step++) {
+      const openRooms = (
+        Object.values(DIRECTIONS) as Array<(typeof DIRECTIONS)[DirectionKey]>
+      )
+        .map(
+          (dir) => game.map[currentRoom.y + dir.dy]?.[currentRoom.x + dir.dx],
+        )
+        .filter((room): room is Room => Boolean(room && !room.enemy.alive));
+      if (openRooms.length === 0) {
+        break;
+      }
+
+      const target = openRooms[nextInt(0, openRooms.length - 1)];
+      if (!target) {
+        break;
+      }
+
+      currentRoom.enemy = enemyFromTemplate("EMPTY");
+      target.enemy = enemy;
+      currentRoom = target;
+
+      if (target.x === game.currentX && target.y === game.currentY) {
+        game.log.push(enemy.description);
+        if (enemy.phrase) {
+          game.log.push(`${enemy.name}: "${enemy.phrase}"`);
+        }
+        break;
+      }
+    }
+  }
+}
+
 export function checkVictory(game: Game): void {
   const room = getCurrentRoom(game);
   if (room.typeKey === "VAULT" && !room.enemy.alive) {

@@ -9,6 +9,7 @@ import {
   type PlayerClassKey,
 } from "./game/data";
 import {
+  advanceEnemyRoaming,
   getAvailableDirections,
   getCurrentRoom,
   movePlayer,
@@ -35,6 +36,7 @@ function App() {
   const [armorKey, setArmorKey] = useState<ArmorKey>("MEDIUM");
   const [playerName, setPlayerName] = useState("");
   const [game, setGame] = useState<Game | null>(null);
+  const [showEnemyDebug, setShowEnemyDebug] = useState(false);
 
   const currentRoom = useMemo(
     () => (game ? getCurrentRoom(game) : null),
@@ -66,15 +68,24 @@ function App() {
   }
 
   function handleMove(directionKey: DirectionKey): void {
-    withGameUpdate((next) => movePlayer(next, directionKey));
+    withGameUpdate((next) => {
+      movePlayer(next, directionKey);
+      advanceEnemyRoaming(next);
+    });
   }
 
   function handleAttack(): void {
-    withGameUpdate((next) => runCombatRound(next));
+    withGameUpdate((next) => {
+      runCombatRound(next);
+      advanceEnemyRoaming(next);
+    });
   }
 
   function handleFlee(): void {
-    withGameUpdate((next) => tryFlee(next));
+    withGameUpdate((next) => {
+      tryFlee(next);
+      advanceEnemyRoaming(next);
+    });
   }
 
   function handleUseItem(index: number): void {
@@ -82,6 +93,7 @@ function App() {
       const used = useItem(next, index);
       if (used) {
         runEnemyTurn(next);
+        advanceEnemyRoaming(next);
       }
     });
   }
@@ -125,6 +137,8 @@ function App() {
       onFlee={handleFlee}
       onReset={resetGame}
       onUseItem={handleUseItem}
+      showEnemyDebug={showEnemyDebug}
+      onToggleEnemyDebug={() => setShowEnemyDebug((current) => !current)}
     />
   );
 }

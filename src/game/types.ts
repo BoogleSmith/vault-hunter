@@ -134,6 +134,9 @@ export interface Enemy extends UnitBase {
   phrase: string;
   description: string;
   lootTags: LootTag[];
+  roamRate: number;
+  undiscoveredRoaming: boolean;
+  roamDelayRemaining?: number;
   inventory: Item[];
 }
 

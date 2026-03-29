@@ -11,7 +11,9 @@
     "alive": false,
     "phrase": "",
     "description": "",
-    "lootTags": []
+    "lootTags": [],
+    "roamRate": 0,
+    "undiscoveredRoaming": false
   },
   "SKELETON": {
     "name": "Skeleton",
@@ -25,7 +27,9 @@
     "alive": true,
     "phrase": "Click Clack!",
     "description": "A skeleton armed with a sword leaps from the shadows to attack you!",
-    "lootTags": ["undead", "martial"]
+    "lootTags": ["undead", "martial"],
+    "roamRate": 0,
+    "undiscoveredRoaming": false
   },
   "ZOMBIE": {
     "name": "Zombie",
@@ -39,7 +43,9 @@
     "alive": true,
     "phrase": "Braaiiinnss!",
     "description": "A drooling zombie climbs out of a nearby coffin!",
-    "lootTags": ["undead", "common"]
+    "lootTags": ["undead", "common"],
+    "roamRate": -2,
+    "undiscoveredRoaming": false
   },
   "CULTIST": {
     "name": "Cultist",
@@ -53,7 +59,9 @@
     "alive": true,
     "phrase": "Finally another sacrifice!",
     "description": "A cloaked figure rises to greet you!",
-    "lootTags": ["cult", "dexterous"]
+    "lootTags": ["cult", "dexterous"],
+    "roamRate": 1,
+    "undiscoveredRoaming": false
   },
   "RAIDER": {
     "name": "Raider",
@@ -67,7 +75,9 @@
     "alive": true,
     "phrase": "Stand and deliver!",
     "description": "A ragtag soldier brandishing a blade jumps out from behind a nearby column!",
-    "lootTags": ["raider", "martial"]
+    "lootTags": ["raider", "martial"],
+    "roamRate": 3,
+    "undiscoveredRoaming": false
   },
   "SPECTRALGUARD": {
     "name": "Spectral Guard",
@@ -81,7 +91,9 @@
     "alive": true,
     "phrase": "Stop! Theif!",
     "description": "A dark guard blocks your path!",
-    "lootTags": ["guardian", "spectral", "vitality"]
+    "lootTags": ["guardian", "spectral", "vitality"],
+    "roamRate": 0,
+    "undiscoveredRoaming": false
   },
   "GARGOYL": {
     "name": "Gargoyl",
@@ -95,7 +107,9 @@
     "alive": true,
     "phrase": "SCRAAAAAWWW!!!!",
     "description": "A menacing Gargoyl swoops from the ceiling to attack you!",
-    "lootTags": ["beast", "agile"]
+    "lootTags": ["beast", "agile"],
+    "roamRate": 2,
+    "undiscoveredRoaming": true
   },
   "HELLHOUND": {
     "name": "HellHound",
@@ -109,7 +123,9 @@
     "alive": true,
     "phrase": "Grrrrrrrrrr!",
     "description": "A bloodthirsty mongrel comes bounding across the room at you!",
-    "lootTags": ["beast", "raider"]
+    "lootTags": ["beast", "raider"],
+    "roamRate": 3,
+    "undiscoveredRoaming": true
   },
   "WRAITH": {
     "name": "Wraith",
@@ -123,7 +139,9 @@
     "alive": true,
     "phrase": "BLOOOOOOOOOSH!!!!",
     "description": "A dark shape spreads across the room. A shadowy figure stands before you!",
-    "lootTags": ["spectral", "cursed"]
+    "lootTags": ["spectral", "cursed"],
+    "roamRate": 2,
+    "undiscoveredRoaming": true
   },
   "POLTERGEIST": {
     "name": "Poltergeist",
@@ -137,7 +155,9 @@
     "alive": true,
     "phrase": "BWAHAHAHAHAHAHA!",
     "description": "Objects begin flying across the room. A translucent figure whirls past you!",
-    "lootTags": ["spectral", "cursed", "agile"]
+    "lootTags": ["spectral", "cursed", "agile"],
+    "roamRate": 3,
+    "undiscoveredRoaming": true
   },
   "CYCLOPS": {
     "name": "Cyclops",
@@ -151,7 +171,9 @@
     "alive": true,
     "phrase": "GRAAAAAAAAAAW!!!!!!",
     "description": "The earth rumbles as a one eyed giant stumbles through the opposite doorway!",
-    "lootTags": ["giant", "martial"]
+    "lootTags": ["giant", "martial"],
+    "roamRate": 0,
+    "undiscoveredRoaming": false
   },
   "LUMBERINGHORROR": {
     "name": "Lumbering Horror",
@@ -165,7 +187,9 @@
     "alive": true,
     "phrase": "Hisssssssssss!",
     "description": "A massive mound of flesh and flailing tentacles gushes out from the chasm!",
-    "lootTags": ["cursed", "giant", "beast"]
+    "lootTags": ["cursed", "giant", "beast"],
+    "roamRate": 0,
+    "undiscoveredRoaming": false
   },
   "DRAKE": {
     "name": "Drake",
@@ -179,6 +203,8 @@
     "alive": true,
     "phrase": "ROOAAAARRR!",
     "description": "A mighty drake rises from a mountain of treasure!",
-    "lootTags": ["dragon", "guardian", "vitality"]
+    "lootTags": ["dragon", "guardian", "vitality"],
+    "roamRate": 0,
+    "undiscoveredRoaming": false
   }
 }

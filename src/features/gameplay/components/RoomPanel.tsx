@@ -1,10 +1,10 @@
 import { type DirectionKey } from "../../../game/data";
 
 const DPAD: { key: DirectionKey; label: string; col: number; row: number }[] = [
-  { key: "UP",    label: "↑",  col: 2, row: 1 },
-  { key: "LEFT",  label: "←",  col: 1, row: 2 },
-  { key: "RIGHT", label: "→",  col: 3, row: 2 },
-  { key: "DOWN",  label: "↓",  col: 2, row: 3 },
+  { key: "UP", label: "↑", col: 2, row: 1 },
+  { key: "LEFT", label: "←", col: 1, row: 2 },
+  { key: "RIGHT", label: "→", col: 3, row: 2 },
+  { key: "DOWN", label: "↓", col: 2, row: 3 },
 ];
 import { getRoomMeta, type Game, type Room } from "../../../game/engine";
 
@@ -16,6 +16,7 @@ interface RoomPanelProps {
   onMove: (direction: DirectionKey) => void;
   onAttack: () => void;
   onFlee: () => void;
+  showEnemyDebug: boolean;
 }
 
 export function RoomPanel({
@@ -26,6 +27,7 @@ export function RoomPanel({
   onMove,
   onAttack,
   onFlee,
+  showEnemyDebug,
 }: RoomPanelProps) {
   const roomMeta = getRoomMeta(currentRoom);
 
@@ -76,15 +78,16 @@ export function RoomPanel({
           <div className="map-row" key={y}>
             {row.map((room, x) => {
               const isCurrent = x === game.currentX && y === game.currentY;
+              const hasEnemy = showEnemyDebug && room.enemy.alive;
               const label = isCurrent
                 ? "X"
-                : room.discovered
+                : room.discovered || hasEnemy
                   ? getRoomMeta(room).tile
                   : " ";
 
               return (
                 <span
-                  className={`tile ${isCurrent ? "current" : ""}`}
+                  className={`tile ${isCurrent ? "current" : ""} ${hasEnemy ? "enemy" : ""}`}
                   key={`${x}-${y}`}
                 >
                   {label}

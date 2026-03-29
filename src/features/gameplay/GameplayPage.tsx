@@ -16,6 +16,8 @@ interface GameplayPageProps {
   onFlee: () => void;
   onReset: () => void;
   onUseItem: (index: number) => void;
+  showEnemyDebug: boolean;
+  onToggleEnemyDebug: () => void;
 }
 
 export function GameplayPage({
@@ -28,10 +30,17 @@ export function GameplayPage({
   onFlee,
   onReset,
   onUseItem,
+  showEnemyDebug,
+  onToggleEnemyDebug,
 }: GameplayPageProps) {
   return (
     <main className="shell in-game">
-      <StatusPanel game={game} onReset={onReset} />
+      <StatusPanel
+        game={game}
+        onReset={onReset}
+        showEnemyDebug={showEnemyDebug}
+        onToggleEnemyDebug={onToggleEnemyDebug}
+      />
       <RoomPanel
         game={game}
         currentRoom={currentRoom}
@@ -40,6 +49,7 @@ export function GameplayPage({
         onMove={onMove}
         onAttack={onAttack}
         onFlee={onFlee}
+        showEnemyDebug={showEnemyDebug}
       />
       <AdventureLogPanel log={game.log} />
       <MonsterPanel enemy={currentRoom.enemy} />

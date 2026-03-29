@@ -5,9 +5,16 @@ import { HealthBar } from "../../shared/components/HealthBar";
 interface StatusPanelProps {
   game: Game;
   onReset: () => void;
+  showEnemyDebug: boolean;
+  onToggleEnemyDebug: () => void;
 }
 
-export function StatusPanel({ game, onReset }: StatusPanelProps) {
+export function StatusPanel({
+  game,
+  onReset,
+  showEnemyDebug,
+  onToggleEnemyDebug,
+}: StatusPanelProps) {
   return (
     <section className="panel status">
       <p className="kicker">
@@ -35,6 +42,16 @@ export function StatusPanel({ game, onReset }: StatusPanelProps) {
         <span>
           Location: {game.currentX},{game.currentY}
         </span>
+      </div>
+      <div className="debug-controls">
+        <label className="debug-toggle">
+          <input
+            type="checkbox"
+            checked={showEnemyDebug}
+            onChange={onToggleEnemyDebug}
+          />
+          <span>Show Enemy Positions</span>
+        </label>
       </div>
       <button className="ghost" onClick={onReset}>
         New Run
