@@ -1,6 +1,7 @@
 {
   "WARRIOR": {
     "label": "Warrior",
+    "startingItems": ["HEALTH_POTION", "RUSTY_SWORD", "CHAIN_MAIL"],
     "bonuses": {
       "health": 100,
       "healthMax": 100,
@@ -12,6 +13,12 @@
   },
   "THEIF": {
     "label": "Theif",
+    "startingItems": [
+      "HEALTH_POTION",
+      "BONE_DAGGER",
+      "LEATHER_TUNIC",
+      "SHADOW_CLOAK"
+    ],
     "bonuses": {
       "health": 0,
       "healthMax": 0,
@@ -23,6 +30,12 @@
   },
   "ROGUE": {
     "label": "Rogue",
+    "startingItems": [
+      "HEALTH_POTION",
+      "BONE_DAGGER",
+      "LEATHER_TUNIC",
+      "AMULET_OF_SWIFTNESS"
+    ],
     "bonuses": {
       "health": 0,
       "healthMax": 0,
@@ -34,6 +47,7 @@
   },
   "BRAWLER": {
     "label": "Brawler",
+    "startingItems": ["HEALTH_POTION", "RUSTY_SWORD", "PLATE_ARMOR"],
     "bonuses": {
       "health": 0,
       "healthMax": 0,

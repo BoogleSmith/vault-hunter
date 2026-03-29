@@ -1,6 +1,4 @@
 import type {
-  Armor,
-  ArmorKey,
   Difficulty,
   DifficultyKey,
   Direction,
@@ -15,7 +13,6 @@ import type {
 } from "./types";
 
 import difficultiesData from "./data/difficulties.json";
-import armorData from "./data/armor.json";
 import classesData from "./data/classes.json";
 import directionsData from "./data/directions.json";
 import enemiesData from "./data/enemies.json";
@@ -23,7 +20,6 @@ import roomsData from "./data/rooms.json";
 import itemsData from "./data/items.json";
 
 export type {
-  ArmorKey,
   DifficultyKey,
   DirectionKey,
   Enemy,
@@ -40,9 +36,7 @@ export const DIFFICULTIES = difficultiesData satisfies Record<
   Difficulty
 >;
 
-export const ARMOR = armorData satisfies Record<ArmorKey, Armor>;
-
-export const PLAYER_CLASSES = classesData satisfies Record<
+export const PLAYER_CLASSES = classesData as Record<
   PlayerClassKey,
   PlayerClass
 >;

@@ -3,6 +3,9 @@ export type DifficultyKey = "SHORT" | "MEDIUM" | "LONG";
 export type ItemKey =
   | "HEALTH_POTION"
   | "GREAT_HEALTH_POTION"
+  | "LEATHER_TUNIC"
+  | "CHAIN_MAIL"
+  | "PLATE_ARMOR"
   | "RUSTY_SWORD"
   | "BONE_DAGGER"
   | "SILVER_SWORD"
@@ -11,13 +14,22 @@ export type ItemKey =
   | "RING_OF_VIGOR"
   | "CURSED_IDOL";
 
-export type ItemType = "potion" | "weapon" | "accessory" | "relic";
+export type ItemType = "potion" | "weapon" | "accessory" | "armor" | "relic";
 
 export type ItemSlot =
   | "leftHand"
   | "rightHand"
   | "leftAccessory"
   | "rightAccessory"
+  | "head"
+  | "amulet"
+  | "back"
+  | "chest"
+  | "legs";
+
+export type EquipRequirement =
+  | "hand"
+  | "ring"
   | "head"
   | "amulet"
   | "back"
@@ -56,7 +68,8 @@ export interface Item {
   description: string;
   type: ItemType;
   tags: LootTag[];
-  equipSlots?: ItemSlot[];
+  armorValue?: number;
+  equipSlots?: EquipRequirement[];
   instanceId?: number;
   dropWeight: number;
   stackable: boolean;
@@ -67,7 +80,6 @@ export interface Item {
   cooldownRemaining?: number;
   effect: ItemEffect;
 }
-export type ArmorKey = "UNARMORED" | "LIGHT" | "MEDIUM" | "HEAVY";
 export type PlayerClassKey = "WARRIOR" | "THEIF" | "ROGUE" | "BRAWLER";
 export type DirectionKey = "RIGHT" | "DOWN" | "LEFT" | "UP";
 export type EnemyTemplateKey =
@@ -106,11 +118,6 @@ export interface Difficulty {
   height: number;
 }
 
-export interface Armor {
-  label: string;
-  constant: number;
-}
-
 export interface UnitBonuses {
   health: number;
   healthMax: number;
@@ -123,6 +130,7 @@ export interface UnitBonuses {
 export interface PlayerClass {
   label: string;
   bonuses: UnitBonuses;
+  startingItems: ItemKey[];
 }
 
 export interface Direction {
@@ -143,7 +151,7 @@ export interface UnitBase {
 
 export interface Enemy extends UnitBase {
   name: string;
-  armor: ArmorKey;
+  armor: number;
   phrase: string;
   description: string;
   lootTags: LootTag[];
@@ -156,7 +164,6 @@ export interface Enemy extends UnitBase {
 export interface Player extends UnitBase {
   name: string;
   classKey: PlayerClassKey;
-  armor: ArmorKey;
   inventory: Item[];
   equipment: Partial<Record<ItemSlot, number>>;
   itemCooldowns: Partial<Record<ItemKey, number>>;

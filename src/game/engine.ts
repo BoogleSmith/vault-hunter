@@ -10,6 +10,7 @@ export { runCombatRound, tryFlee } from "./combat";
 export { equipItem, unequipSlot, useItem } from "./mechanics";
 
 export type {
+  EquipRequirement,
   Game,
   GameStatus,
   Item,

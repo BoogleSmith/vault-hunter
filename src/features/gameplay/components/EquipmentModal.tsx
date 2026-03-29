@@ -1,5 +1,10 @@
 import { useEffect, useState } from "react";
-import type { Game, Item, ItemSlot } from "../../../game/engine";
+import type {
+  EquipRequirement,
+  Game,
+  Item,
+  ItemSlot,
+} from "../../../game/engine";
 
 interface SlotConfig {
   slot: ItemSlot;
@@ -25,14 +30,13 @@ const TYPE_ICON: Record<Item["type"], string> = {
   potion: "🧪",
   weapon: "⚔️",
   accessory: "💍",
+  armor: "🛡️",
   relic: "🗿",
 };
 
-const SLOT_LABELS: Record<ItemSlot, string> = {
-  leftHand: "L Hand",
-  rightHand: "R Hand",
-  leftAccessory: "L Ring",
-  rightAccessory: "R Ring",
+const REQUIREMENT_LABELS: Record<EquipRequirement, string> = {
+  hand: "Hand",
+  ring: "Ring",
   head: "Head",
   amulet: "Amulet",
   back: "Back",
@@ -46,22 +50,24 @@ interface DisplayRow {
   indices: number[];
 }
 
-function buildRows(inventory: Item[]): DisplayRow[] {
+function buildRows(
+  entries: Array<{ item: Item; index: number }>,
+): DisplayRow[] {
   const rows: DisplayRow[] = [];
   const stackIndex = new Map<string, number>();
 
-  inventory.forEach((item, i) => {
+  entries.forEach(({ item, index }) => {
     if (item.stackable) {
       const rowIdx = stackIndex.get(item.key);
       if (rowIdx !== undefined) {
         rows[rowIdx]!.count++;
-        rows[rowIdx]!.indices.push(i);
+        rows[rowIdx]!.indices.push(index);
       } else {
         stackIndex.set(item.key, rows.length);
-        rows.push({ item, count: 1, indices: [i] });
+        rows.push({ item, count: 1, indices: [index] });
       }
     } else {
-      rows.push({ item, count: 1, indices: [i] });
+      rows.push({ item, count: 1, indices: [index] });
     }
   });
 
@@ -95,7 +101,21 @@ export function EquipmentModal({
   onUnequipSlot,
 }: EquipmentModalProps) {
   const [inspectedSlot, setInspectedSlot] = useState<ItemSlot | null>(null);
-  const rows = buildRows(game.player.inventory);
+  const [inspectedInventoryId, setInspectedInventoryId] = useState<
+    number | null
+  >(null);
+  const equippedIds = new Set(
+    Object.values(game.player.equipment).filter(
+      (id): id is number => id !== undefined,
+    ),
+  );
+  const visibleInventoryEntries = game.player.inventory
+    .map((item, index) => ({ item, index }))
+    .filter(
+      ({ item }) =>
+        item.instanceId === undefined || !equippedIds.has(item.instanceId),
+    );
+  const rows = buildRows(visibleInventoryEntries);
 
   useEffect(() => {
     function handleKey(e: KeyboardEvent) {
@@ -117,6 +137,12 @@ export function EquipmentModal({
   const hoveredConfig = inspectedSlot
     ? SLOT_CONFIGS.find((c) => c.slot === inspectedSlot)
     : undefined;
+  const hoveredInventoryItem =
+    inspectedInventoryId !== null
+      ? game.player.inventory.find(
+          (item) => item.instanceId === inspectedInventoryId,
+        )
+      : undefined;
 
   return (
     <div
@@ -182,7 +208,35 @@ export function EquipmentModal({
 
         {/* Hover detail panel */}
         <div className="eq-info-panel">
-          {hoveredConfig ? (
+          {hoveredInventoryItem ? (
+            <div className="eq-info-filled">
+              <span className="eq-info-icon">
+                {TYPE_ICON[hoveredInventoryItem.type]}
+              </span>
+              <div className="eq-info-content">
+                <strong className="eq-info-name">
+                  {hoveredInventoryItem.label}
+                </strong>
+                <p className="eq-info-desc">
+                  {hoveredInventoryItem.description}
+                </p>
+                {(hoveredInventoryItem.armorValue ||
+                  formatEffect(hoveredInventoryItem.effect)) && (
+                  <span className="eq-info-effect">
+                    {[
+                      hoveredInventoryItem.armorValue
+                        ? `+${hoveredInventoryItem.armorValue.toFixed(2)} armor`
+                        : "",
+                      formatEffect(hoveredInventoryItem.effect),
+                    ]
+                      .filter(Boolean)
+                      .join("  ·  ")}
+                  </span>
+                )}
+                <em className="eq-info-hint">Inventory item preview</em>
+              </div>
+            </div>
+          ) : hoveredConfig ? (
             hoveredItem ? (
               <div className="eq-info-filled">
                 <span className="eq-info-icon">
@@ -191,9 +245,17 @@ export function EquipmentModal({
                 <div className="eq-info-content">
                   <strong className="eq-info-name">{hoveredItem.label}</strong>
                   <p className="eq-info-desc">{hoveredItem.description}</p>
-                  {formatEffect(hoveredItem.effect) && (
+                  {(hoveredItem.armorValue ||
+                    formatEffect(hoveredItem.effect)) && (
                     <span className="eq-info-effect">
-                      {formatEffect(hoveredItem.effect)}
+                      {[
+                        hoveredItem.armorValue
+                          ? `+${hoveredItem.armorValue.toFixed(2)} armor`
+                          : "",
+                        formatEffect(hoveredItem.effect),
+                      ]
+                        .filter(Boolean)
+                        .join("  ·  ")}
                     </span>
                   )}
                   <em className="eq-info-hint">Click slot to unequip</em>
@@ -244,13 +306,25 @@ export function EquipmentModal({
 
                 const slotSummary =
                   equipSlots.length > 0
-                    ? equipSlots.map((slot) => SLOT_LABELS[slot]).join(", ")
+                    ? equipSlots
+                        .map((slot) => REQUIREMENT_LABELS[slot])
+                        .join(", ")
                     : "";
+                const effectText = [
+                  item.armorValue ? `+${item.armorValue.toFixed(2)} armor` : "",
+                  formatEffect(item.effect),
+                ]
+                  .filter(Boolean)
+                  .join("  ·  ");
 
                 return (
                   <li
                     key={`${item.key}-${indices[0] ?? 0}`}
                     className="eq-inv-item"
+                    onMouseEnter={() =>
+                      setInspectedInventoryId(item.instanceId ?? null)
+                    }
+                    onMouseLeave={() => setInspectedInventoryId(null)}
                   >
                     <span className="eq-inv-main">
                       <span className="eq-inv-icon">
@@ -266,6 +340,11 @@ export function EquipmentModal({
                         {slotSummary && (
                           <span className="eq-inv-slot-summary">
                             {slotSummary}
+                          </span>
+                        )}
+                        {effectText && (
+                          <span className="eq-inv-slot-summary">
+                            {effectText}
                           </span>
                         )}
                       </span>

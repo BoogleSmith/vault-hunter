@@ -1,9 +1,7 @@
 import type { FormEvent } from "react";
 
 import {
-  ARMOR,
   DIFFICULTIES,
-  type ArmorKey,
   type DifficultyKey,
   PLAYER_CLASSES,
   type PlayerClassKey,
@@ -13,11 +11,9 @@ interface SetupFormProps {
   playerName: string;
   difficultyKey: DifficultyKey;
   classKey: PlayerClassKey;
-  armorKey: ArmorKey;
   onPlayerNameChange: (value: string) => void;
   onDifficultyChange: (value: DifficultyKey) => void;
   onClassChange: (value: PlayerClassKey) => void;
-  onArmorChange: (value: ArmorKey) => void;
   onSubmit: (event: FormEvent<HTMLFormElement>) => void;
 }
 
@@ -25,11 +21,9 @@ export function SetupForm({
   playerName,
   difficultyKey,
   classKey,
-  armorKey,
   onPlayerNameChange,
   onDifficultyChange,
   onClassChange,
-  onArmorChange,
   onSubmit,
 }: SetupFormProps) {
   return (
@@ -69,19 +63,6 @@ export function SetupForm({
         {(Object.keys(PLAYER_CLASSES) as PlayerClassKey[]).map((key) => (
           <option key={key} value={key}>
             {PLAYER_CLASSES[key].label}
-          </option>
-        ))}
-      </select>
-
-      <label htmlFor="armor">Armor</label>
-      <select
-        id="armor"
-        value={armorKey}
-        onChange={(event) => onArmorChange(event.target.value as ArmorKey)}
-      >
-        {(Object.keys(ARMOR) as ArmorKey[]).map((key) => (
-          <option key={key} value={key}>
-            {ARMOR[key].label}
           </option>
         ))}
       </select>

@@ -1,10 +1,14 @@
-import type { Item, ItemEffect, ItemKey, ItemSlot } from "../../../game/engine";
+import type {
+  EquipRequirement,
+  Item,
+  ItemEffect,
+  ItemKey,
+  ItemSlot,
+} from "../../../game/engine";
 
-const SLOT_LABELS: Record<ItemSlot, string> = {
-  leftHand: "Left Hand",
-  rightHand: "Right Hand",
-  leftAccessory: "Left Accessory",
-  rightAccessory: "Right Accessory",
+const SLOT_LABELS: Record<EquipRequirement, string> = {
+  hand: "Hand",
+  ring: "Ring",
   head: "Head",
   amulet: "Amulet",
   back: "Back",
@@ -16,6 +20,7 @@ const TYPE_ICON: Record<Item["type"], string> = {
   potion: "🧪",
   weapon: "⚔",
   accessory: "💍",
+  armor: "🛡️",
   relic: "🗿",
 };
 
@@ -113,6 +118,12 @@ export function InventoryPanel({
             const isEquipped =
               item.instanceId !== undefined &&
               Object.values(equipment).includes(item.instanceId);
+            const effectText = [
+              item.armorValue ? `+${item.armorValue.toFixed(2)} armor` : "",
+              formatEffect(item.effect),
+            ]
+              .filter(Boolean)
+              .join(" · ");
 
             return (
               <li key={`${item.key}-${indices[0] ?? 0}`} className="inv-item">
@@ -129,9 +140,9 @@ export function InventoryPanel({
                       {equipSlots.map((slot) => SLOT_LABELS[slot]).join(", ")}
                     </span>
                   )}
-                  <span className="inv-effect">
-                    {formatEffect(item.effect)}
-                  </span>
+                  {effectText && (
+                    <span className="inv-effect">{effectText}</span>
+                  )}
                 </span>
                 <span className="inv-actions">
                   {equipSlots.length > 0 && equipIndex !== undefined && (

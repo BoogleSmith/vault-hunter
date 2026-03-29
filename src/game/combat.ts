@@ -1,4 +1,3 @@
-import { ARMOR } from "./data";
 import { addHealth, nextInt } from "./mechanics";
 import {
   checkVictory,
@@ -6,14 +5,40 @@ import {
   getCurrentRoom,
   movePlayer,
 } from "./map";
-import type { ArmorKey, DirectionKey, Game, UnitBase } from "./types";
+import type { DirectionKey, Game, UnitBase } from "./types";
+
+function getPlayerArmorValue(game: Game): number {
+  const equippedIds = new Set(
+    Object.values(game.player.equipment).filter(
+      (id): id is number => id !== undefined,
+    ),
+  );
+
+  let total = 0;
+  for (const item of game.player.inventory) {
+    if (
+      item.instanceId === undefined ||
+      !equippedIds.has(item.instanceId) ||
+      !item.armorValue
+    ) {
+      continue;
+    }
+    total += item.armorValue;
+  }
+  return Math.max(0, total);
+}
+
+function armorDivisor(armorValue: number): number {
+  return Math.max(1, 1 + armorValue);
+}
 
 function checkEvade(
-  target: { agility: number; armor: ArmorKey },
+  target: { agility: number; armorValue: number },
   attackerDexterity: number,
 ): boolean {
-  const armor = ARMOR[target.armor].constant;
-  const effectiveAgility = Math.floor(target.agility / armor);
+  const effectiveAgility = Math.floor(
+    target.agility / armorDivisor(target.armorValue),
+  );
   const randomDodge = nextInt(0, Math.max(effectiveAgility, 0));
   const randomHit = nextInt(0, Math.max(attackerDexterity, 0));
   return randomDodge < randomHit;
@@ -21,11 +46,10 @@ function checkEvade(
 
 function calculateDamage(
   source: { damageMax: number; damageBase: number },
-  target: { armor: ArmorKey },
+  target: { armorValue: number },
 ): number {
-  const armor = ARMOR[target.armor].constant;
   const roll = nextInt(source.damageMax, source.damageBase);
-  return Math.max(1, Math.round(roll / armor));
+  return Math.max(1, Math.round(roll / armorDivisor(target.armorValue)));
 }
 
 function attack(
@@ -34,18 +58,22 @@ function attack(
       damageBase: number;
       damageMax: number;
     },
-  target: { name: string } & UnitBase & { armor: ArmorKey; agility: number },
+  target: { name: string } & UnitBase & { agility: number },
+  targetArmorValue: number,
 ): string {
   if (!source.alive || !target.alive) {
     return `${source.name || "Unit"} cannot attack right now.`;
   }
 
-  const hit = checkEvade(target, source.dexterity);
+  const hit = checkEvade(
+    { agility: target.agility, armorValue: targetArmorValue },
+    source.dexterity,
+  );
   if (!hit) {
     return `${source.name} misses ${target.name}.`;
   }
 
-  const damage = calculateDamage(source, target);
+  const damage = calculateDamage(source, { armorValue: targetArmorValue });
   addHealth(target, -damage);
   if (!target.alive) {
     return `${source.name} hits ${target.name} for ${damage}. ${target.name} is defeated.`;
@@ -59,9 +87,9 @@ export function runCombatRound(game: Game): void {
     return;
   }
 
-  game.log.push(attack(game.player, room.enemy));
+  game.log.push(attack(game.player, room.enemy, room.enemy.armor));
   if (room.enemy.alive) {
-    game.log.push(attack(room.enemy, game.player));
+    game.log.push(attack(room.enemy, game.player, getPlayerArmorValue(game)));
   } else {
     // Enemy just died — collect any dropped items
     for (const item of room.enemy.inventory) {
@@ -85,10 +113,16 @@ export function tryFlee(game: Game): void {
     return;
   }
 
-  const escaped = !checkEvade(game.player, room.enemy.dexterity);
+  const escaped = !checkEvade(
+    {
+      agility: game.player.agility,
+      armorValue: getPlayerArmorValue(game),
+    },
+    room.enemy.dexterity,
+  );
   if (!escaped) {
     game.log.push(`${game.player.name} failed to escape!`);
-    game.log.push(attack(room.enemy, game.player));
+    game.log.push(attack(room.enemy, game.player, getPlayerArmorValue(game)));
     if (!game.player.alive) {
       game.status = "lost";
       game.log.push("You have fallen. Game over.");
@@ -118,7 +152,7 @@ export function runEnemyTurn(game: Game): void {
     return;
   }
 
-  game.log.push(attack(room.enemy, game.player));
+  game.log.push(attack(room.enemy, game.player, getPlayerArmorValue(game)));
   if (!game.player.alive) {
     game.status = "lost";
     game.log.push("You have fallen. Game over.");

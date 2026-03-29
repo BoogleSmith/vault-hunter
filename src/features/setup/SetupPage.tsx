@@ -1,17 +1,15 @@
 import type { FormEvent } from "react";
 
-import type { ArmorKey, DifficultyKey, PlayerClassKey } from "../../game/data";
+import type { DifficultyKey, PlayerClassKey } from "../../game/data";
 import { SetupForm } from "./components/SetupForm";
 
 interface SetupPageProps {
   playerName: string;
   difficultyKey: DifficultyKey;
   classKey: PlayerClassKey;
-  armorKey: ArmorKey;
   onPlayerNameChange: (value: string) => void;
   onDifficultyChange: (value: DifficultyKey) => void;
   onClassChange: (value: PlayerClassKey) => void;
-  onArmorChange: (value: ArmorKey) => void;
   onSubmit: (event: FormEvent<HTMLFormElement>) => void;
 }
 

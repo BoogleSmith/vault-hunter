@@ -3,7 +3,6 @@ import type { FormEvent } from "react";
 import "./App.css";
 
 import {
-  type ArmorKey,
   type DifficultyKey,
   type DirectionKey,
   type PlayerClassKey,
@@ -34,7 +33,6 @@ const EMPTY_DIRECTIONS: Record<DirectionKey, boolean> = {
 function App() {
   const [difficultyKey, setDifficultyKey] = useState<DifficultyKey>("MEDIUM");
   const [classKey, setClassKey] = useState<PlayerClassKey>("WARRIOR");
-  const [armorKey, setArmorKey] = useState<ArmorKey>("MEDIUM");
   const [playerName, setPlayerName] = useState("");
   const [game, setGame] = useState<Game | null>(null);
   const [showEnemyDebug, setShowEnemyDebug] = useState(false);
@@ -117,7 +115,7 @@ function App() {
   function startGame(event: FormEvent<HTMLFormElement>): void {
     event.preventDefault();
 
-    const player = createPlayer({ name: playerName, classKey, armorKey });
+    const player = createPlayer({ name: playerName, classKey });
     setGame(createGame({ difficultyKey, player }));
   }
 
@@ -201,11 +199,9 @@ function App() {
         playerName={playerName}
         difficultyKey={difficultyKey}
         classKey={classKey}
-        armorKey={armorKey}
         onPlayerNameChange={setPlayerName}
         onDifficultyChange={setDifficultyKey}
         onClassChange={setClassKey}
-        onArmorChange={setArmorKey}
         onSubmit={startGame}
       />
     );

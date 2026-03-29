@@ -1,18 +1,43 @@
-import { ARMOR, PLAYER_CLASSES } from "../../../game/data";
+import { PLAYER_CLASSES } from "../../../game/data";
 import type { Game } from "../../../game/engine";
 
 interface FinalStatsProps {
   game: Game;
 }
 
+function getTotalArmorValue(game: Game): number {
+  const equippedIds = new Set(
+    Object.values(game.player.equipment).filter(
+      (id): id is number => id !== undefined,
+    ),
+  );
+
+  let total = 0;
+
+  for (const item of game.player.inventory) {
+    if (
+      item.instanceId === undefined ||
+      !equippedIds.has(item.instanceId) ||
+      !item.armorValue
+    ) {
+      continue;
+    }
+    total += item.armorValue;
+  }
+
+  return Math.max(0, total);
+}
+
 export function FinalStats({ game }: FinalStatsProps) {
+  const armorValue = getTotalArmorValue(game);
+
   return (
     <div className="final-stats">
       <p>
         <strong>Class:</strong> {PLAYER_CLASSES[game.player.classKey].label}
       </p>
       <p>
-        <strong>Armor:</strong> {ARMOR[game.player.armor].label}
+        <strong>Armor:</strong> +{armorValue.toFixed(2)}
       </p>
       <p>
         <strong>Final Health:</strong> {Math.max(0, game.player.health)}/

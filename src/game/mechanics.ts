@@ -1,4 +1,79 @@
-import type { Game, Item, ItemSlot, Player, UnitBase } from "./types";
+import type {
+  EquipRequirement,
+  Game,
+  Item,
+  ItemSlot,
+  Player,
+  UnitBase,
+} from "./types";
+
+const REQUIREMENT_TO_CONCRETE_SLOT: Record<
+  Exclude<EquipRequirement, "hand" | "ring">,
+  ItemSlot
+> = {
+  head: "head",
+  amulet: "amulet",
+  back: "back",
+  chest: "chest",
+  legs: "legs",
+};
+
+function pickSlotForAbstractRequirement(
+  choices: ItemSlot[],
+  player: Player,
+  currentItemId: number,
+): ItemSlot {
+  const occupiedByCurrent = choices.find(
+    (slot) => player.equipment[slot] === currentItemId,
+  );
+  if (occupiedByCurrent) return occupiedByCurrent;
+
+  const empty = choices.find((slot) => player.equipment[slot] === undefined);
+  if (empty) return empty;
+
+  return choices[0]!;
+}
+
+export function resolveEquipTargets(
+  player: Player,
+  requirements: EquipRequirement[],
+  currentItemId: number,
+): ItemSlot[] {
+  const targets: ItemSlot[] = [];
+
+  const handCount = requirements.filter((req) => req === "hand").length;
+  if (handCount >= 2) {
+    targets.push("rightHand", "leftHand");
+  } else if (handCount === 1) {
+    targets.push(
+      pickSlotForAbstractRequirement(
+        ["rightHand", "leftHand"],
+        player,
+        currentItemId,
+      ),
+    );
+  }
+
+  const ringCount = requirements.filter((req) => req === "ring").length;
+  if (ringCount >= 2) {
+    targets.push("leftAccessory", "rightAccessory");
+  } else if (ringCount === 1) {
+    targets.push(
+      pickSlotForAbstractRequirement(
+        ["leftAccessory", "rightAccessory"],
+        player,
+        currentItemId,
+      ),
+    );
+  }
+
+  requirements.forEach((req) => {
+    if (req === "hand" || req === "ring") return;
+    targets.push(REQUIREMENT_TO_CONCRETE_SLOT[req]);
+  });
+
+  return Array.from(new Set(targets));
+}
 
 export function nextInt(a: number, b: number): number {
   const min = Math.min(a, b);
@@ -76,12 +151,18 @@ export function unequipSlot(game: Game, slot: ItemSlot): boolean {
 
 export function equipItem(game: Game, index: number): boolean {
   const item = game.player.inventory[index];
-  const equipSlots = item?.equipSlots ?? [];
-  if (!item || equipSlots.length === 0 || item.instanceId === undefined) {
+  const requirements = item?.equipSlots ?? [];
+  if (!item || requirements.length === 0 || item.instanceId === undefined) {
     return false;
   }
 
-  const alreadyEquipped = equipSlots.every(
+  const equipTargets = resolveEquipTargets(
+    game.player,
+    requirements,
+    item.instanceId,
+  );
+
+  const alreadyEquipped = equipTargets.every(
     (slot) => game.player.equipment[slot] === item.instanceId,
   );
   if (alreadyEquipped) {
@@ -91,7 +172,7 @@ export function equipItem(game: Game, index: number): boolean {
 
   const overlappingIds = Array.from(
     new Set(
-      equipSlots
+      equipTargets
         .map((slot) => game.player.equipment[slot])
         .filter((instanceId): instanceId is number => instanceId !== undefined),
     ),
@@ -108,7 +189,7 @@ export function equipItem(game: Game, index: number): boolean {
   }
 
   applyItemEffect(game.player, item);
-  equipSlots.forEach((slot) => {
+  equipTargets.forEach((slot) => {
     game.player.equipment[slot] = item.instanceId;
   });
   game.log.push(`You equipped ${item.label}.`);
