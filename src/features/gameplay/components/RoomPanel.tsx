@@ -2,7 +2,7 @@ import { type DirectionKey } from "../../../game/data";
 import "../../shared/components/controls.css";
 import "../../shared/components/surface.css";
 import "./RoomPanel.css";
-import { EncounterPanel } from "./EncounterPanel";
+import { CombatPanel } from "./CombatPanel";
 
 const DPAD: { key: DirectionKey; label: string; col: number; row: number }[] = [
   { key: "UP", label: "↑", col: 2, row: 1 },
@@ -21,6 +21,7 @@ interface RoomPanelProps {
   onWait: () => void;
   onAttack: () => void;
   onFlee: () => void;
+  onOpenInventory: () => void;
   showEnemyDebug: boolean;
 }
 
@@ -33,6 +34,7 @@ export function RoomPanel({
   onWait,
   onAttack,
   onFlee,
+  onOpenInventory,
   showEnemyDebug,
 }: RoomPanelProps) {
   const roomMeta = getRoomMeta(currentRoom);
@@ -44,10 +46,12 @@ export function RoomPanel({
       <p>{roomMeta.description}</p>
 
       {inEncounter && currentRoom.enemy.alive && (
-        <EncounterPanel
+        <CombatPanel
+          player={game.player}
           enemy={currentRoom.enemy}
           onAttack={onAttack}
           onFlee={onFlee}
+          onOpenInventory={onOpenInventory}
           isPlaying={isPlaying}
         />
       )}

@@ -1,5 +1,15 @@
+/* ── Exploration layout ─────────────────────── */
+
+.shell.in-game,
+.shell.in-combat {
+  width: calc(100% - 1rem);
+  margin: 0.5rem auto;
+}
+
 .shell.in-game {
+  min-height: calc(100vh - 4rem);
   grid-template-columns: minmax(20rem, 1fr) minmax(28rem, 1.35fr);
+  grid-template-rows: minmax(0, 1fr) clamp(14rem, 28vh, 20rem);
   align-items: start;
 }
 
@@ -10,8 +20,7 @@
   align-self: start;
 }
 
-.hud-column .status,
-.hud-column .log {
+.hud-column .status {
   align-self: stretch;
   width: 100%;
 }
@@ -20,8 +29,39 @@
   align-self: start;
 }
 
+/* ── Combat layout ──────────────────────────── */
+
+.shell.in-combat {
+  min-height: calc(100vh - 4rem);
+  grid-template-columns: 1fr;
+  grid-template-rows: minmax(0, 1fr) clamp(14rem, 28vh, 20rem);
+  justify-items: stretch;
+}
+
+.combat-column {
+  width: 100%;
+  max-width: 860px;
+  align-self: start;
+  justify-self: center;
+}
+
+/* ── Adventure log footer (both modes) ──────── */
+
+.shell.in-game > .log,
+.shell.in-combat > .log {
+  grid-column: 1 / -1;
+  min-height: 0;
+  height: 100%;
+}
+
+/* ── Responsive ─────────────────────────────── */
+
 @media (max-width: 980px) {
   .shell.in-game {
     grid-template-columns: 1fr;
+  }
+
+  .shell.in-game > .log {
+    grid-column: 1;
   }
 }

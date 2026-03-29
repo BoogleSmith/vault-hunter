@@ -99,14 +99,23 @@ function getTotalArmorValue(game: Game): number {
   return Math.max(0, total);
 }
 
+function formatSignedValue(value: number): string {
+  return value > 0 ? `+${value}` : `${value}`;
+}
+
 function formatEffect(effect: Item["effect"]): string {
   const parts: string[] = [];
-  if (effect.healthMax) parts.push(`+${effect.healthMax} max HP`);
-  if (effect.health) parts.push(`+${effect.health} HP`);
-  if (effect.damageBase) parts.push(`+${effect.damageBase} min dmg`);
-  if (effect.damageMax) parts.push(`+${effect.damageMax} max dmg`);
-  if (effect.agility) parts.push(`+${effect.agility} agility`);
-  if (effect.dexterity) parts.push(`+${effect.dexterity} dexterity`);
+  if (effect.healthMax)
+    parts.push(`${formatSignedValue(effect.healthMax)} max HP`);
+  if (effect.health) parts.push(`${formatSignedValue(effect.health)} HP`);
+  if (effect.damageBase)
+    parts.push(`${formatSignedValue(effect.damageBase)} min dmg`);
+  if (effect.damageMax)
+    parts.push(`${formatSignedValue(effect.damageMax)} max dmg`);
+  if (effect.agility)
+    parts.push(`${formatSignedValue(effect.agility)} agility`);
+  if (effect.dexterity)
+    parts.push(`${formatSignedValue(effect.dexterity)} dexterity`);
   return parts.join("  ·  ");
 }
 

@@ -50,15 +50,16 @@ export function GameplayPage({
   const [showEquipModal, setShowEquipModal] = useState(false);
 
   return (
-    <main className="shell in-game">
-      <section className="hud-column">
-        <StatusPanel
-          game={game}
-          onReset={onReset}
-          onOpenEquipment={() => setShowEquipModal(true)}
-        />
-        <AdventureLogPanel log={game.log} />
-      </section>
+    <main className={`shell ${inEncounter ? "in-combat" : "in-game"}`}>
+      {!inEncounter && (
+        <section className="hud-column">
+          <StatusPanel
+            game={game}
+            onReset={onReset}
+            onOpenEquipment={() => setShowEquipModal(true)}
+          />
+        </section>
+      )}
       {showEquipModal && (
         <EquipmentModal
           game={game}
@@ -70,7 +71,7 @@ export function GameplayPage({
           }}
         />
       )}
-      <section className="room-column">
+      <section className={inEncounter ? "combat-column" : "room-column"}>
         <RoomPanel
           game={game}
           currentRoom={currentRoom}
@@ -80,9 +81,11 @@ export function GameplayPage({
           onWait={onWait}
           onAttack={onAttack}
           onFlee={onFlee}
+          onOpenInventory={() => setShowEquipModal(true)}
           showEnemyDebug={showEnemyDebug}
         />
       </section>
+      <AdventureLogPanel log={game.log} />
       <DebugMenu
         canForceOutcome={game.status === "playing"}
         showEnemyDebug={showEnemyDebug}

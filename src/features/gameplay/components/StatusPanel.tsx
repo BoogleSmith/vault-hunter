@@ -39,7 +39,7 @@ export function StatusPanel({
         </span>
       </div>
       <button className="eq-open-btn" onClick={onOpenEquipment}>
-        ⚔ Equipment
+        💼 Inventory
       </button>
       <button className="ghost" onClick={onReset}>
         New Run
