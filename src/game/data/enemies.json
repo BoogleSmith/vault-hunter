@@ -112,7 +112,7 @@
     "undiscoveredRoaming": true
   },
   "HELLHOUND": {
-    "name": "HellHound",
+    "name": "Hellhound",
     "health": 50,
     "healthMax": 50,
     "damageBase": 16,
