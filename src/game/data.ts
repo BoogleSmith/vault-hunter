@@ -52,7 +52,11 @@ export const DIRECTIONS = directionsData satisfies Record<
   Direction
 >;
 
-const ENEMY_TEMPLATES = enemiesData as Record<EnemyTemplateKey, Enemy>;
+type EnemyTemplate = Omit<Enemy, "inventory">;
+
+export const ENEMIES = enemiesData as Record<EnemyTemplateKey, EnemyTemplate>;
+
+export const ENEMY_TEMPLATE_KEYS = Object.keys(ENEMIES) as EnemyTemplateKey[];
 
 export const ROOM_TYPES = roomsData as RoomTypeMeta[];
 
@@ -61,5 +65,5 @@ export const ITEMS = itemsData as Record<ItemKey, Item>;
 export const ITEM_KEYS = Object.keys(ITEMS) as ItemKey[];
 
 export function enemyFromTemplate(templateKey: EnemyTemplateKey): Enemy {
-  return { ...ENEMY_TEMPLATES[templateKey], inventory: [] };
+  return { ...ENEMIES[templateKey], inventory: [] };
 }

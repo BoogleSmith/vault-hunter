@@ -15,7 +15,7 @@ import {
   createGame,
 } from "./game/map";
 import { createPlayer } from "./game/player";
-import { runCombatRound, tryFlee } from "./game/combat";
+import { runCombatRound, runEnemyTurn, tryFlee } from "./game/combat";
 import { useItem } from "./game/mechanics";
 import type { Game } from "./game/types";
 import { GameplayPage } from "./features/gameplay/GameplayPage";
@@ -78,7 +78,12 @@ function App() {
   }
 
   function handleUseItem(index: number): void {
-    withGameUpdate((next) => useItem(next, index));
+    withGameUpdate((next) => {
+      const used = useItem(next, index);
+      if (used) {
+        runEnemyTurn(next);
+      }
+    });
   }
 
   function resetGame(): void {

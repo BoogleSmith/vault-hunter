@@ -1,6 +1,8 @@
 import {
   DIFFICULTIES,
   DIRECTIONS,
+  ENEMIES,
+  ENEMY_TEMPLATE_KEYS,
   ITEM_KEYS,
   ITEMS,
   ROOM_TYPES,
@@ -10,7 +12,9 @@ import { addHealth, nextInt } from "./mechanics";
 import type {
   DifficultyKey,
   DirectionKey,
+  EnemyTemplateKey,
   Game,
+  LootTag,
   Player,
   Room,
   RoomTypeKey,
@@ -51,7 +55,7 @@ function pickFromWeighted(
 }
 
 function pickWeightedItemKeyForTags(
-  tags: string[],
+  tags: LootTag[],
 ): (typeof ITEM_KEYS)[number] | undefined {
   if (tags.length === 0) {
     return pickWeightedItemKey();
@@ -69,6 +73,39 @@ function pickWeightedItemKeyForTags(
   );
 }
 
+function pickWeightedEnemyTemplateKeyForTags(
+  tags: LootTag[],
+): EnemyTemplateKey {
+  const pool = ENEMY_TEMPLATE_KEYS.filter(
+    (key) => key !== "EMPTY" && key !== "DRAKE",
+  );
+  if (pool.length === 0) {
+    return "EMPTY";
+  }
+
+  const tagged = pool
+    .map((key) => ({
+      key,
+      overlap: ENEMIES[key].lootTags.filter((tag) => tags.includes(tag)).length,
+    }))
+    .filter((entry) => entry.overlap > 0)
+    .map((entry) => ({ key: entry.key, weight: entry.overlap }));
+
+  const weightedPool =
+    tagged.length > 0 ? tagged : pool.map((key) => ({ key, weight: 1 }));
+
+  const total = weightedPool.reduce((sum, entry) => sum + entry.weight, 0);
+  let roll = Math.random() * total;
+  for (const entry of weightedPool) {
+    roll -= entry.weight;
+    if (roll <= 0) {
+      return entry.key;
+    }
+  }
+
+  return weightedPool[weightedPool.length - 1]?.key ?? "EMPTY";
+}
+
 function roomFromType(
   typeKey: RoomTypeKey,
   x: number,
@@ -77,10 +114,14 @@ function roomFromType(
   alwaysSpawnEnemy = false,
 ): Room {
   const type = ROOM_BY_KEY[typeKey];
-  const enemy =
-    alwaysSpawnEnemy || Math.random() >= 0.5
-      ? enemyFromTemplate(type.enemy)
-      : enemyFromTemplate("EMPTY");
+  const shouldSpawnEnemy =
+    typeKey !== "FOYER" && (alwaysSpawnEnemy || Math.random() >= 0.5);
+  const enemyTemplateKey = shouldSpawnEnemy
+    ? typeKey === "VAULT"
+      ? "DRAKE"
+      : pickWeightedEnemyTemplateKeyForTags(type.lootTags)
+    : "EMPTY";
+  const enemy = enemyFromTemplate(enemyTemplateKey);
 
   if (enemy.alive && ITEM_KEYS.length > 0 && Math.random() < 0.25) {
     const itemKey = pickWeightedItemKeyForTags([
@@ -134,7 +175,7 @@ export function createGame({
   const map: Room[][] = Array.from({ length: height }, (_, y) => {
     return Array.from({ length: width }, (_, x) => {
       if (x === startX && y === startY) {
-        return roomFromType("FOYER", x, y, true, true);
+        return roomFromType("FOYER", x, y, true, false);
       }
       if (x === vaultX && y === vaultY) {
         return roomFromType("VAULT", x, y, false, true);

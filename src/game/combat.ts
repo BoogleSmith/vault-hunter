@@ -112,3 +112,16 @@ export function tryFlee(game: Game): void {
   game.log.push(`${game.player.name} escaped!`);
   movePlayer(game, directionKey);
 }
+
+export function runEnemyTurn(game: Game): void {
+  const room = getCurrentRoom(game);
+  if (!room.enemy.alive || !game.player.alive) {
+    return;
+  }
+
+  game.log.push(attack(room.enemy, game.player));
+  if (!game.player.alive) {
+    game.status = "lost";
+    game.log.push("You have fallen. Game over.");
+  }
+}

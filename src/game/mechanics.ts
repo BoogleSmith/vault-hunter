@@ -33,9 +33,9 @@ export function applyItemEffect(player: Player, item: Item): void {
   if (e.dexterity) player.dexterity += e.dexterity;
 }
 
-export function useItem(game: Game, index: number): void {
+export function useItem(game: Game, index: number): boolean {
   const item = game.player.inventory[index];
-  if (!item || !item.usable) return;
+  if (!item || !item.usable) return false;
 
   const cooldownRemaining = item.sharedCooldown
     ? (game.player.itemCooldowns[item.key] ?? 0)
@@ -46,7 +46,7 @@ export function useItem(game: Game, index: number): void {
         cooldownRemaining !== 1 ? "s" : ""
       } remaining).`,
     );
-    return;
+    return false;
   }
 
   const alreadyApplied = game.player.usedItemKeys.includes(item.key);
@@ -55,11 +55,11 @@ export function useItem(game: Game, index: number): void {
     // Re-use after cooldown: only restore HP, never re-apply permanent stats
     if (!item.effect.health) {
       game.log.push(`${item.label} has already been fully empowered.`);
-      return;
+      return false;
     }
     if (game.player.health >= game.player.healthMax) {
       game.log.push(`You are already at full health.`);
-      return;
+      return false;
     }
     addHealth(game.player, item.effect.health);
     game.log.push(
@@ -71,7 +71,7 @@ export function useItem(game: Game, index: number): void {
       Object.keys(item.effect).every((k) => k === "health");
     if (isHealthOnly && game.player.health >= game.player.healthMax) {
       game.log.push(`You are already at full health.`);
-      return;
+      return false;
     }
     applyItemEffect(game.player, item);
     if (!item.consumable) {
@@ -89,4 +89,6 @@ export function useItem(game: Game, index: number): void {
       item.cooldownRemaining = item.cooldown;
     }
   }
+
+  return true;
 }

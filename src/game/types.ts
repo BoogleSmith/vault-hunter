@@ -149,7 +149,6 @@ export interface Player extends UnitBase {
 export interface RoomTypeMeta {
   key: RoomTypeKey;
   tile: string;
-  enemy: EnemyTemplateKey;
   description: string;
   lootTags: LootTag[];
 }
