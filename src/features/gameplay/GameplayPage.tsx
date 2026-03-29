@@ -9,6 +9,7 @@ import { AdventureLogPanel } from "./components/AdventureLogPanel";
 import { RoomPanel } from "./components/RoomPanel";
 import { StatusPanel } from "./components/StatusPanel";
 import { DebugMenu } from "./components/DebugMenu";
+import { ExplorePanel } from "./components/ExplorePanel";
 
 interface GameplayPageProps {
   game: Game;
@@ -74,16 +75,23 @@ export function GameplayPage({
         <RoomPanel
           game={game}
           currentRoom={currentRoom}
-          availableDirections={availableDirections}
           inEncounter={inEncounter}
-          onMove={onMove}
-          onWait={onWait}
           onAttack={onAttack}
           onFlee={onFlee}
           onOpenInventory={() => setShowEquipModal(true)}
-          showEnemyDebug={showEnemyDebug}
         />
       </section>
+      {!inEncounter && (
+        <section className="explore-column">
+          <ExplorePanel
+            game={game}
+            availableDirections={availableDirections}
+            onMove={onMove}
+            onWait={onWait}
+            showEnemyDebug={showEnemyDebug}
+          />
+        </section>
+      )}
       <AdventureLogPanel log={game.log} />
       <button className="exit-fab" onClick={onReset}>
         ← Exit

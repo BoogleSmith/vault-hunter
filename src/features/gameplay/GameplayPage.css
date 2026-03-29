@@ -9,8 +9,9 @@
 .shell.in-game {
   min-height: calc(100vh - 4rem);
   grid-template-columns: minmax(20rem, 1fr) minmax(28rem, 1.35fr);
-  grid-template-rows: minmax(0, 1fr) clamp(14rem, 28vh, 20rem);
+  grid-template-rows: auto auto clamp(14rem, 28vh, 20rem);
   align-items: start;
+  align-content: start;
 }
 
 .hud-column {
@@ -26,6 +27,11 @@
 }
 
 .room-column {
+  align-self: start;
+}
+
+.explore-column {
+  grid-column: 1 / -1;
   align-self: start;
 }
 

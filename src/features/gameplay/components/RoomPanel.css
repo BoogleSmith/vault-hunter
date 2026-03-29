@@ -2,67 +2,6 @@
   margin: 0.2rem 0 0.65rem;
 }
 
-.actions {
-  margin-top: 0.7rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.3rem;
-}
-
-.actions-label {
-  font-size: 0.72rem;
-  font-weight: 700;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--line);
-  margin: 0.4rem 0 0.2rem;
-}
-
-.actions-label:first-child {
-  margin-top: 0;
-}
-
-.dpad {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  grid-template-rows: repeat(3, minmax(0, auto));
-  gap: 0.35rem;
-  width: fit-content;
-}
-
-.dpad button {
-  width: 3rem;
-  height: 2.5rem;
-  padding: 0;
-  font-size: 1.15rem;
-}
-
-.map {
-  margin-top: 1rem;
-  font-family: "JetBrains Mono", "Consolas", monospace;
-  overflow-x: auto;
-}
-
-.map-row {
-  display: flex;
-}
-
-.tile {
-  width: 1.9rem;
-  height: 1.9rem;
-  display: inline-grid;
-  place-items: center;
-  border: 1px solid var(--line);
-  background: color-mix(in srgb, var(--panel) 86%, white);
-}
-
-.tile.current {
-  background: var(--accent);
-  color: #fff;
-  font-weight: 800;
-}
-
-.tile.enemy:not(.current) {
-  background: color-mix(in srgb, #bf3f3f 48%, var(--panel));
-  color: color-mix(in srgb, #fff 86%, var(--ink));
+.room {
+  position: relative;
 }

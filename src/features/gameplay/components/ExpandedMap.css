@@ -1,0 +1,67 @@
+.expanded-map-grid {
+  --expanded-map-cell: 4rem;
+  --expanded-map-gap: 0.22rem;
+  display: grid;
+  gap: var(--expanded-map-gap);
+  width: fit-content;
+  max-width: 100%;
+  max-height: 65vh;
+  overflow: auto;
+  margin: 0 auto;
+}
+
+.expanded-map-tile {
+  width: var(--expanded-map-cell);
+  height: var(--expanded-map-cell);
+  display: grid;
+  align-content: center;
+  justify-items: center;
+  gap: 0.1rem;
+  padding: 0.08rem;
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  background: color-mix(in srgb, var(--panel) 86%, white);
+}
+
+.expanded-map-symbol {
+  font-size: 0.9rem;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.expanded-map-name {
+  font-size: 0.52rem;
+  text-align: center;
+  line-height: 1.12;
+  font-weight: 800;
+  max-width: 100%;
+  white-space: normal;
+  overflow-wrap: normal;
+  word-break: normal;
+  hyphens: none;
+}
+
+.expanded-map-tile.current {
+  background: var(--accent);
+  color: #fff;
+  font-weight: 800;
+}
+
+.expanded-map-tile.enemy:not(.current) {
+  background: color-mix(in srgb, #bf3f3f 48%, var(--panel));
+  color: color-mix(in srgb, #fff 86%, var(--ink));
+}
+
+.expanded-map-tile.hidden {
+  background:
+    radial-gradient(
+      circle at 50% 50%,
+      rgba(255, 255, 255, 0.1) 0 1px,
+      transparent 1px
+    ),
+    color-mix(in srgb, var(--panel) 68%, black 12%);
+  background-size:
+    8px 8px,
+    auto;
+  border-color: color-mix(in srgb, var(--line) 70%, black 10%);
+}
