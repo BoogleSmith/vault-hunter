@@ -12,6 +12,7 @@ interface GameplayPageProps {
   availableDirections: Record<DirectionKey, boolean>;
   inEncounter: boolean;
   onMove: (direction: DirectionKey) => void;
+  onWait: () => void;
   onAttack: () => void;
   onFlee: () => void;
   onReset: () => void;
@@ -28,6 +29,7 @@ export function GameplayPage({
   availableDirections,
   inEncounter,
   onMove,
+  onWait,
   onAttack,
   onFlee,
   onReset,
@@ -69,6 +71,7 @@ export function GameplayPage({
           availableDirections={availableDirections}
           inEncounter={inEncounter}
           onMove={onMove}
+          onWait={onWait}
           onAttack={onAttack}
           onFlee={onFlee}
           showEnemyDebug={showEnemyDebug}

@@ -15,6 +15,7 @@ interface RoomPanelProps {
   availableDirections: Record<DirectionKey, boolean>;
   inEncounter: boolean;
   onMove: (direction: DirectionKey) => void;
+  onWait: () => void;
   onAttack: () => void;
   onFlee: () => void;
   showEnemyDebug: boolean;
@@ -26,6 +27,7 @@ export function RoomPanel({
   availableDirections,
   inEncounter,
   onMove,
+  onWait,
   onAttack,
   onFlee,
   showEnemyDebug,
@@ -61,6 +63,16 @@ export function RoomPanel({
                 {label}
               </button>
             ))}
+            <button
+              className="ghost"
+              style={{ gridColumn: 2, gridRow: 2 }}
+              onClick={onWait}
+              disabled={!isPlaying}
+              aria-label="Wait"
+              title="Wait"
+            >
+              ⏳
+            </button>
           </div>
         </div>
       )}

@@ -138,6 +138,29 @@ function App() {
     });
   }
 
+  function handleWait(): void {
+    if (activePrompt) return;
+    withGameUpdate((next) => {
+      const restoreAmount = 15;
+      const oldHealth = next.player.health;
+      next.player.health = Math.min(
+        next.player.health + restoreAmount,
+        next.player.healthMax,
+      );
+      const actualRestore = next.player.health - oldHealth;
+
+      if (actualRestore > 0) {
+        next.log.push(
+          `You rest and recover ${actualRestore} health. (${oldHealth}/${next.player.healthMax} → ${next.player.health}/${next.player.healthMax})`,
+        );
+      } else {
+        next.log.push("You hold position and listen for movement...");
+      }
+
+      advanceEnemyRoaming(next);
+    });
+  }
+
   function handleAttack(): void {
     if (activePrompt) return;
     withGameUpdate((next) => {
@@ -219,6 +242,7 @@ function App() {
         availableDirections={availableDirections}
         inEncounter={inEncounter}
         onMove={handleMove}
+        onWait={handleWait}
         onAttack={handleAttack}
         onFlee={handleFlee}
         onReset={resetGame}
