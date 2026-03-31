@@ -236,11 +236,19 @@ export function useItem(game: Game, index: number): boolean {
       game.log.push(`You are already at full health.`);
       return false;
     }
+
+    const previousHealth = game.player.health;
     applyItemEffect(game.player, item);
     if (!item.consumable) {
       game.player.usedItemKeys.push(item.key);
     }
-    game.log.push(`You used ${item.label}.`);
+
+    const restoredHealth = Math.max(0, game.player.health - previousHealth);
+    if (restoredHealth > 0) {
+      game.log.push(`You used ${item.label}, restoring ${restoredHealth} HP.`);
+    } else {
+      game.log.push(`You used ${item.label}.`);
+    }
   }
 
   if (item.consumable) {

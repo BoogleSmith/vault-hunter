@@ -5,3 +5,145 @@
 .room {
   position: relative;
 }
+
+.room-combat-toast {
+  display: grid;
+  gap: 0.18rem;
+  margin: 0.85rem 0 0.9rem;
+  padding: 0.75rem 0.9rem;
+  border-radius: 12px;
+  border: 1px solid var(--line);
+  background:
+    radial-gradient(
+      circle at top left,
+      rgba(255, 255, 255, 0.12) 0%,
+      transparent 44%
+    ),
+    linear-gradient(
+      145deg,
+      color-mix(in srgb, var(--panel) 90%, white) 0%,
+      color-mix(in srgb, var(--panel) 72%, black 8%) 100%
+    );
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.14);
+  animation: room-combat-toast-in 0.52s cubic-bezier(0.2, 0.88, 0.28, 1);
+}
+
+.room-combat-toast--alert {
+  border-color: color-mix(in srgb, #d6b26e 34%, var(--line));
+}
+
+.room-combat-toast--escape {
+  border-color: color-mix(in srgb, #88bfd0 36%, var(--line));
+}
+
+.room-combat-toast__eyebrow {
+  font-size: 0.66rem;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--accent) 62%, white 6%);
+}
+
+.room-combat-toast__text {
+  font-size: 0.92rem;
+  font-weight: 700;
+  line-height: 1.3;
+  color: var(--ink);
+}
+
+.room-postcombat-card {
+  display: grid;
+  gap: 0.75rem;
+  margin: 0.6rem 0;
+  padding: 1.25rem 1.25rem 1.2rem;
+  border-radius: 18px;
+  border: 1px solid color-mix(in srgb, #8bbd74 38%, var(--line));
+  background:
+    radial-gradient(
+      circle at top left,
+      rgba(139, 189, 116, 0.15) 0%,
+      transparent 42%
+    ),
+    linear-gradient(
+      155deg,
+      color-mix(in srgb, var(--panel) 92%, white) 0%,
+      color-mix(in srgb, var(--panel) 70%, black 10%) 100%
+    );
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.18);
+  animation: room-postcombat-card-in 0.44s cubic-bezier(0.16, 0.84, 0.28, 1);
+}
+
+.room-postcombat-card--loot {
+  border-color: color-mix(in srgb, #d6b26e 38%, var(--line));
+  background:
+    radial-gradient(
+      circle at top left,
+      rgba(214, 178, 110, 0.15) 0%,
+      transparent 42%
+    ),
+    linear-gradient(
+      155deg,
+      color-mix(in srgb, var(--panel) 92%, white) 0%,
+      color-mix(in srgb, var(--panel) 70%, black 10%) 100%
+    );
+}
+
+.room-postcombat-card__eyebrow {
+  font-size: 0.68rem;
+  font-weight: 900;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, #8bbd74 74%, white 8%);
+}
+
+.room-postcombat-card--loot .room-postcombat-card__eyebrow {
+  color: color-mix(in srgb, #d6b26e 74%, white 8%);
+}
+
+.room-postcombat-card__message {
+  margin: 0;
+  font-size: 0.98rem;
+  line-height: 1.5;
+  color: var(--ink);
+}
+
+.room-postcombat-card__loot-list {
+  margin: 0;
+  padding: 0 0 0 1.1rem;
+  display: grid;
+  gap: 0.3rem;
+}
+
+.room-postcombat-card__loot-item {
+  font-size: 0.95rem;
+  color: var(--ink);
+}
+
+.room-postcombat-card__button {
+  justify-self: start;
+  min-width: 11rem;
+}
+
+@keyframes room-combat-toast-in {
+  0% {
+    opacity: 0;
+    transform: translateY(8px) scale(0.98);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes room-postcombat-card-in {
+  0% {
+    opacity: 0;
+    transform: translateY(10px) scale(0.97);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}

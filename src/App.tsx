@@ -76,6 +76,7 @@ function App() {
     const nextEnemy = nextRoom?.enemy;
     const wasEncounter = Boolean(previousEnemy?.alive);
     const nowEncounter = Boolean(nextEnemy?.alive);
+    const endedEncounter = wasEncounter && !nowEncounter;
 
     const enemyChangedWhileEncountered =
       wasEncounter &&
@@ -101,6 +102,10 @@ function App() {
     );
     for (const item of game.player.inventory) {
       if (item.instanceId !== undefined && !previousIds.has(item.instanceId)) {
+        // Loot gained as part of defeating an enemy is presented inline in RoomPanel.
+        if (endedEncounter) {
+          continue;
+        }
         nextPrompts.push({
           title: "You acquired an item!",
           message: `You obtained ${item.label}. ${item.description}`,
