@@ -1,6 +1,7 @@
 {
   "WARRIOR": {
     "label": "Warrior",
+    "summary": "A frontline bruiser who thrives in prolonged fights with heavy steel and relentless pressure.",
     "startingItems": ["HEALTH_POTION", "RUSTY_SWORD", "CHAIN_MAIL"],
     "bonuses": {
       "health": 100,
@@ -13,6 +14,7 @@
   },
   "THEIF": {
     "label": "Theif",
+    "summary": "A slippery infiltrator built around speed, positioning, and evasive play over raw toughness.",
     "startingItems": [
       "HEALTH_POTION",
       "BONE_DAGGER",
@@ -24,12 +26,13 @@
       "healthMax": 0,
       "damageBase": 0,
       "damageMax": 0,
-      "agility": 60,
+      "agility": 15,
       "dexterity": 20
     }
   },
   "ROGUE": {
     "label": "Rogue",
+    "summary": "A precision striker that balances mobility with burst damage and sharp finishing blows.",
     "startingItems": [
       "HEALTH_POTION",
       "BONE_DAGGER",
@@ -41,12 +44,13 @@
       "healthMax": 0,
       "damageBase": 20,
       "damageMax": 0,
-      "agility": 0,
-      "dexterity": 30
+      "agility": 5,
+      "dexterity": 10
     }
   },
   "BRAWLER": {
     "label": "Brawler",
+    "summary": "A reckless powerhouse that trades finesse for crushing hits and durable armor.",
     "startingItems": ["HEALTH_POTION", "RUSTY_SWORD", "PLATE_ARMOR"],
     "bonuses": {
       "health": 0,

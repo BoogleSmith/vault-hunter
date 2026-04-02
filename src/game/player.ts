@@ -1,4 +1,4 @@
-import { itemFromTemplate, PLAYER_CLASSES } from "./data";
+import { ITEMS, itemFromTemplate, PLAYER_CLASSES } from "./data";
 import {
   applyItemEffect,
   removeItemEffect,
@@ -16,6 +16,49 @@ const BASE_PLAYER: UnitBase = {
   alive: true,
 };
 
+export function getStartingStatsForClass(classKey: PlayerClassKey): UnitBase {
+  const stats = getClassStatsBeforeEquipment(classKey);
+  const playerClass = PLAYER_CLASSES[classKey];
+
+  // Starting equipment is auto-equipped and affects opening stats.
+  for (const itemKey of playerClass.startingItems) {
+    const item = ITEMS[itemKey];
+    if (!item.equipSlots?.length) {
+      continue;
+    }
+    const effect = item.effect;
+    if (effect.healthMax) {
+      stats.healthMax += effect.healthMax;
+      stats.health = Math.min(stats.health + effect.healthMax, stats.healthMax);
+    }
+    if (effect.health) {
+      stats.health = Math.min(stats.health + effect.health, stats.healthMax);
+    }
+    if (effect.damageBase) stats.damageBase += effect.damageBase;
+    if (effect.damageMax) stats.damageMax += effect.damageMax;
+    if (effect.agility) stats.agility += effect.agility;
+    if (effect.dexterity) stats.dexterity += effect.dexterity;
+  }
+
+  return stats;
+}
+
+function getClassStatsBeforeEquipment(classKey: PlayerClassKey): UnitBase {
+  const playerClass = PLAYER_CLASSES[classKey];
+  const bonuses = playerClass.bonuses;
+
+  return {
+    health: BASE_PLAYER.health + bonuses.health,
+    healthMax: BASE_PLAYER.healthMax + bonuses.healthMax,
+    damageBase: BASE_PLAYER.damageBase + bonuses.damageBase,
+    damageMax:
+      BASE_PLAYER.damageBase + BASE_PLAYER.damageMax + bonuses.damageMax,
+    agility: BASE_PLAYER.agility + bonuses.agility,
+    dexterity: BASE_PLAYER.dexterity + bonuses.dexterity,
+    alive: true,
+  };
+}
+
 export function createPlayer({
   name,
   classKey,
@@ -24,18 +67,17 @@ export function createPlayer({
   classKey: PlayerClassKey;
 }): Player {
   const playerClass = PLAYER_CLASSES[classKey];
-  const bonuses = playerClass.bonuses;
+  const baseStats = getClassStatsBeforeEquipment(classKey);
 
   const player: Player = {
     name: name.trim() || "Stranger",
     classKey,
-    health: BASE_PLAYER.health + bonuses.health,
-    healthMax: BASE_PLAYER.healthMax + bonuses.healthMax,
-    damageBase: BASE_PLAYER.damageBase + bonuses.damageBase,
-    damageMax:
-      BASE_PLAYER.damageBase + BASE_PLAYER.damageMax + bonuses.damageMax,
-    agility: BASE_PLAYER.agility + bonuses.agility,
-    dexterity: BASE_PLAYER.dexterity + bonuses.dexterity,
+    health: baseStats.health,
+    healthMax: baseStats.healthMax,
+    damageBase: baseStats.damageBase,
+    damageMax: baseStats.damageMax,
+    agility: baseStats.agility,
+    dexterity: baseStats.dexterity,
     alive: true,
     inventory: [],
     equipment: {},

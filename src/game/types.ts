@@ -129,6 +129,7 @@ export interface UnitBonuses {
 
 export interface PlayerClass {
   label: string;
+  summary: string;
   bonuses: UnitBonuses;
   startingItems: ItemKey[];
 }
