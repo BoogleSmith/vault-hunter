@@ -6,7 +6,7 @@ import {
   getCurrentRoom,
   movePlayer,
 } from "./map";
-import type { DirectionKey, Game, UnitBase } from "./types";
+import type { Combative, Damageable, DirectionKey, Game } from "./types";
 
 function getPlayerArmorValue(game: Game): number {
   const equippedIds = new Set(
@@ -42,7 +42,7 @@ function checkEvade(
 }
 
 function calculateDamage(
-  source: { damageMax: number; damageBase: number },
+  source: Combative,
   target: { armorValue: number },
 ): number {
   const roll = nextInt(source.damageMax, source.damageBase);
@@ -50,12 +50,9 @@ function calculateDamage(
 }
 
 function attack(
-  source: { name: string } & UnitBase & {
-      dexterity: number;
-      damageBase: number;
-      damageMax: number;
-    },
-  target: { name: string } & UnitBase & { agility: number },
+  source: { name: string; alive: boolean; dexterity: number } & Damageable &
+    Combative,
+  target: { name: string; alive: boolean; agility: number } & Damageable,
   targetArmorValue: number,
 ): string {
   if (!source.alive || !target.alive) {

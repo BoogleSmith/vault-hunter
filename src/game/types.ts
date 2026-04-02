@@ -163,11 +163,26 @@ export interface Direction {
   dy: number;
 }
 
-export interface UnitBase {
+export interface Damageable {
   health: number;
   healthMax: number;
+}
+
+export interface Combative {
   damageBase: number;
   damageMax: number;
+}
+
+export interface Levelable {
+  level: number;
+  experience: number;
+}
+
+export interface Inventory {
+  inventory: Item[];
+}
+
+export interface UnitBase extends Damageable, Combative {
   agility: number;
   dexterity: number;
   alive: boolean;
@@ -185,22 +200,21 @@ export interface EnemyTemplate extends UnitBase {
   undiscoveredRoaming: boolean;
 }
 
-export type Enemy = Entity<EnemyTemplate> & {
-  roamDelayRemaining?: number;
-  inventory: Item[];
-};
+export type Enemy = Entity<EnemyTemplate> &
+  Inventory & {
+    roamDelayRemaining?: number;
+  };
 
 export interface PlayerTemplate {
   classKey: PlayerClassKey;
 }
 
 export type Player = Entity<PlayerTemplate> &
-  UnitBase & {
+  UnitBase &
+  Levelable &
+  Inventory & {
     name: string;
     classKey: PlayerClassKey;
-    level: number;
-    experience: number;
-    inventory: Item[];
     equipment: Partial<Record<ItemSlot, string>>;
     itemCooldowns: Partial<Record<ItemKey, number>>;
     usedItemKeys: ItemKey[];
