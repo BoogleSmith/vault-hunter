@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import "../../shared/components/controls.css";
 import "../../shared/components/surface.css";
 import "./RoomPanel.css";
@@ -9,7 +9,8 @@ type PostCombatPhase = "none" | "animating" | "message" | "loot";
 
 interface VictoryState {
   enemyName: string;
-  lootItems: string[];
+  logIndexAtVictory: number;
+  searched: boolean;
 }
 
 interface RoomPanelProps {
@@ -19,6 +20,7 @@ interface RoomPanelProps {
   onCombatVisibilityChange?: (visible: boolean) => void;
   onAttack: () => void;
   onFlee: () => void;
+  onSearchBody: () => void;
   onOpenInventory: () => void;
 }
 
@@ -29,6 +31,7 @@ export function RoomPanel({
   onCombatVisibilityChange,
   onAttack,
   onFlee,
+  onSearchBody,
   onOpenInventory,
 }: RoomPanelProps) {
   const roomMeta = getRoomMeta(currentRoom);
@@ -68,7 +71,7 @@ export function RoomPanel({
     };
   }, []);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const previous = previousStateRef.current;
     const stayedInSameRoom =
       previous.roomX === currentRoom.x && previous.roomY === currentRoom.y;
@@ -92,15 +95,13 @@ export function RoomPanel({
       if (victoryTimeoutRef.current !== null) {
         window.clearTimeout(victoryTimeoutRef.current);
       }
-      const lootItems = game.log.slice(-10).flatMap((line) => {
-        const m = line.match(/^You found (.+) on the body!$/);
-        return m?.[1] ? [m[1]] : [];
+      setCombatPresentation("victory-exit");
+      setPostCombatPhase("animating");
+      setVictoryState({
+        enemyName,
+        logIndexAtVictory: game.log.length,
+        searched: false,
       });
-      window.setTimeout(() => {
-        setCombatPresentation("victory-exit");
-        setPostCombatPhase("animating");
-        setVictoryState({ enemyName, lootItems });
-      }, 0);
       victoryTimeoutRef.current = window.setTimeout(() => {
         setPostCombatPhase("message");
         victoryTimeoutRef.current = null;
@@ -112,11 +113,9 @@ export function RoomPanel({
         window.clearTimeout(victoryTimeoutRef.current);
         victoryTimeoutRef.current = null;
       }
-      window.setTimeout(() => {
-        setCombatPresentation("active");
-        setPostCombatPhase("none");
-        setVictoryState(null);
-      }, 0);
+      setCombatPresentation("active");
+      setPostCombatPhase("none");
+      setVictoryState(null);
       showNotice(
         "alert",
         stayedInSameRoom
@@ -141,13 +140,17 @@ export function RoomPanel({
     };
   }, [currentRoom, game.log, game.player.name, inEncounter]);
 
-  function advanceFromMessage(): void {
-    if (victoryState && victoryState.lootItems.length > 0) {
-      setPostCombatPhase("loot");
-    } else {
-      setPostCombatPhase("none");
-      setVictoryState(null);
-    }
+  const lootItems = victoryState
+    ? game.log.slice(victoryState.logIndexAtVictory).flatMap((line) => {
+        const m = line.match(/^You found (.+) on the body!$/);
+        return m?.[1] ? [m[1]] : [];
+      })
+    : [];
+
+  function handleSearchBody(): void {
+    onSearchBody();
+    setVictoryState((prev) => (prev ? { ...prev, searched: true } : null));
+    setPostCombatPhase("loot");
   }
 
   function advanceFromLoot(): void {
@@ -179,42 +182,6 @@ export function RoomPanel({
         </div>
       )}
 
-      {postCombatPhase === "message" && victoryState && (
-        <div className="room-postcombat-card">
-          <span className="room-postcombat-card__eyebrow">Victory</span>
-          <p className="room-postcombat-card__message">
-            <strong>{victoryState.enemyName}</strong> has been defeated.
-          </p>
-          <button
-            className="room-postcombat-card__button"
-            onClick={advanceFromMessage}
-          >
-            {victoryState.lootItems.length > 0
-              ? "Check the Body →"
-              : "Return to Room"}
-          </button>
-        </div>
-      )}
-
-      {postCombatPhase === "loot" && victoryState && (
-        <div className="room-postcombat-card room-postcombat-card--loot">
-          <span className="room-postcombat-card__eyebrow">Items Found</span>
-          <ul className="room-postcombat-card__loot-list">
-            {victoryState.lootItems.map((item, i) => (
-              <li key={i} className="room-postcombat-card__loot-item">
-                {item}
-              </li>
-            ))}
-          </ul>
-          <button
-            className="room-postcombat-card__button"
-            onClick={advanceFromLoot}
-          >
-            Return to Room
-          </button>
-        </div>
-      )}
-
       <div style={showCombatPanel ? undefined : { display: "none" }}>
         <CombatPanel
           key={`${currentRoom.x}-${currentRoom.y}-${currentRoom.enemy.instanceId}`}
@@ -226,6 +193,12 @@ export function RoomPanel({
           onOpenInventory={onOpenInventory}
           isPlaying={isPlaying && inEncounter}
           presentationMode={inEncounter ? "active" : combatPresentation}
+          postCombatPhase={postCombatPhase}
+          postCombatEnemyName={victoryState?.enemyName ?? null}
+          postCombatLootItems={lootItems}
+          postCombatHasSearched={victoryState?.searched ?? false}
+          onSearchBody={handleSearchBody}
+          onReturnToRoom={advanceFromLoot}
         />
       </div>
     </section>

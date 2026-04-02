@@ -9,6 +9,8 @@ import {
   type CombatPresentationMode,
 } from "./useCombatAnimationState";
 
+type PostCombatPhase = "none" | "animating" | "message" | "loot";
+
 interface CombatPanelProps {
   player: Player;
   enemy: Enemy;
@@ -18,6 +20,12 @@ interface CombatPanelProps {
   onOpenInventory: () => void;
   isPlaying: boolean;
   presentationMode?: CombatPresentationMode;
+  postCombatPhase?: PostCombatPhase;
+  postCombatEnemyName?: string | null;
+  postCombatLootItems?: string[];
+  postCombatHasSearched?: boolean;
+  onSearchBody?: () => void;
+  onReturnToRoom?: () => void;
 }
 
 export function CombatPanel({
@@ -29,6 +37,11 @@ export function CombatPanel({
   onOpenInventory,
   isPlaying,
   presentationMode = "active",
+  postCombatPhase = "none",
+  postCombatLootItems = [],
+  postCombatHasSearched = false,
+  onSearchBody,
+  onReturnToRoom,
 }: CombatPanelProps) {
   const classLabel = PLAYER_CLASSES[player.classKey].label;
   const {
@@ -77,6 +90,7 @@ export function CombatPanel({
 
       <div className={`combat-arena ${actionMeta.arenaClassName}`}>
         <CombatEntityCard
+          key={player.instanceId}
           direction="left"
           alignment="friendly"
           state={playerState}
@@ -94,6 +108,7 @@ export function CombatPanel({
         </div>
 
         <CombatEntityCard
+          key={enemy.instanceId}
           direction="right"
           alignment="hostile"
           state={enemyEntered ? enemyState : "entering"}
@@ -107,23 +122,51 @@ export function CombatPanel({
       </div>
 
       <div className="combat-actions">
-        <button onClick={onAttack} disabled={!isPlaying || isAnimating}>
-          {isAnimating ? "Resolving..." : "⚔️ Attack"}
-        </button>
-        <button
-          className="ghost"
-          onClick={onOpenInventory}
-          disabled={!isPlaying || isAnimating}
-        >
-          💼 Inventory
-        </button>
-        <button
-          className="ghost"
-          onClick={onFlee}
-          disabled={!isPlaying || isAnimating}
-        >
-          🏃 Flee
-        </button>
+        {postCombatPhase === "message" || postCombatPhase === "loot" ? (
+          <>
+            {postCombatPhase === "loot" &&
+              (postCombatLootItems.length > 0 ? (
+                <ul className="combat-postcombat__loot">
+                  {postCombatLootItems.map((item, i) => (
+                    <li key={i} className="combat-postcombat__loot-item">
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+              ) : null)}
+            <div className="combat-postcombat__buttons">
+              <button onClick={onSearchBody} disabled={postCombatHasSearched}>
+                🔍 Search
+              </button>
+              <button className="ghost" onClick={onOpenInventory}>
+                💼 Inventory
+              </button>
+              <button className="ghost" onClick={onReturnToRoom}>
+                🏃 Leave
+              </button>
+            </div>
+          </>
+        ) : (
+          <>
+            <button onClick={onAttack} disabled={!isPlaying || isAnimating}>
+              {isAnimating ? "Resolving..." : "⚔️ Attack"}
+            </button>
+            <button
+              className="ghost"
+              onClick={onOpenInventory}
+              disabled={!isPlaying || isAnimating}
+            >
+              💼 Inventory
+            </button>
+            <button
+              className="ghost"
+              onClick={onFlee}
+              disabled={!isPlaying || isAnimating}
+            >
+              🏃 Flee
+            </button>
+          </>
+        )}
       </div>
     </div>
   );

@@ -103,13 +103,6 @@ export function runCombatRound(game: Game): void {
         );
       }
     }
-
-    // Enemy just died — collect any dropped items
-    for (const item of room.enemy.inventory) {
-      game.player.inventory.push(item);
-      game.log.push(`You found ${item.label} on the body!`);
-    }
-    room.enemy.inventory = [];
   }
   if (!game.player.alive) {
     game.status = "lost";
@@ -117,6 +110,23 @@ export function runCombatRound(game: Game): void {
   }
 
   checkVictory(game);
+}
+
+export function searchBody(game: Game): void {
+  const room = getCurrentRoom(game);
+  if (room.enemy.alive) {
+    game.log.push("The enemy isn't dead yet.");
+    return;
+  }
+  if (room.enemy.inventory.length === 0) {
+    game.log.push("You search the body but find nothing of value.");
+    return;
+  }
+  for (const item of room.enemy.inventory) {
+    game.player.inventory.push(item);
+    game.log.push(`You found ${item.label} on the body!`);
+  }
+  room.enemy.inventory = [];
 }
 
 export function tryFlee(game: Game): void {

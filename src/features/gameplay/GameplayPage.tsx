@@ -20,6 +20,7 @@ interface GameplayPageProps {
   onWait: () => void;
   onAttack: () => void;
   onFlee: () => void;
+  onSearchBody: () => void;
   onReset: () => void;
   onUseItem: (index: number) => void;
   onEquipItem: (index: number) => void;
@@ -39,6 +40,7 @@ export function GameplayPage({
   onWait,
   onAttack,
   onFlee,
+  onSearchBody,
   onReset,
   onUseItem,
   onEquipItem,
@@ -81,6 +83,7 @@ export function GameplayPage({
           onCombatVisibilityChange={setIsCombatPanelVisible}
           onAttack={onAttack}
           onFlee={onFlee}
+          onSearchBody={onSearchBody}
           onOpenInventory={() => setShowEquipModal(true)}
         />
       </section>

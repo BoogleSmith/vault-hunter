@@ -14,7 +14,12 @@ import {
   createGame,
 } from "./game/map";
 import { createPlayer } from "./game/player";
-import { runCombatRound, runEnemyTurn, tryFlee } from "./game/combat";
+import {
+  runCombatRound,
+  runEnemyTurn,
+  searchBody,
+  tryFlee,
+} from "./game/combat";
 import {
   equipItem,
   unequipSlot,
@@ -185,6 +190,12 @@ function App() {
     });
   }
 
+  function handleSearchBody(): void {
+    withGameUpdate((next) => {
+      searchBody(next);
+    });
+  }
+
   function handleUseItem(index: number): void {
     if (activePrompt) return;
     withGameUpdate((next) => {
@@ -273,6 +284,7 @@ function App() {
         onWait={handleWait}
         onAttack={handleAttack}
         onFlee={handleFlee}
+        onSearchBody={handleSearchBody}
         onReset={resetGame}
         onUseItem={handleUseItem}
         onEquipItem={handleEquipItem}
