@@ -36,6 +36,7 @@ const meta = {
     state: {
       control: "select",
       options: [
+        "entering",
         "idle",
         "acting",
         "hit",
@@ -47,7 +48,6 @@ const meta = {
         "victory",
       ],
     },
-    isEntering: { control: "boolean" },
   },
 } satisfies Meta<typeof CombatEntityCard>;
 
@@ -71,7 +71,6 @@ export const EnemyThreaten: Story = {
       { label: "AGI", value: 26 },
       { label: "ARM", value: "0.70" },
     ],
-    isEntering: true,
     floatTexts: [{ text: "INTIMIDATE", tone: "item" }],
   },
 };

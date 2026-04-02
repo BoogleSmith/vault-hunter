@@ -250,8 +250,8 @@
   animation: combat-flee-clear 0.96s ease forwards;
 }
 
-.combatant-card--right.enemy-motion--entering {
-  animation: combat-enemy-menace-intro 0.82s ease;
+.combatant-card.is-entering {
+  animation: combat-intro 0.82s ease;
 }
 
 /* Portrait placeholder area */
@@ -774,7 +774,7 @@
   }
 }
 
-@keyframes combat-enemy-menace-intro {
+@keyframes combat-intro {
   0% {
     opacity: 0;
     transform: translateY(18px) scale(0.95);

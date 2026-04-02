@@ -3,6 +3,7 @@ import { HealthBar } from "../../shared/components/HealthBar";
 
 type CombatDirection = "left" | "right";
 type CombatantState =
+  | "entering"
   | "idle"
   | "acting"
   | "hit"
@@ -24,7 +25,6 @@ interface CombatEntityCardProps {
   healthMax: number;
   stats: Array<{ label: string; value: string | number }>;
   floatTexts: Array<{ text: string; tone: FloatingTone }>;
-  isEntering?: boolean;
 }
 
 function StatRow({ label, value }: { label: string; value: string | number }) {
@@ -46,14 +46,12 @@ export function CombatEntityCard({
   healthMax,
   stats,
   floatTexts,
-  isEntering = false,
 }: CombatEntityCardProps) {
   const combatShift = direction === "left" ? 1 : -1;
 
   const classes = [
     "combatant-card",
     `combatant-card--${direction}`,
-    isEntering ? "enemy-motion--entering" : "",
     `is-${state}`,
   ]
     .filter(Boolean)

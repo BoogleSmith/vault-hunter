@@ -94,14 +94,13 @@ export function CombatPanel({
 
         <CombatEntityCard
           direction="right"
-          state={enemyState}
+          state={enemyEntered ? enemyState : "entering"}
           name={enemy.name}
           portraitGlyph="👹"
           healthCurrent={displayedEnemyHealth}
           healthMax={enemy.healthMax}
           stats={enemyStats}
           floatTexts={enemyFloats}
-          isEntering={!enemyEntered}
         />
       </div>
 
