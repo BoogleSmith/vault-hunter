@@ -80,7 +80,7 @@ export function CombatPanel({
         className={`combat-arena ${actionMeta.arenaClassName} combat-arena--enemy-${enemyMotionVariant}`}
       >
         <CombatEntityCard
-          side="player"
+          direction="left"
           state={playerState}
           name={player.name}
           classLabel={classLabel}
@@ -89,7 +89,6 @@ export function CombatPanel({
           healthMax={player.healthMax}
           stats={playerStats}
           floatTexts={playerFloats}
-          combatShift={1}
         />
 
         <div className={`combat-vs ${isAnimating ? "is-active" : ""}`}>
@@ -97,7 +96,7 @@ export function CombatPanel({
         </div>
 
         <CombatEntityCard
-          side="enemy"
+          direction="right"
           state={enemyState}
           name={enemy.name}
           portraitGlyph="👹"
@@ -105,7 +104,6 @@ export function CombatPanel({
           healthMax={enemy.healthMax}
           stats={enemyStats}
           floatTexts={enemyFloats}
-          combatShift={-1}
           motionVariant={enemyMotionVariant}
           isEntering={!enemyEntered}
         />

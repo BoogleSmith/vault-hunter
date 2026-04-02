@@ -16,7 +16,7 @@ const meta = {
     ),
   ],
   args: {
-    side: "player",
+    direction: "left",
     state: "idle",
     name: "Arin",
     classLabel: "Warrior",
@@ -30,10 +30,9 @@ const meta = {
       { label: "DEX", value: 22 },
     ],
     floatTexts: [],
-    combatShift: 1,
   },
   argTypes: {
-    side: { control: "inline-radio", options: ["player", "enemy"] },
+    direction: { control: "inline-radio", options: ["left", "right"] },
     state: {
       control: "select",
       options: [
@@ -62,7 +61,6 @@ const meta = {
       ],
     },
     isEntering: { control: "boolean" },
-    combatShift: { control: "inline-radio", options: [1, -1] },
   },
 } satisfies Meta<typeof CombatEntityCard>;
 
@@ -73,7 +71,7 @@ export const PlayerIdle: Story = {};
 
 export const EnemyThreaten: Story = {
   args: {
-    side: "enemy",
+    direction: "right",
     state: "threaten",
     name: "Spectral Guard",
     classLabel: undefined,
@@ -86,7 +84,6 @@ export const EnemyThreaten: Story = {
       { label: "AGI", value: 26 },
       { label: "ARM", value: "0.70" },
     ],
-    combatShift: -1,
     motionVariant: "guardian",
     isEntering: true,
     floatTexts: [{ text: "INTIMIDATE", tone: "item" }],

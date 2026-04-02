@@ -1,7 +1,7 @@
 import type { CSSProperties } from "react";
 import { HealthBar } from "../../shared/components/HealthBar";
 
-type CombatSide = "player" | "enemy";
+type CombatDirection = "left" | "right";
 type CombatantState =
   | "idle"
   | "acting"
@@ -23,7 +23,7 @@ type EnemyMotionVariant =
 type FloatingTone = "damage" | "heal" | "miss" | "escape" | "item" | "defeat";
 
 interface CombatEntityCardProps {
-  side: CombatSide;
+  direction: CombatDirection;
   state: CombatantState;
   name: string;
   classLabel?: string;
@@ -32,7 +32,6 @@ interface CombatEntityCardProps {
   healthMax: number;
   stats: Array<{ label: string; value: string | number }>;
   floatTexts: Array<{ text: string; tone: FloatingTone }>;
-  combatShift: 1 | -1;
   motionVariant?: EnemyMotionVariant;
   isEntering?: boolean;
 }
@@ -47,7 +46,7 @@ function StatRow({ label, value }: { label: string; value: string | number }) {
 }
 
 export function CombatEntityCard({
-  side,
+  direction,
   state,
   name,
   classLabel,
@@ -56,13 +55,14 @@ export function CombatEntityCard({
   healthMax,
   stats,
   floatTexts,
-  combatShift,
   motionVariant,
   isEntering = false,
 }: CombatEntityCardProps) {
+  const combatShift = direction === "left" ? 1 : -1;
+
   const classes = [
     "combatant-card",
-    `combatant-card--${side}`,
+    `combatant-card--${direction}`,
     motionVariant ? `enemy-motion--${motionVariant}` : "",
     motionVariant && isEntering ? "enemy-motion--entering" : "",
     `is-${state}`,
@@ -85,7 +85,7 @@ export function CombatEntityCard({
           </span>
         ))}
       </div>
-      <div className={`combatant-portrait combatant-portrait--${side}`}>
+      <div className={`combatant-portrait combatant-portrait--${direction}`}>
         <span className="combatant-portrait__placeholder">{portraitGlyph}</span>
       </div>
       <div className="combatant-body">
