@@ -4,7 +4,6 @@ import "../../shared/components/surface.css";
 import "./RoomPanel.css";
 import { CombatPanel } from "./CombatPanel";
 import { getRoomMeta, type Game, type Room } from "../../../game/engine";
-import type { Enemy } from "../../../game/types";
 
 type PostCombatPhase = "none" | "animating" | "message" | "loot";
 
@@ -17,6 +16,7 @@ interface RoomPanelProps {
   game: Game;
   currentRoom: Room;
   inEncounter: boolean;
+  onCombatVisibilityChange?: (visible: boolean) => void;
   onAttack: () => void;
   onFlee: () => void;
   onOpenInventory: () => void;
@@ -26,15 +26,15 @@ export function RoomPanel({
   game,
   currentRoom,
   inEncounter,
+  onCombatVisibilityChange,
   onAttack,
   onFlee,
   onOpenInventory,
 }: RoomPanelProps) {
   const roomMeta = getRoomMeta(currentRoom);
   const isPlaying = game.status === "playing";
-  const [lingeringEnemy, setLingeringEnemy] = useState<Enemy | null>(null);
   const [combatPresentation, setCombatPresentation] = useState<
-    "active" | "victory-exit" | "escape-exit"
+    "active" | "victory-exit"
   >("active");
   const [encounterNotice, setEncounterNotice] = useState<{
     tone: "alert" | "escape";
@@ -43,7 +43,6 @@ export function RoomPanel({
   const [postCombatPhase, setPostCombatPhase] =
     useState<PostCombatPhase>("none");
   const [victoryState, setVictoryState] = useState<VictoryState | null>(null);
-  const lingerTimeoutRef = useRef<number | null>(null);
   const noticeTimeoutRef = useRef<number | null>(null);
   const victoryTimeoutRef = useRef<number | null>(null);
   const previousStateRef = useRef<{
@@ -51,22 +50,15 @@ export function RoomPanel({
     roomY: number;
     inEncounter: boolean;
     enemyName: string | null;
-    enemySnapshot: Enemy | null;
   }>({
     roomX: currentRoom.x,
     roomY: currentRoom.y,
     inEncounter,
     enemyName: currentRoom.enemy.alive ? currentRoom.enemy.name : null,
-    enemySnapshot: currentRoom.enemy.alive
-      ? structuredClone(currentRoom.enemy)
-      : null,
   });
 
   useEffect(() => {
     return () => {
-      if (lingerTimeoutRef.current !== null) {
-        window.clearTimeout(lingerTimeoutRef.current);
-      }
       if (noticeTimeoutRef.current !== null) {
         window.clearTimeout(noticeTimeoutRef.current);
       }
@@ -96,26 +88,6 @@ export function RoomPanel({
       }, 1800);
     }
 
-    function clearLingeringEnemy(): void {
-      window.setTimeout(() => {
-        setLingeringEnemy(null);
-      }, 0);
-    }
-
-    function beginEscapeSequence(enemy: Enemy): void {
-      if (lingerTimeoutRef.current !== null) {
-        window.clearTimeout(lingerTimeoutRef.current);
-      }
-      window.setTimeout(() => {
-        setCombatPresentation("escape-exit");
-        setLingeringEnemy(structuredClone(enemy));
-      }, 0);
-      lingerTimeoutRef.current = window.setTimeout(() => {
-        setLingeringEnemy(null);
-        lingerTimeoutRef.current = null;
-      }, 980);
-    }
-
     function beginVictorySequence(enemyName: string): void {
       if (victoryTimeoutRef.current !== null) {
         window.clearTimeout(victoryTimeoutRef.current);
@@ -126,28 +98,21 @@ export function RoomPanel({
       });
       window.setTimeout(() => {
         setCombatPresentation("victory-exit");
-        setLingeringEnemy(structuredClone(currentRoom.enemy));
         setPostCombatPhase("animating");
         setVictoryState({ enemyName, lootItems });
       }, 0);
       victoryTimeoutRef.current = window.setTimeout(() => {
-        setLingeringEnemy(null);
         setPostCombatPhase("message");
         victoryTimeoutRef.current = null;
       }, 1450);
     }
 
     if (!previous.inEncounter && inEncounter && currentRoom.enemy.alive) {
-      if (lingerTimeoutRef.current !== null) {
-        window.clearTimeout(lingerTimeoutRef.current);
-        lingerTimeoutRef.current = null;
-      }
       if (victoryTimeoutRef.current !== null) {
         window.clearTimeout(victoryTimeoutRef.current);
         victoryTimeoutRef.current = null;
       }
       window.setTimeout(() => {
-        setLingeringEnemy(null);
         setCombatPresentation("active");
         setPostCombatPhase("none");
         setVictoryState(null);
@@ -161,13 +126,10 @@ export function RoomPanel({
     }
 
     if (previous.inEncounter && !inEncounter) {
-      if (escaped && previous.enemySnapshot) {
-        beginEscapeSequence(previous.enemySnapshot);
+      if (escaped) {
         showNotice("escape", "You slip out of the fight.");
       } else if (!currentRoom.enemy.alive && stayedInSameRoom) {
         beginVictorySequence(previous.enemyName ?? "Enemy");
-      } else {
-        clearLingeringEnemy();
       }
     }
 
@@ -176,9 +138,6 @@ export function RoomPanel({
       roomY: currentRoom.y,
       inEncounter,
       enemyName: currentRoom.enemy.alive ? currentRoom.enemy.name : null,
-      enemySnapshot: currentRoom.enemy.alive
-        ? structuredClone(currentRoom.enemy)
-        : null,
     };
   }, [currentRoom, game.log, game.player.name, inEncounter]);
 
@@ -196,13 +155,11 @@ export function RoomPanel({
     setVictoryState(null);
   }
 
-  // Show combat panel only during live encounter or while the exit animation is playing.
-  // Never render it during post-combat message/loot phases.
-  const showCombatPanel =
-    (inEncounter && currentRoom.enemy.alive) ||
-    (postCombatPhase === "animating" && lingeringEnemy !== null);
-  const displayedEnemy =
-    inEncounter && currentRoom.enemy.alive ? currentRoom.enemy : lingeringEnemy;
+  const showCombatPanel = inEncounter || postCombatPhase !== "none";
+
+  useEffect(() => {
+    onCombatVisibilityChange?.(showCombatPanel);
+  }, [onCombatVisibilityChange, showCombatPanel]);
 
   return (
     <section className="panel room">
@@ -258,11 +215,11 @@ export function RoomPanel({
         </div>
       )}
 
-      {showCombatPanel && displayedEnemy && (
+      <div style={showCombatPanel ? undefined : { display: "none" }}>
         <CombatPanel
-          key={`${currentRoom.x}-${currentRoom.y}-${displayedEnemy.instanceId}-${displayedEnemy.alive ? "live" : "linger"}`}
+          key={`${currentRoom.x}-${currentRoom.y}-${currentRoom.enemy.instanceId}`}
           player={game.player}
-          enemy={displayedEnemy}
+          enemy={currentRoom.enemy}
           log={game.log}
           onAttack={onAttack}
           onFlee={onFlee}
@@ -270,7 +227,7 @@ export function RoomPanel({
           isPlaying={isPlaying && inEncounter}
           presentationMode={inEncounter ? "active" : combatPresentation}
         />
-      )}
+      </div>
     </section>
   );
 }

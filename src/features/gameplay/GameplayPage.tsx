@@ -49,10 +49,12 @@ export function GameplayPage({
   onForceDeath,
 }: GameplayPageProps) {
   const [showEquipModal, setShowEquipModal] = useState(false);
+  const [isCombatPanelVisible, setIsCombatPanelVisible] = useState(inEncounter);
+  const isCombatFlow = inEncounter || isCombatPanelVisible;
 
   return (
-    <main className={`shell ${inEncounter ? "in-combat" : "in-game"}`}>
-      {!inEncounter && (
+    <main className={`shell ${isCombatFlow ? "in-combat" : "in-game"}`}>
+      {!isCombatFlow && (
         <section className="hud-column">
           <StatusPanel
             game={game}
@@ -71,17 +73,18 @@ export function GameplayPage({
           }}
         />
       )}
-      <section className={inEncounter ? "combat-column" : "room-column"}>
+      <section className={isCombatFlow ? "combat-column" : "room-column"}>
         <RoomPanel
           game={game}
           currentRoom={currentRoom}
           inEncounter={inEncounter}
+          onCombatVisibilityChange={setIsCombatPanelVisible}
           onAttack={onAttack}
           onFlee={onFlee}
           onOpenInventory={() => setShowEquipModal(true)}
         />
       </section>
-      {!inEncounter && (
+      {!isCombatFlow && (
         <section className="explore-column">
           <ExplorePanel
             game={game}
