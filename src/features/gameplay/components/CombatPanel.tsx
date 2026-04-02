@@ -78,6 +78,7 @@ export function CombatPanel({
       <div className={`combat-arena ${actionMeta.arenaClassName}`}>
         <CombatEntityCard
           direction="left"
+          alignment="friendly"
           state={playerState}
           name={player.name}
           classLabel={classLabel}
@@ -94,6 +95,7 @@ export function CombatPanel({
 
         <CombatEntityCard
           direction="right"
+          alignment="hostile"
           state={enemyEntered ? enemyState : "entering"}
           name={enemy.name}
           portraitGlyph="👹"

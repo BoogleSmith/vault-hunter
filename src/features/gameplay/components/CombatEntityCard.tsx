@@ -2,6 +2,7 @@ import type { CSSProperties } from "react";
 import { HealthBar } from "../../shared/components/HealthBar";
 
 type CombatDirection = "left" | "right";
+type CombatAlignment = "friendly" | "neutral" | "cautious" | "hostile";
 type CombatantState =
   | "entering"
   | "idle"
@@ -17,6 +18,7 @@ type FloatingTone = "damage" | "heal" | "miss" | "escape" | "item" | "defeat";
 
 interface CombatEntityCardProps {
   direction: CombatDirection;
+  alignment: CombatAlignment;
   state: CombatantState;
   name: string;
   classLabel?: string;
@@ -38,6 +40,7 @@ function StatRow({ label, value }: { label: string; value: string | number }) {
 
 export function CombatEntityCard({
   direction,
+  alignment,
   state,
   name,
   classLabel,
@@ -52,6 +55,7 @@ export function CombatEntityCard({
   const classes = [
     "combatant-card",
     `combatant-card--${direction}`,
+    `combatant-card--align-${alignment}`,
     `is-${state}`,
   ]
     .filter(Boolean)
@@ -72,7 +76,7 @@ export function CombatEntityCard({
           </span>
         ))}
       </div>
-      <div className={`combatant-portrait combatant-portrait--${direction}`}>
+      <div className={`combatant-portrait combatant-portrait--${alignment}`}>
         <span className="combatant-portrait__placeholder">{portraitGlyph}</span>
       </div>
       <div className="combatant-body">

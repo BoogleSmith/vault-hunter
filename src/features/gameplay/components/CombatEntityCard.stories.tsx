@@ -17,6 +17,7 @@ const meta = {
   ],
   args: {
     direction: "left",
+    alignment: "friendly",
     state: "idle",
     name: "Arin",
     classLabel: "Warrior",
@@ -33,6 +34,10 @@ const meta = {
   },
   argTypes: {
     direction: { control: "inline-radio", options: ["left", "right"] },
+    alignment: {
+      control: "inline-radio",
+      options: ["friendly", "neutral", "cautious", "hostile"],
+    },
     state: {
       control: "select",
       options: [
@@ -59,6 +64,7 @@ export const PlayerIdle: Story = {};
 export const EnemyThreaten: Story = {
   args: {
     direction: "right",
+    alignment: "hostile",
     state: "threaten",
     name: "Spectral Guard",
     classLabel: undefined,

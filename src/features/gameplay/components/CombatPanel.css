@@ -134,6 +134,9 @@
 
 .combatant-card {
   --combat-shift: 1;
+  --alignment-ink: var(--accent);
+  --alignment-strong: color-mix(in srgb, var(--accent) 30%, var(--line));
+  --alignment-soft: color-mix(in srgb, var(--accent) 12%, var(--panel));
   position: relative;
   border-radius: 12px;
   overflow: hidden;
@@ -145,6 +148,30 @@
     border-color 0.24s ease,
     filter 0.24s ease;
   box-shadow: 0 14px 26px rgba(0, 0, 0, 0.1);
+}
+
+.combatant-card--align-friendly {
+  --alignment-ink: #79b26a;
+  --alignment-strong: color-mix(in srgb, #79b26a 34%, var(--line));
+  --alignment-soft: color-mix(in srgb, #79b26a 15%, var(--panel));
+}
+
+.combatant-card--align-neutral {
+  --alignment-ink: #95a0aa;
+  --alignment-strong: color-mix(in srgb, #95a0aa 34%, var(--line));
+  --alignment-soft: color-mix(in srgb, #95a0aa 14%, var(--panel));
+}
+
+.combatant-card--align-cautious {
+  --alignment-ink: #d7b65d;
+  --alignment-strong: color-mix(in srgb, #d7b65d 36%, var(--line));
+  --alignment-soft: color-mix(in srgb, #d7b65d 14%, var(--panel));
+}
+
+.combatant-card--align-hostile {
+  --alignment-ink: #bf5b52;
+  --alignment-strong: color-mix(in srgb, #bf5b52 36%, var(--line));
+  --alignment-soft: color-mix(in srgb, #bf5b52 14%, var(--panel));
 }
 
 .combat-float-layer {
@@ -341,22 +368,16 @@
   animation: combat-evade-ring 0.68s ease;
 }
 
-.combatant-portrait--left {
+.combatant-portrait--friendly,
+.combatant-portrait--neutral,
+.combatant-portrait--cautious,
+.combatant-portrait--hostile {
   background: linear-gradient(
     160deg,
-    color-mix(in srgb, var(--accent) 18%, var(--panel)) 0%,
-    color-mix(in srgb, var(--accent) 8%, var(--panel)) 100%
+    color-mix(in srgb, var(--alignment-soft) 84%, white 4%) 0%,
+    color-mix(in srgb, var(--alignment-soft) 100%, black 4%) 100%
   );
-  border-bottom: 1px solid color-mix(in srgb, var(--accent) 30%, var(--line));
-}
-
-.combatant-portrait--right {
-  background: linear-gradient(
-    160deg,
-    color-mix(in srgb, #bf3f3f 18%, var(--panel)) 0%,
-    color-mix(in srgb, #bf3f3f 8%, var(--panel)) 100%
-  );
-  border-bottom: 1px solid color-mix(in srgb, #bf3f3f 30%, var(--line));
+  border-bottom: 1px solid var(--alignment-strong);
 }
 
 .combatant-portrait__placeholder {
@@ -431,7 +452,7 @@
   font-size: 0.7rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--accent);
+  color: var(--alignment-ink);
   opacity: 0.85;
 }
 
