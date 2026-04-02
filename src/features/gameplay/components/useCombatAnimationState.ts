@@ -12,14 +12,6 @@ type CombatResult =
   | "use"
   | "channel";
 export type CombatPresentationMode = "active" | "victory-exit" | "escape-exit";
-export type EnemyMotionVariant =
-  | "menace"
-  | "skirmisher"
-  | "beast"
-  | "spectral"
-  | "brute"
-  | "guardian"
-  | "dragon";
 export type CombatantState =
   | "idle"
   | "acting"
@@ -132,36 +124,6 @@ function parseCombatStep(
   return null;
 }
 
-function getEnemyMotionVariant(enemy: Enemy): EnemyMotionVariant {
-  const tags = new Set(enemy.lootTags);
-
-  if (tags.has("dragon")) {
-    return "dragon";
-  }
-  if (tags.has("giant")) {
-    return "brute";
-  }
-  if (tags.has("spectral")) {
-    return "spectral";
-  }
-  if (tags.has("beast")) {
-    return "beast";
-  }
-  if (tags.has("guardian")) {
-    return "guardian";
-  }
-  if (
-    tags.has("raider") ||
-    tags.has("cult") ||
-    tags.has("agile") ||
-    tags.has("dexterous")
-  ) {
-    return "skirmisher";
-  }
-
-  return "menace";
-}
-
 function parseHealAmount(line: string): number | null {
   const healMatch = line.match(/restoring (\d+) HP/);
   if (!healMatch?.[1]) {
@@ -230,7 +192,6 @@ export function useCombatAnimationState({
   log: string[];
   presentationMode: CombatPresentationMode;
 }) {
-  const enemyMotionVariant = getEnemyMotionVariant(enemy);
   const [stepQueue, setStepQueue] = useState<CombatAnimationStep[]>([]);
   const [activeStep, setActiveStep] = useState<CombatAnimationStep | null>(
     null,
@@ -247,24 +208,15 @@ export function useCombatAnimationState({
   });
 
   useEffect(() => {
-    const introDurations: Record<EnemyMotionVariant, number> = {
-      menace: 820,
-      skirmisher: 740,
-      beast: 820,
-      spectral: 940,
-      brute: 920,
-      guardian: 880,
-      dragon: 920,
-    };
     const resetId = window.setTimeout(() => setEnemyEntered(false), 0);
     const doneId = window.setTimeout(() => {
       setEnemyEntered(true);
-    }, introDurations[enemyMotionVariant] + 50);
+    }, 870);
     return () => {
       window.clearTimeout(resetId);
       window.clearTimeout(doneId);
     };
-  }, [enemy.name, enemyMotionVariant]);
+  }, [enemy.name]);
 
   useEffect(() => {
     const previous = previousStateRef.current;
@@ -398,7 +350,6 @@ export function useCombatAnimationState({
     presentationMode !== "active";
 
   return {
-    enemyMotionVariant,
     activeStep,
     displayedPlayerHealth,
     displayedEnemyHealth,

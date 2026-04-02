@@ -12,14 +12,6 @@ type CombatantState =
   | "support"
   | "threaten"
   | "victory";
-type EnemyMotionVariant =
-  | "menace"
-  | "skirmisher"
-  | "beast"
-  | "spectral"
-  | "brute"
-  | "guardian"
-  | "dragon";
 type FloatingTone = "damage" | "heal" | "miss" | "escape" | "item" | "defeat";
 
 interface CombatEntityCardProps {
@@ -32,7 +24,6 @@ interface CombatEntityCardProps {
   healthMax: number;
   stats: Array<{ label: string; value: string | number }>;
   floatTexts: Array<{ text: string; tone: FloatingTone }>;
-  motionVariant?: EnemyMotionVariant;
   isEntering?: boolean;
 }
 
@@ -55,7 +46,6 @@ export function CombatEntityCard({
   healthMax,
   stats,
   floatTexts,
-  motionVariant,
   isEntering = false,
 }: CombatEntityCardProps) {
   const combatShift = direction === "left" ? 1 : -1;
@@ -63,8 +53,7 @@ export function CombatEntityCard({
   const classes = [
     "combatant-card",
     `combatant-card--${direction}`,
-    motionVariant ? `enemy-motion--${motionVariant}` : "",
-    motionVariant && isEntering ? "enemy-motion--entering" : "",
+    isEntering ? "enemy-motion--entering" : "",
     `is-${state}`,
   ]
     .filter(Boolean)

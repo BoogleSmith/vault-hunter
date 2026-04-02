@@ -47,19 +47,6 @@ const meta = {
         "victory",
       ],
     },
-    motionVariant: {
-      control: "select",
-      options: [
-        undefined,
-        "menace",
-        "skirmisher",
-        "beast",
-        "spectral",
-        "brute",
-        "guardian",
-        "dragon",
-      ],
-    },
     isEntering: { control: "boolean" },
   },
 } satisfies Meta<typeof CombatEntityCard>;
@@ -84,7 +71,6 @@ export const EnemyThreaten: Story = {
       { label: "AGI", value: 26 },
       { label: "ARM", value: "0.70" },
     ],
-    motionVariant: "guardian",
     isEntering: true,
     floatTexts: [{ text: "INTIMIDATE", tone: "item" }],
   },

@@ -32,7 +32,6 @@ export function CombatPanel({
 }: CombatPanelProps) {
   const classLabel = PLAYER_CLASSES[player.classKey].label;
   const {
-    enemyMotionVariant,
     activeStep,
     displayedPlayerHealth,
     displayedEnemyHealth,
@@ -76,9 +75,7 @@ export function CombatPanel({
         <span className="combat-callout__text">{actionLabel}</span>
       </div>
 
-      <div
-        className={`combat-arena ${actionMeta.arenaClassName} combat-arena--enemy-${enemyMotionVariant}`}
-      >
+      <div className={`combat-arena ${actionMeta.arenaClassName}`}>
         <CombatEntityCard
           direction="left"
           state={playerState}
@@ -104,7 +101,6 @@ export function CombatPanel({
           healthMax={enemy.healthMax}
           stats={enemyStats}
           floatTexts={enemyFloats}
-          motionVariant={enemyMotionVariant}
           isEntering={!enemyEntered}
         />
       </div>
