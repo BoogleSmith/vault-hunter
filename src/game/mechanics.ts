@@ -1,10 +1,10 @@
 import type {
+  Damageable,
   EquipRequirement,
   Game,
   Item,
   ItemSlot,
   Player,
-  UnitBase,
 } from "./types";
 
 const REQUIREMENT_TO_CONCRETE_SLOT: Record<
@@ -81,7 +81,10 @@ export function nextInt(a: number, b: number): number {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-export function addHealth(unit: UnitBase, amount: number): void {
+export function addHealth(
+  unit: Damageable & { alive: boolean },
+  amount: number,
+): void {
   const next = unit.health + amount;
   if (next >= unit.healthMax) {
     unit.health = unit.healthMax;

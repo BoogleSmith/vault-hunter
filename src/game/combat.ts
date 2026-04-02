@@ -148,7 +148,15 @@ export function tryFlee(game: Game): void {
   )
     .filter(([, ok]) => ok)
     .map(([key]) => key);
+  if (options.length === 0) {
+    game.log.push("No escape route is open.");
+    return;
+  }
   const directionKey = options[nextInt(0, options.length - 1)];
+  if (!directionKey) {
+    game.log.push("No escape route is open.");
+    return;
+  }
 
   room.enemy.roamDelayRemaining = Math.max(
     1,

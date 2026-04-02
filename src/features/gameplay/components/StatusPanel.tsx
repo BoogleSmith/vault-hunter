@@ -5,7 +5,6 @@ import "../../shared/components/controls.css";
 import "../../shared/components/surface.css";
 import "./StatusPanel.css";
 import { HealthBar } from "../../shared/components/HealthBar";
-import { ExpandedMap } from "./ExpandedMap";
 import { ExperienceBar } from "../../shared/components/ExperienceBar";
 
 interface StatusPanelProps {
