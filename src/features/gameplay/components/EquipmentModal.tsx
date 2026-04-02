@@ -86,17 +86,13 @@ function buildRows(
 function getTotalArmorValue(game: Game): number {
   const equippedIds = new Set(
     Object.values(game.player.equipment).filter(
-      (id): id is number => id !== undefined,
+      (id): id is string => id !== undefined,
     ),
   );
 
   let total = 0;
   for (const item of game.player.inventory) {
-    if (
-      item.instanceId === undefined ||
-      !equippedIds.has(item.instanceId) ||
-      !item.armorValue
-    ) {
+    if (!equippedIds.has(item.instanceId) || !item.armorValue) {
       continue;
     }
     total += item.armorValue;
@@ -200,19 +196,16 @@ export function EquipmentModal({
 }: EquipmentModalProps) {
   const [inspectedSlot, setInspectedSlot] = useState<ItemSlot | null>(null);
   const [inspectedInventoryId, setInspectedInventoryId] = useState<
-    number | null
+    string | null
   >(null);
   const equippedIds = new Set(
     Object.values(game.player.equipment).filter(
-      (id): id is number => id !== undefined,
+      (id): id is string => id !== undefined,
     ),
   );
   const visibleInventoryEntries = game.player.inventory
     .map((item, index) => ({ item, index }))
-    .filter(
-      ({ item }) =>
-        item.instanceId === undefined || !equippedIds.has(item.instanceId),
-    );
+    .filter(({ item }) => !equippedIds.has(item.instanceId));
   const rows = buildRows(visibleInventoryEntries);
 
   useEffect(() => {
@@ -341,11 +334,9 @@ export function EquipmentModal({
                     : (selected?.cooldownRemaining ?? 0);
 
                   const equipIndex = indices[0];
-                  const isEquipped =
-                    item.instanceId !== undefined &&
-                    Object.values(game.player.equipment).includes(
-                      item.instanceId,
-                    );
+                  const isEquipped = Object.values(
+                    game.player.equipment,
+                  ).includes(item.instanceId);
 
                   const slotSummary =
                     equipSlots.length > 0
@@ -359,7 +350,7 @@ export function EquipmentModal({
                       key={`${item.key}-${indices[0] ?? 0}`}
                       className={`eq-inv-item eq-inv-item--r${rarity.tier}`}
                       onMouseEnter={() =>
-                        setInspectedInventoryId(item.instanceId ?? null)
+                        setInspectedInventoryId(item.instanceId)
                       }
                       onMouseLeave={() => setInspectedInventoryId(null)}
                     >

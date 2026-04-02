@@ -21,7 +21,7 @@ const REQUIREMENT_TO_CONCRETE_SLOT: Record<
 function pickSlotForAbstractRequirement(
   choices: ItemSlot[],
   player: Player,
-  currentItemId: number,
+  currentItemId: string,
 ): ItemSlot {
   const occupiedByCurrent = choices.find(
     (slot) => player.equipment[slot] === currentItemId,
@@ -37,7 +37,7 @@ function pickSlotForAbstractRequirement(
 export function resolveEquipTargets(
   player: Player,
   requirements: EquipRequirement[],
-  currentItemId: number,
+  currentItemId: string,
 ): ItemSlot[] {
   const targets: ItemSlot[] = [];
 
@@ -120,7 +120,7 @@ export function removeItemEffect(player: Player, item: Item): void {
   if (e.dexterity) player.dexterity -= e.dexterity;
 }
 
-function clearEquipmentSlots(player: Player, instanceId: number): void {
+function clearEquipmentSlots(player: Player, instanceId: string): void {
   (Object.keys(player.equipment) as ItemSlot[]).forEach((slot) => {
     if (player.equipment[slot] === instanceId) {
       delete player.equipment[slot];
@@ -128,7 +128,7 @@ function clearEquipmentSlots(player: Player, instanceId: number): void {
   });
 }
 
-function unequipByInstanceId(player: Player, instanceId: number): void {
+function unequipByInstanceId(player: Player, instanceId: string): void {
   const item = player.inventory.find(
     (entry) => entry.instanceId === instanceId,
   );
@@ -152,7 +152,7 @@ export function unequipSlot(game: Game, slot: ItemSlot): boolean {
 export function equipItem(game: Game, index: number): boolean {
   const item = game.player.inventory[index];
   const requirements = item?.equipSlots ?? [];
-  if (!item || requirements.length === 0 || item.instanceId === undefined) {
+  if (!item || requirements.length === 0) {
     return false;
   }
 
@@ -174,7 +174,7 @@ export function equipItem(game: Game, index: number): boolean {
     new Set(
       equipTargets
         .map((slot) => game.player.equipment[slot])
-        .filter((instanceId): instanceId is number => instanceId !== undefined),
+        .filter((instanceId): instanceId is string => instanceId !== undefined),
     ),
   );
 

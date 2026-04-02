@@ -260,7 +260,7 @@ export function RoomPanel({
 
       {showCombatPanel && displayedEnemy && (
         <CombatPanel
-          key={`${currentRoom.x}-${currentRoom.y}-${displayedEnemy.name}-${displayedEnemy.alive ? "live" : "linger"}`}
+          key={`${currentRoom.x}-${currentRoom.y}-${displayedEnemy.instanceId}-${displayedEnemy.alive ? "live" : "linger"}`}
           player={game.player}
           enemy={displayedEnemy}
           log={game.log}

@@ -4,9 +4,11 @@ import type {
   Direction,
   DirectionKey,
   Enemy,
+  EnemyTemplate,
   EnemyTemplateKey,
   Item,
   ItemKey,
+  ItemTemplate,
   PlayerClass,
   PlayerClassKey,
   RoomTypeMeta,
@@ -46,24 +48,32 @@ export const DIRECTIONS = directionsData satisfies Record<
   Direction
 >;
 
-type EnemyTemplate = Omit<Enemy, "inventory">;
-
 export const ENEMIES = enemiesData as Record<EnemyTemplateKey, EnemyTemplate>;
 
 export const ENEMY_TEMPLATE_KEYS = Object.keys(ENEMIES) as EnemyTemplateKey[];
 
 export const ROOM_TYPES = roomsData as RoomTypeMeta[];
 
-export const ITEMS = itemsData as Record<ItemKey, Item>;
+export const ITEMS = itemsData as Record<ItemKey, ItemTemplate>;
 
 export const ITEM_KEYS = Object.keys(ITEMS) as ItemKey[];
 
-let nextItemInstanceId = 1;
+function createInstanceId(): string {
+  if (
+    typeof crypto !== "undefined" &&
+    typeof crypto.randomUUID === "function"
+  ) {
+    return crypto.randomUUID();
+  }
+  return `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+}
 
 export function itemFromTemplate(itemKey: ItemKey): Item {
+  const template = ITEMS[itemKey];
   return {
-    ...ITEMS[itemKey],
-    instanceId: nextItemInstanceId++,
+    ...template,
+    instanceId: createInstanceId(),
+    template,
   };
 }
 
@@ -71,6 +81,8 @@ export function enemyFromTemplate(templateKey: EnemyTemplateKey): Enemy {
   const template = ENEMIES[templateKey];
   return {
     ...template,
+    instanceId: createInstanceId(),
+    template,
     roamDelayRemaining:
       template.roamRate < 0 ? Math.abs(template.roamRate) : undefined,
     inventory: [],

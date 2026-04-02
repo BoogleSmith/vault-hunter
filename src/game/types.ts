@@ -76,7 +76,12 @@ export interface ItemEffect {
   dexterity?: number;
 }
 
-export interface Item {
+export type Entity<TTemplate> = TTemplate & {
+  instanceId: string;
+  template: TTemplate;
+};
+
+export interface ItemTemplate {
   key: ItemKey;
   label: string;
   description: string;
@@ -84,7 +89,6 @@ export interface Item {
   tags: LootTag[];
   armorValue?: number;
   equipSlots?: EquipRequirement[];
-  instanceId?: number;
   dropWeight: number;
   rarity: number;
   stackable: boolean;
@@ -92,9 +96,12 @@ export interface Item {
   consumable: boolean;
   sharedCooldown: boolean;
   cooldown: number;
-  cooldownRemaining?: number;
   effect: ItemEffect;
 }
+
+export type Item = Entity<ItemTemplate> & {
+  cooldownRemaining?: number;
+};
 export type PlayerClassKey = "WARRIOR" | "THEIF" | "ROGUE" | "BRAWLER";
 export type DirectionKey = "RIGHT" | "DOWN" | "LEFT" | "UP";
 export type EnemyTemplateKey =
@@ -166,7 +173,7 @@ export interface UnitBase {
   alive: boolean;
 }
 
-export interface Enemy extends UnitBase {
+export interface EnemyTemplate extends UnitBase {
   name: string;
   level: number;
   experienceReward: number;
@@ -176,20 +183,28 @@ export interface Enemy extends UnitBase {
   lootTags: LootTag[];
   roamRate: number;
   undiscoveredRoaming: boolean;
-  roamDelayRemaining?: number;
-  inventory: Item[];
 }
 
-export interface Player extends UnitBase {
-  name: string;
-  classKey: PlayerClassKey;
-  level: number;
-  experience: number;
+export type Enemy = Entity<EnemyTemplate> & {
+  roamDelayRemaining?: number;
   inventory: Item[];
-  equipment: Partial<Record<ItemSlot, number>>;
-  itemCooldowns: Partial<Record<ItemKey, number>>;
-  usedItemKeys: ItemKey[];
+};
+
+export interface PlayerTemplate {
+  classKey: PlayerClassKey;
 }
+
+export type Player = Entity<PlayerTemplate> &
+  UnitBase & {
+    name: string;
+    classKey: PlayerClassKey;
+    level: number;
+    experience: number;
+    inventory: Item[];
+    equipment: Partial<Record<ItemSlot, string>>;
+    itemCooldowns: Partial<Record<ItemKey, number>>;
+    usedItemKeys: ItemKey[];
+  };
 
 export interface RoomTypeMeta {
   key: RoomTypeKey;
@@ -198,14 +213,18 @@ export interface RoomTypeMeta {
   lootTags: LootTag[];
 }
 
-export interface Room {
+export interface RoomTemplate {
+  typeKey: RoomTypeKey;
+}
+
+export type Room = Entity<RoomTemplate> & {
   x: number;
   y: number;
   typeKey: RoomTypeKey;
   discovered: boolean;
   enemy: Enemy;
   items: Item[];
-}
+};
 
 export type GameStatus = "playing" | "won" | "lost";
 

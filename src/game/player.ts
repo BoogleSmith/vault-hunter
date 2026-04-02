@@ -6,6 +6,16 @@ import {
 } from "./mechanics";
 import type { Item, Player, PlayerClassKey, UnitBase } from "./types";
 
+function createInstanceId(): string {
+  if (
+    typeof crypto !== "undefined" &&
+    typeof crypto.randomUUID === "function"
+  ) {
+    return crypto.randomUUID();
+  }
+  return `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+}
+
 const BASE_PLAYER: UnitBase = {
   health: 100,
   healthMax: 100,
@@ -70,6 +80,8 @@ export function createPlayer({
   const baseStats = getClassStatsBeforeEquipment(classKey);
 
   const player: Player = {
+    instanceId: createInstanceId(),
+    template: { classKey },
     name: name.trim() || "Stranger",
     classKey,
     level: 1,
@@ -144,7 +156,7 @@ export function gainExperience(
 
 function equipStartingItem(player: Player, item: Item): void {
   const requirements = item.equipSlots ?? [];
-  if (requirements.length === 0 || item.instanceId === undefined) {
+  if (requirements.length === 0) {
     return;
   }
 
@@ -154,7 +166,7 @@ function equipStartingItem(player: Player, item: Item): void {
     new Set(
       equipSlots
         .map((slot) => player.equipment[slot])
-        .filter((id): id is number => id !== undefined),
+        .filter((id): id is string => id !== undefined),
     ),
   );
 

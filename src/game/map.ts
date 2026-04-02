@@ -30,6 +30,16 @@ const RANDOM_ROOM_POOL = ROOM_TYPES.filter(
   (room) => room.key !== "FOYER" && room.key !== "VAULT",
 );
 
+function createInstanceId(): string {
+  if (
+    typeof crypto !== "undefined" &&
+    typeof crypto.randomUUID === "function"
+  ) {
+    return crypto.randomUUID();
+  }
+  return `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+}
+
 function getItemDropWeight(key: (typeof ITEM_KEYS)[number]): number {
   const item = ITEMS[key];
   const rarity = Math.max(1, item.rarity);
@@ -157,13 +167,15 @@ function roomFromType(
     if (itemKey) enemy.inventory.push(itemFromTemplate(itemKey));
   }
 
-  const items: (typeof ITEMS)[keyof typeof ITEMS][] = [];
+  const items: Room["items"] = [];
   if (!enemy.alive && ITEM_KEYS.length > 0 && Math.random() < 0.18) {
     const itemKey = pickWeightedItemKeyForTags(type.lootTags);
     if (itemKey) items.push(itemFromTemplate(itemKey));
   }
 
   return {
+    instanceId: createInstanceId(),
+    template: { typeKey },
     x,
     y,
     typeKey,

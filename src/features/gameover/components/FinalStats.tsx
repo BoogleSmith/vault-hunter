@@ -10,18 +10,14 @@ interface FinalStatsProps {
 function getTotalArmorValue(game: Game): number {
   const equippedIds = new Set(
     Object.values(game.player.equipment).filter(
-      (id): id is number => id !== undefined,
+      (id): id is string => id !== undefined,
     ),
   );
 
   let total = 0;
 
   for (const item of game.player.inventory) {
-    if (
-      item.instanceId === undefined ||
-      !equippedIds.has(item.instanceId) ||
-      !item.armorValue
-    ) {
+    if (!equippedIds.has(item.instanceId) || !item.armorValue) {
       continue;
     }
     total += item.armorValue;

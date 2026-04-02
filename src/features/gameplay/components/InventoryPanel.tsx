@@ -78,7 +78,7 @@ function buildRows(inventory: Item[]): DisplayRow[] {
 
 interface InventoryPanelProps {
   inventory: Item[];
-  equipment: Partial<Record<ItemSlot, number>>;
+  equipment: Partial<Record<ItemSlot, string>>;
   playerHealth: number;
   playerHealthMax: number;
   itemCooldowns: Partial<Record<ItemKey, number>>;
@@ -120,9 +120,9 @@ export function InventoryPanel({
               ? (itemCooldowns[item.key] ?? 0)
               : (selected?.cooldownRemaining ?? 0);
             const equipIndex = indices[0];
-            const isEquipped =
-              item.instanceId !== undefined &&
-              Object.values(equipment).includes(item.instanceId);
+            const isEquipped = Object.values(equipment).includes(
+              item.instanceId,
+            );
             const effectText = [
               item.armorValue ? `+${item.armorValue.toFixed(2)} armor` : "",
               formatEffect(item.effect),

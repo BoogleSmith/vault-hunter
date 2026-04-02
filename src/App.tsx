@@ -98,10 +98,10 @@ function App() {
     const previousIds = new Set(
       previous.player.inventory
         .map((item) => item.instanceId)
-        .filter((id): id is number => id !== undefined),
+        .filter((id): id is string => id !== undefined),
     );
     for (const item of game.player.inventory) {
-      if (item.instanceId !== undefined && !previousIds.has(item.instanceId)) {
+      if (!previousIds.has(item.instanceId)) {
         // Loot gained as part of defeating an enemy is presented inline in RoomPanel.
         if (endedEncounter) {
           continue;

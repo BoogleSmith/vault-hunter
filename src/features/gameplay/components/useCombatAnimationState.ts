@@ -216,7 +216,7 @@ export function useCombatAnimationState({
       window.clearTimeout(resetId);
       window.clearTimeout(doneId);
     };
-  }, [enemy.name]);
+  }, [enemy.instanceId]);
 
   useEffect(() => {
     const previous = previousStateRef.current;
@@ -246,7 +246,14 @@ export function useCombatAnimationState({
     previousStateRef.current = {
       logLength: log.length,
     };
-  }, [enemy.health, enemy.name, log, player.health, player.name]);
+  }, [
+    enemy.instanceId,
+    enemy.health,
+    enemy.name,
+    log,
+    player.health,
+    player.name,
+  ]);
 
   useEffect(() => {
     if (activeStep || stepQueue.length === 0) {
