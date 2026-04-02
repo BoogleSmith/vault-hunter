@@ -5,6 +5,7 @@ import type {
   ItemKey,
   ItemSlot,
 } from "../../../game/engine";
+import { getItemRarityMeta } from "../../shared/components/itemRarity";
 import "../../shared/components/controls.css";
 import "../../shared/components/surface.css";
 import "./InventoryPanel.css";
@@ -104,6 +105,7 @@ export function InventoryPanel({
       ) : (
         <ul className="inv-list">
           {rows.map(({ item, count, indices }) => {
+            const rarity = getItemRarityMeta(item.rarity);
             const equipSlots = item.equipSlots ?? [];
             const isPureHeal =
               !!item.effect.health &&
@@ -129,13 +131,17 @@ export function InventoryPanel({
               .join(" · ");
 
             return (
-              <li key={`${item.key}-${indices[0] ?? 0}`} className="inv-item">
+              <li
+                key={`${item.key}-${indices[0] ?? 0}`}
+                className={`inv-item inv-item--r${rarity.tier}`}
+              >
                 <span className="inv-icon">{TYPE_ICON[item.type]}</span>
                 <span className="inv-info">
-                  <strong>
-                    {item.label}
+                  <strong className="inv-item-name">
+                    <span className="inv-item-label">{item.label}</span>
                     {count > 1 && <span className="inv-count"> x{count}</span>}
                   </strong>
+                  <span className="inv-rarity-subtitle">{rarity.label}</span>
                   <span className="inv-desc">{item.description}</span>
                   {equipSlots.length > 0 && (
                     <span className="inv-slots">

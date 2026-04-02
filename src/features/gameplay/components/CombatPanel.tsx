@@ -113,7 +113,7 @@ export function CombatPanel({
 
       <div className="combat-actions">
         <button onClick={onAttack} disabled={!isPlaying || isAnimating}>
-          {isAnimating ? "Resolving..." : "⚔ Attack"}
+          {isAnimating ? "Resolving..." : "⚔️ Attack"}
         </button>
         <button
           className="ghost"

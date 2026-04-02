@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useState } from "react";
+import { Fragment, useEffect, useState, type CSSProperties } from "react";
 import "../../shared/components/controls.css";
 import "./EquipmentModal.css";
 import type {
@@ -8,6 +8,7 @@ import type {
   ItemSlot,
 } from "../../../game/engine";
 import { PLAYER_CLASSES } from "../../../game/data";
+import { getItemRarityMeta } from "../../shared/components/itemRarity";
 
 interface SlotConfig {
   slot: ItemSlot;
@@ -240,6 +241,12 @@ export function EquipmentModal({
           (item) => item.instanceId === inspectedInventoryId,
         )
       : undefined;
+  const hoveredInventoryRarity = hoveredInventoryItem
+    ? getItemRarityMeta(hoveredInventoryItem.rarity)
+    : null;
+  const hoveredEquippedRarity = hoveredItem
+    ? getItemRarityMeta(hoveredItem.rarity)
+    : null;
 
   const armorValue = getTotalArmorValue(game);
 
@@ -314,6 +321,7 @@ export function EquipmentModal({
             ) : (
               <ul className="eq-inv-list">
                 {rows.map(({ item, count, indices }) => {
+                  const rarity = getItemRarityMeta(item.rarity);
                   const equipSlots = item.equipSlots ?? [];
                   const isPureHeal =
                     !!item.effect.health &&
@@ -349,7 +357,7 @@ export function EquipmentModal({
                   return (
                     <li
                       key={`${item.key}-${indices[0] ?? 0}`}
-                      className="eq-inv-item"
+                      className={`eq-inv-item eq-inv-item--r${rarity.tier}`}
                       onMouseEnter={() =>
                         setInspectedInventoryId(item.instanceId ?? null)
                       }
@@ -360,12 +368,15 @@ export function EquipmentModal({
                           {TYPE_ICON[item.type]}
                         </span>
                         <span className="eq-inv-text">
-                          <strong>
-                            {item.label}
+                          <strong className="eq-item-name">
+                            <span className="eq-item-label">{item.label}</span>
                             {count > 1 && (
                               <span className="eq-inv-count"> x{count}</span>
                             )}
                           </strong>
+                          <span className="eq-rarity-subtitle">
+                            {rarity.label}
+                          </span>
                           {slotSummary && (
                             <span className="eq-inv-slot-summary">
                               {slotSummary}
@@ -421,9 +432,28 @@ export function EquipmentModal({
                   {TYPE_ICON[hoveredInventoryItem.type]}
                 </span>
                 <div className="eq-info-content">
-                  <strong className="eq-info-name">
-                    {hoveredInventoryItem.label}
+                  <strong
+                    className="eq-info-name eq-item-name"
+                    style={
+                      {
+                        "--rarity-color": `var(--rarity-r${hoveredInventoryRarity?.tier ?? 1})`,
+                      } as CSSProperties
+                    }
+                  >
+                    <span className="eq-item-label">
+                      {hoveredInventoryItem.label}
+                    </span>
                   </strong>
+                  <span
+                    className="eq-rarity-subtitle"
+                    style={
+                      {
+                        "--rarity-color": `var(--rarity-r${hoveredInventoryRarity?.tier ?? 1})`,
+                      } as CSSProperties
+                    }
+                  >
+                    {hoveredInventoryRarity?.label}
+                  </span>
                   <p className="eq-info-desc">
                     {hoveredInventoryItem.description}
                   </p>
@@ -441,9 +471,26 @@ export function EquipmentModal({
                     {TYPE_ICON[hoveredItem.type]}
                   </span>
                   <div className="eq-info-content">
-                    <strong className="eq-info-name">
-                      {hoveredItem.label}
+                    <strong
+                      className="eq-info-name eq-item-name"
+                      style={
+                        {
+                          "--rarity-color": `var(--rarity-r${hoveredEquippedRarity?.tier ?? 1})`,
+                        } as CSSProperties
+                      }
+                    >
+                      <span className="eq-item-label">{hoveredItem.label}</span>
                     </strong>
+                    <span
+                      className="eq-rarity-subtitle"
+                      style={
+                        {
+                          "--rarity-color": `var(--rarity-r${hoveredEquippedRarity?.tier ?? 1})`,
+                        } as CSSProperties
+                      }
+                    >
+                      {hoveredEquippedRarity?.label}
+                    </span>
                     <p className="eq-info-desc">{hoveredItem.description}</p>
                     <EffectText item={hoveredItem} className="eq-info-effect" />
                     <em className="eq-info-hint">Click slot to unequip</em>

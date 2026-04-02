@@ -5,6 +5,12 @@
   --line: #9b8f7a;
   --accent: #1c6e63;
   --body: "Trebuchet MS", "Segoe UI", sans-serif;
+  --rarity-r1: #a7b0bc;
+  --rarity-r2: #5fc987;
+  --rarity-r3: #69a4ff;
+  --rarity-r4: #af79e8;
+  --rarity-r5: #e8b24f;
+  --rarity-r6: #ee6f6f;
 }
 
 * {

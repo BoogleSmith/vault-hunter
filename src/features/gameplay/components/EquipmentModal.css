@@ -314,6 +314,36 @@
   background: color-mix(in srgb, var(--panel) 82%, white);
 }
 
+.eq-inv-item--r1 {
+  --rarity-color: var(--rarity-r1);
+  border-color: color-mix(in srgb, var(--rarity-r1) 46%, var(--line));
+}
+
+.eq-inv-item--r2 {
+  --rarity-color: var(--rarity-r2);
+  border-color: color-mix(in srgb, var(--rarity-r2) 46%, var(--line));
+}
+
+.eq-inv-item--r3 {
+  --rarity-color: var(--rarity-r3);
+  border-color: color-mix(in srgb, var(--rarity-r3) 50%, var(--line));
+}
+
+.eq-inv-item--r4 {
+  --rarity-color: var(--rarity-r4);
+  border-color: color-mix(in srgb, var(--rarity-r4) 55%, var(--line));
+}
+
+.eq-inv-item--r5 {
+  --rarity-color: var(--rarity-r5);
+  border-color: color-mix(in srgb, var(--rarity-r5) 58%, var(--line));
+}
+
+.eq-inv-item--r6 {
+  --rarity-color: var(--rarity-r6);
+  border-color: color-mix(in srgb, var(--rarity-r6) 58%, var(--line));
+}
+
 .eq-inv-main {
   display: inline-flex;
   align-items: center;
@@ -332,11 +362,27 @@
   min-width: 0;
 }
 
-.eq-inv-text strong {
+.eq-item-name {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  min-width: 0;
   font-size: 0.8rem;
+  color: var(--rarity-color);
+}
+
+.eq-item-label {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+.eq-rarity-subtitle {
+  font-size: 0.64rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  opacity: 0.9;
+  color: var(--rarity-color);
 }
 
 .eq-inv-count {

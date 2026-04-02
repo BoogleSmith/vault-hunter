@@ -30,10 +30,16 @@ const RANDOM_ROOM_POOL = ROOM_TYPES.filter(
   (room) => room.key !== "FOYER" && room.key !== "VAULT",
 );
 
+function getItemDropWeight(key: (typeof ITEM_KEYS)[number]): number {
+  const item = ITEMS[key];
+  const rarity = Math.max(1, item.rarity);
+  return Math.max(0.05, item.dropWeight / Math.pow(rarity, 1.35));
+}
+
 function pickWeightedItemKey(): (typeof ITEM_KEYS)[number] | undefined {
   const weighted = ITEM_KEYS.map((key) => ({
     key,
-    weight: Math.max(0, ITEMS[key].dropWeight),
+    weight: getItemDropWeight(key),
   }));
   return pickFromWeighted(weighted);
 }
@@ -70,7 +76,7 @@ function pickWeightedItemKeyForTags(
   }
 
   return pickFromWeighted(
-    tagged.map((key) => ({ key, weight: Math.max(0, ITEMS[key].dropWeight) })),
+    tagged.map((key) => ({ key, weight: getItemDropWeight(key) })),
   );
 }
 

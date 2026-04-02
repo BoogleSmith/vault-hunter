@@ -86,6 +86,7 @@ export interface Item {
   equipSlots?: EquipRequirement[];
   instanceId?: number;
   dropWeight: number;
+  rarity: number;
   stackable: boolean;
   usable: boolean;
   consumable: boolean;
