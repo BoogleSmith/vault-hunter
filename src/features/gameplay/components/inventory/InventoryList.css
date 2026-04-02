@@ -1,0 +1,113 @@
+.eq-inventory {
+  border-top: 1px solid var(--line);
+  padding: 0.65rem 0.9rem 0.9rem;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.eq-inventory h3 {
+  margin: 0.2rem 0 0.5rem;
+  font-size: 0.92rem;
+}
+
+.eq-inv-empty {
+  margin: 0;
+  font-size: 0.8rem;
+  opacity: 0.65;
+  font-style: italic;
+  overflow: auto;
+}
+
+.eq-inv-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.35rem;
+  overflow: auto;
+  padding-right: 0.2rem;
+}
+
+.eq-inv-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  border: 1px solid color-mix(in srgb, var(--line) 88%, transparent);
+  border-radius: 9px;
+  padding: 0.4rem 0.5rem;
+  background: color-mix(in srgb, var(--panel) 82%, white);
+}
+
+.eq-inv-item--r1 {
+  --rarity-color: var(--rarity-r1);
+  border-color: color-mix(in srgb, var(--rarity-r1) 46%, var(--line));
+}
+
+.eq-inv-item--r2 {
+  --rarity-color: var(--rarity-r2);
+  border-color: color-mix(in srgb, var(--rarity-r2) 46%, var(--line));
+}
+
+.eq-inv-item--r3 {
+  --rarity-color: var(--rarity-r3);
+  border-color: color-mix(in srgb, var(--rarity-r3) 50%, var(--line));
+}
+
+.eq-inv-item--r4 {
+  --rarity-color: var(--rarity-r4);
+  border-color: color-mix(in srgb, var(--rarity-r4) 55%, var(--line));
+}
+
+.eq-inv-item--r5 {
+  --rarity-color: var(--rarity-r5);
+  border-color: color-mix(in srgb, var(--rarity-r5) 58%, var(--line));
+}
+
+.eq-inv-item--r6 {
+  --rarity-color: var(--rarity-r6);
+  border-color: color-mix(in srgb, var(--rarity-r6) 58%, var(--line));
+}
+
+.eq-inv-main {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  min-width: 0;
+}
+
+.eq-inv-icon {
+  line-height: 1;
+  font-size: 1rem;
+}
+
+.eq-inv-text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.eq-inv-count {
+  font-size: 0.72rem;
+  opacity: 0.65;
+  font-weight: 400;
+}
+
+.eq-inv-slot-summary {
+  font-size: 0.66rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.eq-inv-actions {
+  display: inline-flex;
+  gap: 0.35rem;
+  flex-shrink: 0;
+}
+
+.eq-inv-btn {
+  padding: 0.22rem 0.55rem;
+  font-size: 0.72rem;
+}

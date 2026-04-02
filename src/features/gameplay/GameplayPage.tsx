@@ -4,7 +4,7 @@ import "../shared/components/surface.css";
 import "./GameplayPage.css";
 import type { DirectionKey } from "../../game/data";
 import type { Game, ItemSlot, Room } from "../../game/engine";
-import { EquipmentModal } from "./components/EquipmentModal";
+import { EquipmentModal } from "./components/inventory";
 import { AdventureLogPanel } from "./components/AdventureLogPanel";
 import { RoomPanel } from "./components/RoomPanel";
 import { StatusPanel } from "./components/StatusPanel";

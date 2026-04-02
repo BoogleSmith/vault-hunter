@@ -1,0 +1,11 @@
+.eq-effect-token--positive {
+  color: #2f8e57;
+}
+
+.eq-effect-token--negative {
+  color: #b64b4b;
+}
+
+.eq-effect-sep {
+  color: color-mix(in srgb, var(--ink) 35%, transparent);
+}

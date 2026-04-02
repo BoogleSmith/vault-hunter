@@ -1,0 +1,89 @@
+.eq-slot-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.15fr 1fr;
+  grid-template-rows: repeat(5, minmax(60px, auto));
+  gap: 0.5rem;
+  position: relative;
+}
+
+.eq-body-svg {
+  position: absolute;
+  width: 22%;
+  height: auto;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  fill: none;
+  stroke: var(--line);
+  stroke-width: 2.2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  opacity: 0.3;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.eq-slot {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.15rem;
+  padding: 0.55rem 0.3rem 0.45rem;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--panel) 82%, white);
+  font: inherit;
+  color: var(--ink);
+  cursor: default;
+  transition:
+    border-color 150ms ease,
+    background 150ms ease,
+    transform 120ms ease,
+    box-shadow 150ms ease;
+}
+
+.eq-slot--filled {
+  border-color: color-mix(in srgb, var(--accent) 55%, var(--line));
+  background: color-mix(in srgb, var(--accent) 10%, var(--panel));
+  cursor: pointer;
+}
+
+.eq-slot--empty {
+  opacity: 0.52;
+}
+
+.eq-slot--filled:hover {
+  border-color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 18%, var(--panel));
+  transform: translateY(-2px);
+  box-shadow: 0 5px 14px color-mix(in srgb, var(--accent) 22%, transparent);
+}
+
+.eq-slot-icon {
+  font-size: 1.45rem;
+  line-height: 1;
+}
+
+.eq-slot-name {
+  font-size: 0.58rem;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  opacity: 0.6;
+  line-height: 1;
+}
+
+.eq-slot-item {
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: var(--accent);
+  text-align: center;
+  line-height: 1.2;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
