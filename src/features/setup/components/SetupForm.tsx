@@ -40,6 +40,7 @@ export function SetupForm({
 }: SetupFormProps) {
   const selectedClass = PLAYER_CLASSES[classKey];
   const classStats = Object.entries(getStartingStatsForClass(classKey));
+  const levelBonuses = Object.entries(selectedClass.levelBonuses);
   const classItems = Object.entries(
     selectedClass.startingItems.reduce<Record<string, number>>(
       (counts, itemKey) => {
@@ -117,6 +118,26 @@ export function SetupForm({
                     }
                   </strong>
                   <span>{value}</span>
+                </li>
+              ))}
+          </ul>
+        </div>
+
+        <div className="setup-preview-section">
+          <h3>Per-Level Bonuses</h3>
+          <ul>
+            {levelBonuses
+              .filter(([, value]) => value !== 0)
+              .map(([statKey, value]) => (
+                <li key={statKey}>
+                  <strong>
+                    {
+                      CLASS_STAT_LABELS[
+                        statKey as keyof typeof CLASS_STAT_LABELS
+                      ]
+                    }
+                  </strong>
+                  <span>+{value}</span>
                 </li>
               ))}
           </ul>

@@ -72,6 +72,8 @@ export function createPlayer({
   const player: Player = {
     name: name.trim() || "Stranger",
     classKey,
+    level: 1,
+    experience: 0,
     health: baseStats.health,
     healthMax: baseStats.healthMax,
     damageBase: baseStats.damageBase,
@@ -92,6 +94,52 @@ export function createPlayer({
   }
 
   return player;
+}
+
+export function getExperienceForLevel(level: number): number {
+  return 80 + (level - 1) * 45;
+}
+
+export function getExperienceToNextLevel(player: Player): number {
+  return getExperienceForLevel(player.level);
+}
+
+function applyLevelBonuses(player: Player): void {
+  const bonuses = PLAYER_CLASSES[player.classKey].levelBonuses;
+  if (bonuses.healthMax) {
+    player.healthMax += bonuses.healthMax;
+  }
+
+  const totalHealthGain = bonuses.health + bonuses.healthMax;
+  if (totalHealthGain) {
+    player.health = Math.min(player.health + totalHealthGain, player.healthMax);
+  }
+
+  player.damageBase += bonuses.damageBase;
+  player.damageMax += bonuses.damageMax;
+  player.agility += bonuses.agility;
+  player.dexterity += bonuses.dexterity;
+}
+
+export function gainExperience(
+  player: Player,
+  amount: number,
+): { levelsGained: number } {
+  if (amount <= 0) {
+    return { levelsGained: 0 };
+  }
+
+  player.experience += amount;
+
+  let levelsGained = 0;
+  while (player.experience >= getExperienceForLevel(player.level)) {
+    player.experience -= getExperienceForLevel(player.level);
+    player.level += 1;
+    levelsGained += 1;
+    applyLevelBonuses(player);
+  }
+
+  return { levelsGained };
 }
 
 function equipStartingItem(player: Player, item: Item): void {

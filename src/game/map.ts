@@ -111,6 +111,8 @@ function roomFromType(
   typeKey: RoomTypeKey,
   x: number,
   y: number,
+  width: number,
+  height: number,
   discovered = false,
   alwaysSpawnEnemy = false,
 ): Room {
@@ -122,7 +124,8 @@ function roomFromType(
       ? "DRAKE"
       : pickWeightedEnemyTemplateKeyForTags(type.lootTags)
     : "EMPTY";
-  const enemy = enemyFromTemplate(enemyTemplateKey);
+  const enemyLevel = getEnemyLevelForPosition(x, y, width, height, typeKey);
+  const enemy = enemyFromTemplate(enemyTemplateKey, enemyLevel);
 
   if (enemy.alive && ITEM_KEYS.length > 0 && Math.random() < 0.25) {
     const itemKey = pickWeightedItemKeyForTags([
@@ -146,6 +149,25 @@ function roomFromType(
     enemy,
     items,
   };
+}
+
+function getEnemyLevelForPosition(
+  x: number,
+  y: number,
+  width: number,
+  height: number,
+  roomTypeKey: RoomTypeKey,
+): number {
+  const maxProgress = Math.max(1, width + height - 2);
+  const progress = Math.min(1, (x + y) / maxProgress);
+  const baseMaxLevel = Math.max(3, Math.floor(width / 3) + 1);
+  const scaled = 1 + Math.floor(progress * (baseMaxLevel - 1));
+
+  if (roomTypeKey === "VAULT") {
+    return baseMaxLevel + 1;
+  }
+
+  return Math.max(1, Math.min(baseMaxLevel, scaled + nextInt(0, 1)));
 }
 
 function pickRandomRoomType(): RoomTypeKey {
@@ -176,12 +198,12 @@ export function createGame({
   const map: Room[][] = Array.from({ length: height }, (_, y) => {
     return Array.from({ length: width }, (_, x) => {
       if (x === startX && y === startY) {
-        return roomFromType("FOYER", x, y, true, false);
+        return roomFromType("FOYER", x, y, width, height, true, false);
       }
       if (x === vaultX && y === vaultY) {
-        return roomFromType("VAULT", x, y, false, true);
+        return roomFromType("VAULT", x, y, width, height, false, true);
       }
-      return roomFromType(pickRandomRoomType(), x, y);
+      return roomFromType(pickRandomRoomType(), x, y, width, height);
     });
   });
 

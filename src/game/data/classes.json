@@ -10,6 +10,14 @@
       "damageMax": 0,
       "agility": 0,
       "dexterity": 0
+    },
+    "levelBonuses": {
+      "health": 6,
+      "healthMax": 8,
+      "damageBase": 4,
+      "damageMax": 2,
+      "agility": 1,
+      "dexterity": 1
     }
   },
   "THEIF": {
@@ -28,6 +36,14 @@
       "damageMax": 0,
       "agility": 15,
       "dexterity": 20
+    },
+    "levelBonuses": {
+      "health": 2,
+      "healthMax": 4,
+      "damageBase": 2,
+      "damageMax": 2,
+      "agility": 4,
+      "dexterity": 3
     }
   },
   "ROGUE": {
@@ -46,6 +62,14 @@
       "damageMax": 0,
       "agility": 5,
       "dexterity": 10
+    },
+    "levelBonuses": {
+      "health": 3,
+      "healthMax": 5,
+      "damageBase": 3,
+      "damageMax": 3,
+      "agility": 2,
+      "dexterity": 3
     }
   },
   "BRAWLER": {
@@ -59,6 +83,14 @@
       "damageMax": 15,
       "agility": 0,
       "dexterity": 0
+    },
+    "levelBonuses": {
+      "health": 5,
+      "healthMax": 6,
+      "damageBase": 4,
+      "damageMax": 4,
+      "agility": 1,
+      "dexterity": 1
     }
   }
 }

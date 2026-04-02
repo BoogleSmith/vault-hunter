@@ -131,6 +131,7 @@ export interface PlayerClass {
   label: string;
   summary: string;
   bonuses: UnitBonuses;
+  levelBonuses: UnitBonuses;
   startingItems: ItemKey[];
 }
 
@@ -152,6 +153,8 @@ export interface UnitBase {
 
 export interface Enemy extends UnitBase {
   name: string;
+  level: number;
+  experienceReward: number;
   armor: number;
   phrase: string;
   description: string;
@@ -165,6 +168,8 @@ export interface Enemy extends UnitBase {
 export interface Player extends UnitBase {
   name: string;
   classKey: PlayerClassKey;
+  level: number;
+  experience: number;
   inventory: Item[];
   equipment: Partial<Record<ItemSlot, number>>;
   itemCooldowns: Partial<Record<ItemKey, number>>;

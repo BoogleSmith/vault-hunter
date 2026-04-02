@@ -1,4 +1,5 @@
 import { addHealth, nextInt } from "./mechanics";
+import { gainExperience, getExperienceToNextLevel } from "./player";
 import {
   checkVictory,
   getAvailableDirections,
@@ -91,6 +92,25 @@ export function runCombatRound(game: Game): void {
   if (room.enemy.alive) {
     game.log.push(attack(room.enemy, game.player, getPlayerArmorValue(game)));
   } else {
+    const experienceAward = room.enemy.experienceReward;
+    if (experienceAward > 0) {
+      const previousLevel = game.player.level;
+      const levelResult = gainExperience(game.player, experienceAward);
+      game.log.push(
+        `You gained ${experienceAward} XP from level ${room.enemy.level} ${room.enemy.name}.`,
+      );
+      if (levelResult.levelsGained > 0) {
+        game.log.push(
+          `Level up! ${game.player.name} reached level ${game.player.level}.`,
+        );
+      } else {
+        const xpToNext = getExperienceToNextLevel(game.player);
+        game.log.push(
+          `XP progress: ${game.player.experience}/${xpToNext} (Level ${previousLevel}).`,
+        );
+      }
+    }
+
     // Enemy just died — collect any dropped items
     for (const item of room.enemy.inventory) {
       game.player.inventory.push(item);

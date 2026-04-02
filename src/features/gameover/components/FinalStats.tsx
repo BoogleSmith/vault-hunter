@@ -1,5 +1,6 @@
 import { PLAYER_CLASSES } from "../../../game/data";
 import type { Game } from "../../../game/engine";
+import { getExperienceToNextLevel } from "../../../game/player";
 import "./FinalStats.css";
 
 interface FinalStatsProps {
@@ -31,11 +32,18 @@ function getTotalArmorValue(game: Game): number {
 
 export function FinalStats({ game }: FinalStatsProps) {
   const armorValue = getTotalArmorValue(game);
+  const xpToNext = getExperienceToNextLevel(game.player);
 
   return (
     <div className="final-stats">
       <p>
         <strong>Class:</strong> {PLAYER_CLASSES[game.player.classKey].label}
+      </p>
+      <p>
+        <strong>Level:</strong> {game.player.level}
+      </p>
+      <p>
+        <strong>Experience:</strong> {game.player.experience}/{xpToNext}
       </p>
       <p>
         <strong>Armor:</strong> +{armorValue.toFixed(2)}

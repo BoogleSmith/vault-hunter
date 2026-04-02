@@ -52,11 +52,13 @@ export function CombatPanel({
     enemyName: enemy.name,
   });
   const playerStats = [
+    { label: "LVL", value: player.level },
     { label: "DMG", value: `${player.damageBase}–${player.damageMax}` },
     { label: "AGI", value: player.agility },
     { label: "DEX", value: player.dexterity },
   ];
   const enemyStats = [
+    { label: "LVL", value: enemy.level },
     { label: "DMG", value: `${enemy.damageBase}–${enemy.damageMax}` },
     { label: "AGI", value: enemy.agility },
     { label: "ARM", value: enemy.armor.toFixed(2) },

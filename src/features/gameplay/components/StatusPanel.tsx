@@ -1,9 +1,11 @@
 import { PLAYER_CLASSES } from "../../../game/data";
 import type { Game } from "../../../game/engine";
+import { getExperienceToNextLevel } from "../../../game/player";
 import "../../shared/components/controls.css";
 import "../../shared/components/surface.css";
 import "./StatusPanel.css";
 import { HealthBar } from "../../shared/components/HealthBar";
+import { ProgressBar } from "../../shared/components/ProgressBar";
 
 interface StatusPanelProps {
   game: Game;
@@ -11,6 +13,8 @@ interface StatusPanelProps {
 }
 
 export function StatusPanel({ game, onOpenEquipment }: StatusPanelProps) {
+  const xpToNext = getExperienceToNextLevel(game.player);
+
   return (
     <section className="panel status">
       <p className="kicker">
@@ -26,8 +30,20 @@ export function StatusPanel({ game, onOpenEquipment }: StatusPanelProps) {
       </p>
       <div className="stats-grid">
         <div>
-          <span>HP:</span>
-          <HealthBar current={game.player.health} max={game.player.healthMax} />
+          <HealthBar
+            label="❤️"
+            tooltip="Health"
+            current={game.player.health}
+            max={game.player.healthMax}
+          />
+        </div>
+        <div>
+          <ProgressBar
+            label="⭐"
+            tooltip="Experience"
+            current={game.player.experience}
+            max={xpToNext}
+          />
         </div>
         <span>
           Location: {game.currentX},{game.currentY}
