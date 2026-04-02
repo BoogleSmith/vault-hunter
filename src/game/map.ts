@@ -76,6 +76,7 @@ function pickWeightedItemKeyForTags(
 
 function pickWeightedEnemyTemplateKeyForTags(
   tags: LootTag[],
+  targetLevel: number,
 ): EnemyTemplateKey {
   const pool = ENEMY_TEMPLATE_KEYS.filter(
     (key) => key !== "EMPTY" && key !== "DRAKE",
@@ -84,16 +85,25 @@ function pickWeightedEnemyTemplateKeyForTags(
     return "EMPTY";
   }
 
-  const tagged = pool
+  const basePool = pool
     .map((key) => ({
       key,
       overlap: ENEMIES[key].lootTags.filter((tag) => tags.includes(tag)).length,
     }))
-    .filter((entry) => entry.overlap > 0)
-    .map((entry) => ({ key: entry.key, weight: entry.overlap }));
+    .filter((entry) => entry.overlap > 0);
 
-  const weightedPool =
-    tagged.length > 0 ? tagged : pool.map((key) => ({ key, weight: 1 }));
+  const matchingPool =
+    basePool.length > 0 ? basePool : pool.map((key) => ({ key, overlap: 1 }));
+
+  const weightedPool = matchingPool.map((entry) => {
+    const template = ENEMIES[entry.key];
+    const levelDistance = Math.abs(template.level - targetLevel);
+    const levelWeight = Math.max(1, 7 - levelDistance * 2);
+    return {
+      key: entry.key,
+      weight: entry.overlap * levelWeight,
+    };
+  });
 
   const total = weightedPool.reduce((sum, entry) => sum + entry.weight, 0);
   let roll = Math.random() * total;
@@ -119,13 +129,19 @@ function roomFromType(
   const type = ROOM_BY_KEY[typeKey];
   const shouldSpawnEnemy =
     typeKey !== "FOYER" && (alwaysSpawnEnemy || Math.random() >= 0.5);
+  const targetEnemyLevel = getTargetEnemyLevelForPosition(
+    x,
+    y,
+    width,
+    height,
+    typeKey,
+  );
   const enemyTemplateKey = shouldSpawnEnemy
     ? typeKey === "VAULT"
       ? "DRAKE"
-      : pickWeightedEnemyTemplateKeyForTags(type.lootTags)
+      : pickWeightedEnemyTemplateKeyForTags(type.lootTags, targetEnemyLevel)
     : "EMPTY";
-  const enemyLevel = getEnemyLevelForPosition(x, y, width, height, typeKey);
-  const enemy = enemyFromTemplate(enemyTemplateKey, enemyLevel);
+  const enemy = enemyFromTemplate(enemyTemplateKey);
 
   if (enemy.alive && ITEM_KEYS.length > 0 && Math.random() < 0.25) {
     const itemKey = pickWeightedItemKeyForTags([
@@ -151,23 +167,27 @@ function roomFromType(
   };
 }
 
-function getEnemyLevelForPosition(
+function getTargetEnemyLevelForPosition(
   x: number,
   y: number,
   width: number,
   height: number,
   roomTypeKey: RoomTypeKey,
 ): number {
+  const nonBossLevels = ENEMY_TEMPLATE_KEYS.filter(
+    (key) => key !== "EMPTY" && key !== "DRAKE",
+  ).map((key) => ENEMIES[key].level);
+  const minLevel = Math.min(...nonBossLevels);
+  const maxLevel = Math.max(...nonBossLevels);
   const maxProgress = Math.max(1, width + height - 2);
   const progress = Math.min(1, (x + y) / maxProgress);
-  const baseMaxLevel = Math.max(3, Math.floor(width / 3) + 1);
-  const scaled = 1 + Math.floor(progress * (baseMaxLevel - 1));
+  const scaled = minLevel + Math.round(progress * (maxLevel - minLevel));
 
   if (roomTypeKey === "VAULT") {
-    return baseMaxLevel + 1;
+    return ENEMIES.DRAKE.level;
   }
 
-  return Math.max(1, Math.min(baseMaxLevel, scaled + nextInt(0, 1)));
+  return Math.max(minLevel, Math.min(maxLevel, scaled + nextInt(0, 1)));
 }
 
 function pickRandomRoomType(): RoomTypeKey {

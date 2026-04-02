@@ -5,7 +5,8 @@ import "../../shared/components/controls.css";
 import "../../shared/components/surface.css";
 import "./StatusPanel.css";
 import { HealthBar } from "../../shared/components/HealthBar";
-import { ProgressBar } from "../../shared/components/ProgressBar";
+import { ExpandedMap } from "./ExpandedMap";
+import { ExperienceBar } from "../../shared/components/ExperienceBar";
 
 interface StatusPanelProps {
   game: Game;
@@ -30,20 +31,10 @@ export function StatusPanel({ game, onOpenEquipment }: StatusPanelProps) {
       </p>
       <div className="stats-grid">
         <div>
-          <HealthBar
-            label="❤️"
-            tooltip="Health"
-            current={game.player.health}
-            max={game.player.healthMax}
-          />
+          <HealthBar current={game.player.health} max={game.player.healthMax} />
         </div>
         <div>
-          <ProgressBar
-            label="⭐"
-            tooltip="Experience"
-            current={game.player.experience}
-            max={xpToNext}
-          />
+          <ExperienceBar current={game.player.experience} max={xpToNext} />
         </div>
         <span>
           Location: {game.currentX},{game.currentY}
