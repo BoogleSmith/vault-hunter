@@ -9,7 +9,7 @@ import { AdventureLogPanel } from "./components/AdventureLogPanel";
 import { RoomPanel } from "./components/RoomPanel";
 import { StatusPanel } from "./components/StatusPanel";
 import { DebugMenu } from "./components/DebugMenu";
-import { ExplorePanel } from "./components/ExplorePanel";
+import { ExplorePanel } from "./components/navigation/ExplorePanel";
 
 interface GameplayPageProps {
   game: Game;

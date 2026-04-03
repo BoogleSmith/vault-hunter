@@ -1,0 +1,20 @@
+.explore-panel {
+  margin-top: 0;
+  --explore-cell: 2.45rem;
+  --map-cell: 4rem;
+  --explore-gap: 0.22rem;
+}
+
+.explore-layout {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 0.7rem;
+  align-items: start;
+}
+
+@media (max-width: 900px) {
+  .explore-layout {
+    grid-template-columns: 1fr;
+    justify-items: start;
+  }
+}

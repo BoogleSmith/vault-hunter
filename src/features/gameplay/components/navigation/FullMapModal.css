@@ -1,0 +1,28 @@
+.map-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1200;
+  display: grid;
+  place-items: center;
+  background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(2px);
+}
+
+.map-modal {
+  width: min(92vw, 780px);
+  max-height: 86vh;
+  overflow: auto;
+  padding: 0.75rem;
+}
+
+.map-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.8rem;
+  margin-bottom: 0.7rem;
+}
+
+.map-modal-header h3 {
+  margin: 0;
+}

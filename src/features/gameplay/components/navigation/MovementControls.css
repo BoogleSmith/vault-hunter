@@ -1,0 +1,40 @@
+.actions {
+  display: grid;
+  justify-items: center;
+  align-content: start;
+  gap: 0.28rem;
+}
+
+.actions-label {
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--line);
+  margin: 0 0 0.08rem;
+}
+
+.dpad {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-rows: repeat(3, minmax(0, auto));
+  gap: var(--explore-gap);
+  width: fit-content;
+}
+
+.dpad button {
+  width: var(--explore-cell);
+  height: var(--explore-cell);
+  padding: 0;
+  font-size: 0.98rem;
+}
+
+.map-open-btn {
+  margin-top: 0.42rem;
+}
+
+@media (max-width: 900px) {
+  .actions {
+    justify-items: start;
+  }
+}

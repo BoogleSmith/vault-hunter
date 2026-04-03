@@ -1,4 +1,4 @@
-import { getRoomMeta, type Game } from "../../../game/engine";
+import { getRoomMeta, type Game } from "../../../../game/engine";
 import "./ExpandedMap.css";
 
 function toRoomName(key: string): string {
