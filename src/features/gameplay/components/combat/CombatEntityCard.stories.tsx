@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { CombatEntityCard } from "./CombatEntityCard";
-import "./CombatPanel.css";
+import "./index.css";
 
 const meta = {
   title: "Gameplay/Combat Entity Card",

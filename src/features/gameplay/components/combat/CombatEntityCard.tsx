@@ -1,5 +1,8 @@
 import type { CSSProperties } from "react";
-import { HealthBar } from "../../shared/components/HealthBar";
+import { HealthBar } from "../../../shared/components/HealthBar";
+
+import "./CombatEntityCard.css";
+import "./CombatAnimations.css";
 
 type CombatDirection = "left" | "right";
 type CombatAlignment = "friendly" | "neutral" | "cautious" | "hostile";

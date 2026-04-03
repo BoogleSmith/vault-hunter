@@ -1,0 +1,185 @@
+.combatant-card {
+  --combat-shift: 1;
+  --alignment-ink: var(--accent);
+  --alignment-strong: color-mix(in srgb, var(--accent) 30%, var(--line));
+  --alignment-soft: color-mix(in srgb, var(--accent) 12%, var(--panel));
+  position: relative;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  background: color-mix(in srgb, var(--panel) 82%, white);
+  transform-origin: center center;
+  transition:
+    box-shadow 0.24s ease,
+    border-color 0.24s ease,
+    filter 0.24s ease;
+  box-shadow: 0 14px 26px rgba(0, 0, 0, 0.1);
+}
+
+.combatant-card--align-friendly {
+  --alignment-ink: #79b26a;
+  --alignment-strong: color-mix(in srgb, #79b26a 34%, var(--line));
+  --alignment-soft: color-mix(in srgb, #79b26a 15%, var(--panel));
+}
+
+.combatant-card--align-neutral {
+  --alignment-ink: #95a0aa;
+  --alignment-strong: color-mix(in srgb, #95a0aa 34%, var(--line));
+  --alignment-soft: color-mix(in srgb, #95a0aa 14%, var(--panel));
+}
+
+.combatant-card--align-cautious {
+  --alignment-ink: #d7b65d;
+  --alignment-strong: color-mix(in srgb, #d7b65d 36%, var(--line));
+  --alignment-soft: color-mix(in srgb, #d7b65d 14%, var(--panel));
+}
+
+.combatant-card--align-hostile {
+  --alignment-ink: #bf5b52;
+  --alignment-strong: color-mix(in srgb, #bf5b52 36%, var(--line));
+  --alignment-soft: color-mix(in srgb, #bf5b52 14%, var(--panel));
+}
+
+.combat-float-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding-top: 1.1rem;
+  z-index: 3;
+}
+
+.combat-float {
+  position: absolute;
+  padding: 0.28rem 0.55rem;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #fff8eb;
+  background: rgba(24, 22, 19, 0.74);
+  box-shadow: 0 10px 18px rgba(0, 0, 0, 0.18);
+  animation: combat-float-up 0.76s ease forwards;
+}
+
+.combat-float--damage {
+  background: rgba(163, 55, 38, 0.84);
+}
+
+.combat-float--heal {
+  background: rgba(69, 126, 55, 0.84);
+}
+
+.combat-float--miss {
+  background: rgba(70, 96, 115, 0.84);
+}
+
+.combat-float--escape {
+  background: rgba(133, 106, 39, 0.86);
+}
+
+.combat-float--item {
+  background: rgba(78, 110, 58, 0.86);
+}
+
+.combat-float--defeat {
+  background: rgba(122, 45, 32, 0.88);
+}
+
+.combatant-portrait {
+  height: 10rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.combatant-portrait::before,
+.combatant-portrait::after {
+  content: "";
+  position: absolute;
+  inset: 12%;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.combatant-portrait--friendly,
+.combatant-portrait--neutral,
+.combatant-portrait--cautious,
+.combatant-portrait--hostile {
+  background: linear-gradient(
+    160deg,
+    color-mix(in srgb, var(--alignment-soft) 84%, white 4%) 0%,
+    color-mix(in srgb, var(--alignment-soft) 100%, black 4%) 100%
+  );
+  border-bottom: 1px solid var(--alignment-strong);
+}
+
+.combatant-portrait__placeholder {
+  font-size: 4rem;
+  opacity: 0.18;
+  user-select: none;
+  pointer-events: none;
+  filter: grayscale(1);
+  transition:
+    transform 0.24s ease,
+    opacity 0.24s ease;
+}
+
+.combatant-body {
+  padding: 0.7rem 0.75rem 0.8rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.combatant-name-row {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+}
+
+.combatant-name {
+  font-size: 0.9rem;
+  font-weight: 700;
+  line-height: 1.2;
+  word-break: break-word;
+}
+
+.combatant-class {
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--alignment-ink);
+  opacity: 0.85;
+}
+
+.combat-stats {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  margin-top: 0.15rem;
+}
+
+.combat-stat-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.78rem;
+}
+
+.combat-stat-label {
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--ink) 62%, transparent);
+}
+
+.combat-stat-value {
+  font-weight: 700;
+  color: var(--ink);
+}

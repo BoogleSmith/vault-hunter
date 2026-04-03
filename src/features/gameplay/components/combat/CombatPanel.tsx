@@ -1,13 +1,14 @@
-import { PLAYER_CLASSES } from "../../../game/data";
-import type { Enemy, Player } from "../../../game/types";
-import "../../shared/components/controls.css";
-import "./CombatPanel.css";
+import { PLAYER_CLASSES } from "../../../../game/data";
+import type { Enemy, Player } from "../../../../game/types";
+import "../../../shared/components/controls.css";
 import { CombatEntityCard } from "./CombatEntityCard";
-import { useCombatText } from "./useCombatText";
 import {
+  CombatPresentationMode,
   useCombatAnimationState,
-  type CombatPresentationMode,
 } from "./useCombatAnimationState";
+import { useCombatText } from "./useCombatText";
+
+import "./CombatPanel.css";
 
 type PostCombatPhase = "none" | "animating" | "message" | "loot";
 

@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import type { Enemy, Player } from "../../../game/types";
+import type { Enemy, Player } from "../../../../game/types";
 import { CombatPanel } from "./CombatPanel";
 
 function makePlayer(): Player {

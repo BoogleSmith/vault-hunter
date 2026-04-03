@@ -2,7 +2,7 @@ import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import "../../shared/components/controls.css";
 import "../../shared/components/surface.css";
 import "./RoomPanel.css";
-import { CombatPanel } from "./CombatPanel";
+import { CombatPanel } from "./combat/CombatPanel";
 import { getRoomMeta, type Game, type Room } from "../../../game/engine";
 
 type PostCombatPhase = "none" | "animating" | "message" | "loot";
@@ -73,10 +73,16 @@ export function RoomPanel({
 
   useLayoutEffect(() => {
     const previous = previousStateRef.current;
+    const deferredTimeoutIds: number[] = [];
     const stayedInSameRoom =
       previous.roomX === currentRoom.x && previous.roomY === currentRoom.y;
     const recentLog = game.log.slice(-4);
     const escaped = recentLog.includes(`${game.player.name} escaped!`);
+
+    function deferStateUpdate(callback: () => void): void {
+      const timeoutId = window.setTimeout(callback, 0);
+      deferredTimeoutIds.push(timeoutId);
+    }
 
     function showNotice(tone: "alert" | "escape", text: string): void {
       window.setTimeout(() => {
@@ -95,12 +101,14 @@ export function RoomPanel({
       if (victoryTimeoutRef.current !== null) {
         window.clearTimeout(victoryTimeoutRef.current);
       }
-      setCombatPresentation("victory-exit");
-      setPostCombatPhase("animating");
-      setVictoryState({
-        enemyName,
-        logIndexAtVictory: game.log.length,
-        searched: false,
+      deferStateUpdate(() => {
+        setCombatPresentation("victory-exit");
+        setPostCombatPhase("animating");
+        setVictoryState({
+          enemyName,
+          logIndexAtVictory: game.log.length,
+          searched: false,
+        });
       });
       victoryTimeoutRef.current = window.setTimeout(() => {
         setPostCombatPhase("message");
@@ -113,9 +121,11 @@ export function RoomPanel({
         window.clearTimeout(victoryTimeoutRef.current);
         victoryTimeoutRef.current = null;
       }
-      setCombatPresentation("active");
-      setPostCombatPhase("none");
-      setVictoryState(null);
+      deferStateUpdate(() => {
+        setCombatPresentation("active");
+        setPostCombatPhase("none");
+        setVictoryState(null);
+      });
       showNotice(
         "alert",
         stayedInSameRoom
@@ -137,6 +147,10 @@ export function RoomPanel({
       roomY: currentRoom.y,
       inEncounter,
       enemyName: currentRoom.enemy.alive ? currentRoom.enemy.name : null,
+    };
+
+    return () => {
+      deferredTimeoutIds.forEach((timeoutId) => window.clearTimeout(timeoutId));
     };
   }, [currentRoom, game.log, game.player.name, inEncounter]);
 

@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import type { Enemy, Player } from "../../../game/types";
+import type { Enemy, Player } from "../../../../game/types";
 
 type CombatSide = "player" | "enemy";
 type CombatStepKind = "attack" | "flee" | "item";
