@@ -9,7 +9,7 @@
 .shell.in-game {
   min-height: calc(100vh - 4rem);
   grid-template-columns: minmax(20rem, 1fr) minmax(28rem, 1.35fr);
-  grid-template-rows: auto auto clamp(14rem, 28vh, 20rem);
+  grid-template-rows: auto auto clamp(14rem, 28vh, 20rem) auto;
   align-items: start;
   align-content: start;
 }
@@ -40,7 +40,7 @@
 .shell.in-combat {
   min-height: calc(100vh - 4rem);
   grid-template-columns: 1fr;
-  grid-template-rows: minmax(0, 1fr) clamp(14rem, 28vh, 20rem);
+  grid-template-rows: minmax(0, 1fr) clamp(14rem, 28vh, 20rem) auto;
   justify-items: stretch;
 }
 
@@ -58,20 +58,6 @@
   grid-column: 1 / -1;
   min-height: 0;
   height: 100%;
-}
-
-.exit-fab {
-  position: fixed;
-  left: 0.8rem;
-  bottom: 0.8rem;
-  z-index: 1300;
-  background: transparent;
-  color: #f1f4f6;
-  border-color: rgba(0, 0, 0, 0.75);
-}
-
-.exit-fab:hover:not(:disabled) {
-  background: rgba(255, 255, 255, 0.05);
 }
 
 /* ── Responsive ─────────────────────────────── */

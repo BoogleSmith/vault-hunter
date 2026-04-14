@@ -1,0 +1,18 @@
+.gameplay-footer {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.25rem 0.5rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.exit-fab {
+  background: transparent;
+  color: #f1f4f6;
+  border-color: rgba(0, 0, 0, 0.75);
+}
+
+.exit-fab:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.05);
+}

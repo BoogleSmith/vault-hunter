@@ -8,7 +8,7 @@ import { EquipmentModal } from "./components/inventory";
 import { AdventureLogPanel } from "./components/AdventureLogPanel";
 import { RoomPanel } from "./components/RoomPanel";
 import { StatusPanel } from "./components/StatusPanel";
-import { DebugMenu } from "./components/DebugMenu";
+import { GameplayFooter } from "./components/GameplayFooter";
 import { ExplorePanel } from "./components/navigation/ExplorePanel";
 
 interface GameplayPageProps {
@@ -99,12 +99,10 @@ export function GameplayPage({
         </section>
       )}
       <AdventureLogPanel log={game.log} />
-      <button className="exit-fab" onClick={onReset}>
-        ← Exit
-      </button>
-      <DebugMenu
-        canForceOutcome={game.status === "playing"}
+      <GameplayFooter
+        game={game}
         showEnemyDebug={showEnemyDebug}
+        onReset={onReset}
         onToggleEnemyDebug={onToggleEnemyDebug}
         onForceVictory={onForceVictory}
         onForceDeath={onForceDeath}
